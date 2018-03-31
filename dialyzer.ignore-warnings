@@ -1,1 +1,4 @@
-The pattern {'ok', Visland@1} can never match the type {'error',atom()}
+Function print_boards/1 has no local return
+Function player/1 has no local return
+Function board/0 has no local return
+The pattern {'ok', Vatoll@1} can never match the type

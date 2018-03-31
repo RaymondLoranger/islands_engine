@@ -1,67 +1,103 @@
 defmodule Islands.Engine.Game do
-  # @moduledoc """
-  # Implements an Islands game.
-  # """
   @moduledoc false
+
+  @behaviour Access
 
   use PersistConfig
 
   alias __MODULE__
-  alias Islands.Engine.{Board, Guesses, Rules}
+  alias Islands.Engine.{Board, Coord, Guesses, Player, State}
 
   @enforce_keys [:player1, :player2]
-  defstruct player1: %{},
-            player2: %{},
-            rules: Rules.new()
+  defstruct player1: nil,
+            player2: nil,
+            request: {},
+            response: {},
+            state: State.new()
 
-  @type player :: map
-  @type t :: %Game{player1: player, player2: player, rules: Rules.t()}
-  @type tally :: map
+  @type player_id :: :player1 | :player2
+  @type request :: tuple
+  @type response :: tuple
+  @type t :: %Game{
+          player1: Player.t(),
+          player2: Player.t(),
+          request: request,
+          response: response,
+          state: State.t()
+        }
 
-  @players Application.get_env(@app, :players)
+  @player_ids Application.get_env(@app, :player_ids)
 
-  # @doc """
-  # Returns a new Islands game.
+  # Access behaviour
+  defdelegate fetch(game, key), to: Map
+  defdelegate get(game, key, default), to: Map
+  defdelegate get_and_update(game, key, fun), to: Map
+  defdelegate pop(game, key), to: Map
 
-  # ## Examples
+  @doc """
+  Returns a new Islands game.
 
-  #     iex> alias Hangman.Engine.Game
-  #     iex> Game.new_game("Mr. Smith").game_state
-  #     :initializing
-  # """
-  # @spec new_game(String.t(), String.t()) :: t
-  def new_game(name) when is_binary(name) do
-    %Game{
-      player1: %{name: name, board: Board.new(), guesses: Guesses.new()},
-      player2: %{name: nil, board: Board.new(), guesses: Guesses.new()}
-    }
+  ## Examples
+
+      iex> alias Islands.Engine.Game
+      iex> Game.new("Mr. Smith").state.game
+      :initialized
+  """
+  @spec new(String.t()) :: t
+  def new(player1_name) when is_binary(player1_name) do
+    %Game{player1: Player.new(player1_name), player2: Player.new("?")}
   end
 
-  def update_board(game, player_id, board) do
-    # Map.update!(game, player_id, fn player -> %{player | board: board} end)
-    # update_in(state, [player_id, board], &(board || &1))
-    update_in(game[player_id].board, fn _ -> board end)
+  @spec update_board(t, player_id, Board.t()) :: t
+  def update_board(%Game{} = game, player_id, %{} = board)
+      when player_id in @player_ids do
+    put_in(game[player_id].board, board)
   end
 
-  def update_guesses(game, player_id, hit_or_miss, coord) do
-    # update_in(game[player_id].guesses, fn guesses ->
-    #   Guesses.add(guesses, hit_or_miss, coord)
-    # end)
-    update_in(game[player_id].guesses, &Guesses.add(&1, hit_or_miss, coord))
+  @spec update_guesses(t, player_id, Guesses.type(), Coord.t()) :: t
+  def update_guesses(%Game{} = game, player_id, hit_or_miss, %Coord{} = guess)
+      when player_id in @player_ids and hit_or_miss in [:hit, :miss] do
+    update_in(game[player_id].guesses, &Guesses.add(&1, hit_or_miss, guess))
   end
 
+  @spec update_player2_name(t, String.t()) :: t
   def update_player2_name(%Game{} = game, name) when is_binary(name) do
     put_in(game.player2.name, name)
   end
 
-  def tally(%Game{} = _game, player) when player in @players do
-    nil
+  @spec update_player_pid(t, player_id, pid) :: t
+  def update_player_pid(%Game{} = game, player_id, pid)
+      when player_id in @player_ids and is_pid(pid) do
+    put_in(game[player_id].pid, pid)
   end
 
-  def player_board(state, player_id), do: get_in(state, [player_id, :board])
+  @spec notify_player(t, player_id) :: t
+  def notify_player(%Game{} = game, player_id) when player_id in @player_ids do
+    send(game[player_id].pid, game.state.game)
+    game
+  end
 
+  @spec player_board(t, player_id) :: Board.t()
+  def player_board(%Game{} = game, player_id) when player_id in @player_ids do
+    game[player_id].board
+  end
+
+  @spec opponent(player_id) :: player_id
   def opponent(:player1), do: :player2
   def opponent(:player2), do: :player1
 
-  def update_rules(game, rules), do: %Game{game | rules: rules}
+  @spec update_state(t, State.t()) :: t
+  def update_state(%Game{} = game, %State{} = state) do
+    put_in(game.state, state)
+  end
+
+  @spec update_request(t, request) :: t
+  def update_request(%Game{} = game, request) when is_tuple(request) do
+    put_in(game.request, request)
+  end
+
+  @spec update_response(t, response) :: t
+  def update_response(%Game{} = game, response) when is_tuple(response) do
+    put_in(game.response, response)
+  end
 end

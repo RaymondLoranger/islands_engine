@@ -1,4 +1,5 @@
-exceptions = ["persist.exs"]
+# exceptions = ["persist.exs"]
+exceptions = []
 
 inputs = [
   ".formatter.exs",

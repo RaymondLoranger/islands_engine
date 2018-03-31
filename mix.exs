@@ -5,16 +5,17 @@ defmodule Islands.Engine.Mixfile do
     [
       app: :islands_engine,
       version: "0.1.0",
-      elixir: "~> 1.5",
+      elixir: "~> 1.6",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
-      dialyzer: [ignore_warnings: "dialyzer.ignore-warnings"]
+      dialyzer: [plt_add_apps: [:io_ansi_table]]
     ]
   end
 
   # Run "mix help compile.app" to learn about applications.
   def application do
     [
+      included_applications: [:io_ansi_table],
       extra_applications: [:logger],
       mod: {Islands.Engine.App, :ok}
     ]
@@ -23,7 +24,8 @@ defmodule Islands.Engine.Mixfile do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:mix_tasks, path: "../mix_tasks", only: :dev, runtime: false},
+      {:mix_tasks,
+       github: "RaymondLoranger/mix_tasks", only: :dev, runtime: false},
       {:persist_config, "~> 0.1"},
       {:io_ansi_table, "~> 0.4"},
       {:logger_file_backend, "~> 0.0.9"},

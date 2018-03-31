@@ -1,39 +1,34 @@
 defmodule Islands.Engine.Island do
-  # @moduledoc """
-  # Island module...
-  # """
   @moduledoc false
 
   use PersistConfig
 
   alias __MODULE__
-  alias Islands.Engine.Coord
+  alias Islands.Engine.{Coord, Offsets}
 
   @enforce_keys [:type, :coords, :hits]
   defstruct [:type, :coords, :hits]
 
   @type coords :: MapSet.t(Coord.t())
-  @type hits :: MapSet.t(Coord.t())
-  @type t :: %Island{type: type, coords: coords, hits: hits}
+  @type t :: %Island{type: type, coords: coords, hits: coords}
   @type type :: :atoll | :dot | :l_shape | :s_shape | :square
 
-  @offsets Application.get_env(@app, :island_type_offsets)
   @types Application.get_env(@app, :island_types)
 
-  @dialyzer {:no_opaque, new: 2}
   @spec new(type, Coord.t()) :: {:ok, t} | {:error, atom}
   def new(type, %Coord{} = origin) when type in @types do
-    with %MapSet{} = coords <- coords(@offsets[type], origin),
-         do: {:ok, %Island{type: type, coords: coords, hits: MapSet.new()}},
-         else: ({:error, reason} -> {:error, reason})
+    with [_ | _] = coords <- type |> Offsets.for() |> coords(origin) do
+      {:ok, %Island{type: type, coords: MapSet.new(coords), hits: MapSet.new()}}
+    else
+      :error -> {:error, :invalid_island_location}
+    end
   end
 
-  def new(_type, %Coord{}), do: {:error, :invalid_island_type}
-  def new(_type, _origin), do: {:error, :improper_origin}
+  def new(_type, _origin), do: {:error, :invalid_island_args}
 
   @spec overlaps?(t, t) :: boolean
-  def overlaps?(%Island{} = other_island, %Island{} = island) do
-    not MapSet.disjoint?(other_island.coords, island.coords)
+  def overlaps?(%Island{} = island, %Island{} = new_island) do
+    not MapSet.disjoint?(island.coords, new_island.coords)
   end
 
   @spec guess(t, Coord.t()) :: {:hit, t} | :miss
@@ -50,12 +45,12 @@ defmodule Islands.Engine.Island do
 
   ## Private functions
 
-  @spec coords([tuple], Coord.t()) :: coords | {:error, atom}
-  defp coords(offsets, _origin = %Coord{row: row, col: col}) do
-    Enum.reduce_while(offsets, %MapSet{}, fn {row_offset, col_offset}, set ->
+  @spec coords([tuple], Coord.t()) :: [Coord.t()] | :error
+  defp coords(offsets, %Coord{row: row, col: col} = _origin) do
+    Enum.reduce_while(offsets, [], fn {row_offset, col_offset}, coords ->
       case Coord.new(row + row_offset, col + col_offset) do
-        {:ok, coord} -> {:cont, MapSet.put(set, coord)}
-        {:error, _reason} -> {:halt, {:error, :invalid_origin}}
+        {:ok, coord} -> {:cont, [coord | coords]}
+        {:error, _reason} -> {:halt, :error}
       end
     end)
   end

@@ -34,22 +34,24 @@ defmodule Islands.Engine.IslandTest do
   describe "Island.new/2" do
     test "returns {:ok, ...} given valid args" do
       {:ok, coord} = Coord.new(4, 6)
-      assert {:ok, %Island{}} = Island.new(:l_shape, coord)
+
+      assert {:ok, %Island{type: _type, coords: _coords, hits: _hits}} =
+               Island.new(:l_shape, coord)
     end
 
-    test "returns {:error, ...} given bad island type" do
+    test "returns {:error, ...} given invalid island type" do
       {:ok, coord} = Coord.new(9, 3)
-      assert {:error, :invalid_island_type} = Island.new(:wrong, coord)
+      assert Island.new(:wrong, coord) == {:error, :invalid_island_args}
     end
 
-    test "returns {:error, ...} given invalid origin" do
+    test "returns {:error, ...} given invalid origin location" do
       {:ok, coord} = Coord.new(10, 10)
-      assert {:error, :invalid_origin} = Island.new(:l_shape, coord)
+      assert Island.new(:l_shape, coord) == {:error, :invalid_island_location}
     end
 
-    test "returns {:error, ...} given improper origin" do
+    test "returns {:error, ...} given invalid origin type" do
       coord = %{row: 3, col: 7}
-      assert {:error, :improper_origin} = Island.new(:l_shape, coord)
+      assert Island.new(:l_shape, coord) == {:error, :invalid_island_args}
     end
   end
 
@@ -70,7 +72,7 @@ defmodule Islands.Engine.IslandTest do
 
     test "bad guess", %{islands: islands} do
       {:ok, coord} = Coord.new(3, 4)
-      assert :miss = Island.guess(islands.dot, coord)
+      assert Island.guess(islands.dot, coord) == :miss
     end
   end
 

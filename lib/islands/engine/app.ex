@@ -8,14 +8,14 @@ defmodule Islands.Engine.App do
   alias Islands.Engine.{Recover, Sup}
 
   @ets Application.get_env(@app, :ets_name)
-  @reg Application.get_env(@app, :registry)
+  # @reg Application.get_env(@app, :registry)
 
   @spec start(Application.start_type(), term) :: {:ok, pid}
   def start(_type, :ok) do
     :ets.new(@ets, [:public, :named_table])
 
     [
-      {Registry, keys: :unique, name: @reg},
+      # {Registry, keys: :unique, name: @reg},
 
       # Child spec relying on use DynamicSupervisor...
       {Sup, :ok},

@@ -1,55 +1,58 @@
 defmodule Islands.Engine.Board do
-  # @moduledoc """
-  # Board module...
-  # """
   @moduledoc false
 
   use PersistConfig
 
+  alias __MODULE__
   alias Islands.Engine.{Coord, Island}
 
-  @type hit_forested_no_win :: {:hit, Island.type(), :no_win, t}
-  @type hit_forested_none :: {:hit, :none, :no_win, t}
-  @type hit_forested_win :: {:hit, Island.type(), :win, t}
-  @type hit :: hit_forested_no_win | hit_forested_none | hit_forested_win
-  @type miss :: {:miss, :none, :no_win, t}
-  @type response :: hit | miss
-  @type t :: map
+  @enforce_keys [:islands, :misses]
+  defstruct [:islands, :misses]
 
-  @types Application.get_env(@app, :island_types)
+  @type islands :: %{Island.type() => Island.t()}
+  @type response :: hit | miss
+  @type t :: %Board{islands: islands, misses: Island.coords()}
+
+  @typep hit :: hit_forested_no_win | hit_forested_none | hit_forested_win
+  @typep hit_forested_no_win :: {:hit, Island.type(), :no_win, t}
+  @typep hit_forested_none :: {:hit, :none, :no_win, t}
+  @typep hit_forested_win :: {:hit, Island.type(), :win, t}
+  @typep miss :: {:miss, :none, :no_win, t}
+
+  @island_types Application.get_env(@app, :island_types)
 
   @spec new() :: t
-  def new(), do: %{}
+  def new(), do: %Board{islands: %{}, misses: MapSet.new()}
 
   @spec position_island(t, Island.t()) :: t | {:error, atom}
-  def position_island(%{} = board, %Island{} = island) do
-    if overlaps_other_islands?(board, island),
+  def position_island(%Board{} = board, %Island{} = island) do
+    if overlaps_other_island?(board.islands, island),
       do: {:error, :overlapping_island},
-      else: Map.put(board, island.type, island)
+      else: put_in(board.islands[island.type], island)
   end
 
   @spec all_islands_positioned?(t) :: boolean
-  def all_islands_positioned?(%{} = board) do
-    Enum.all?(@types, &Map.has_key?(board, &1))
+  def all_islands_positioned?(%Board{} = board) do
+    Enum.all?(@island_types, &Map.has_key?(board.islands, &1))
   end
 
   @spec guess(t, Coord.t()) :: response
-  def guess(%{} = board, %Coord{} = guess) do
-    board |> check_all_islands(guess) |> guess_response(board)
+  def guess(%Board{} = board, %Coord{} = guess) do
+    board |> check_islands(guess) |> response(board)
   end
 
   ## Private functions
 
-  @spec overlaps_other_islands?(t, Island.t()) :: boolean
-  defp overlaps_other_islands?(board, new_island) do
-    Enum.any?(board, fn {type, island} ->
+  @spec overlaps_other_island?(islands, Island.t()) :: boolean
+  defp overlaps_other_island?(islands, new_island) do
+    Enum.any?(islands, fn {type, island} ->
       type != new_island.type and Island.overlaps?(island, new_island)
     end)
   end
 
-  @spec check_all_islands(t, Coord.t()) :: {:hit, Island.t()} | :miss
-  defp check_all_islands(board, guess) do
-    Enum.find_value(board, :miss, fn {_type, island} ->
+  @spec check_islands(t, Coord.t()) :: {:hit, Island.t()} | {:miss, Coord.t()}
+  defp check_islands(board, guess) do
+    Enum.find_value(board.islands, {:miss, guess}, fn {_type, island} ->
       case Island.guess(island, guess) do
         {:hit, island} -> {:hit, island}
         :miss -> false
@@ -57,26 +60,27 @@ defmodule Islands.Engine.Board do
     end)
   end
 
-  @spec guess_response({:hit, Island.t()} | :miss, t) :: response
-  defp guess_response({:hit, island}, board) do
-    board = %{board | island.type => island}
+  @spec response({:hit, Island.t()} | {:miss, Coord.t()}, t) :: response
+  defp response({:hit, island}, board) do
+    board = put_in(board.islands[island.type], island)
     {:hit, forest_check(board, island), win_check(board), board}
   end
 
-  defp guess_response(:miss, board), do: {:miss, :none, :no_win, board}
+  defp response({:miss, guess}, board) do
+    board = update_in(board.misses, &MapSet.put(&1, guess))
+    {:miss, :none, :no_win, board}
+  end
 
   @spec forest_check(t, Island.t()) :: Island.type() | :none
-  defp forest_check(board, island) do
-    if Island.forested?(board[island.type]), do: island.type, else: :none
+  defp forest_check(board, %Island{type: type} = _island) do
+    if Island.forested?(board.islands[type]), do: type, else: :none
   end
 
   @spec win_check(t) :: :win | :no_win
-  defp win_check(board) do
-    if all_forested?(board), do: :win, else: :no_win
-  end
+  defp win_check(board), do: if(all_forested?(board), do: :win, else: :no_win)
 
   @spec all_forested?(t) :: boolean
   defp all_forested?(board) do
-    Enum.all?(board, fn {_type, island} -> Island.forested?(island) end)
+    Enum.all?(board.islands, fn {_type, island} -> Island.forested?(island) end)
   end
 end

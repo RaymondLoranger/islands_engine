@@ -9,11 +9,13 @@ defmodule Islands.Engine.CoordTest do
 
   describe "Coord.new/2" do
     test "returns {:ok, ...} given valid args" do
-      assert {:ok, %Coord{}} = Coord.new(1, 10)
+      assert Coord.new(1, 10) == {:ok, %Coord{row: 1, col: 10}}
     end
 
-    test "returns {:error, ...} given bad args" do
-      assert {:error, :invalid_coordinate} = Coord.new(0, 10)
+    test "returns {:error, ...} given invalid args" do
+      assert Coord.new(0, 10) == {:error, :invalid_coordinate}
+      assert Coord.new(-1, 2) == {:error, :invalid_coordinate}
+      assert Coord.new("1", "2") == {:error, :invalid_coordinate}
     end
   end
 end

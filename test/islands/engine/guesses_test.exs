@@ -16,7 +16,7 @@ defmodule Islands.Engine.GuessesTest do
 
   describe "Guesses.new/0" do
     test "returns a struct" do
-      assert %Guesses{} = Guesses.new()
+      assert %Guesses{hits: _hits, misses: _misses} = Guesses.new()
     end
   end
 
@@ -43,6 +43,14 @@ defmodule Islands.Engine.GuessesTest do
       assert MapSet.member?(guesses.misses, coords.one)
       assert MapSet.member?(guesses.misses, coords.two)
       assert MapSet.size(guesses.misses) == 2
+    end
+
+    test "returns {:error, ...} given bad args", %{coords: coords} do
+      assert Guesses.new() |> Guesses.add(:what, coords.one) ==
+               {:error, :invalid_guesses_args}
+
+      assert Guesses.new() |> Guesses.add(:hit, {1, 1}) ==
+               {:error, :invalid_guesses_args}
     end
   end
 end

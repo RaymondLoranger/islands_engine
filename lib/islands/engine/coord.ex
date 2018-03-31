@@ -1,7 +1,4 @@
 defmodule Islands.Engine.Coord do
-  # @moduledoc """
-  # Coordinate module...
-  # """
   @moduledoc false
 
   use PersistConfig
@@ -13,7 +10,7 @@ defmodule Islands.Engine.Coord do
 
   @type col :: non_neg_integer
   @type row :: non_neg_integer
-  @type t :: %Coord{col: col, row: row}
+  @type t :: %Coord{row: row, col: col}
 
   @board_range Application.get_env(@app, :board_range)
 
