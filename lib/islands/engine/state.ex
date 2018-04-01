@@ -87,11 +87,7 @@ defmodule Islands.Engine.State do
     {:ok, put_in(state.game, :game_over)}
   end
 
-  def check(%State{game: player_turn} = state, :stop)
-      when player_turn in @player_turns do
-    {:ok, put_in(state.game, :game_over)}
-  end
-
+  def check(%State{} = state, :stop), do: {:ok, put_in(state.game, :game_over)}
   def check(_state, _request), do: :error
 
   ## Private functions

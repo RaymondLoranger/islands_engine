@@ -40,10 +40,13 @@ defmodule Islands.Engine.Server do
 
   @spec text(Game.t(), String.t()) :: String.t()
   defp text(game, phrase \\ @phrase) do
-    key = game.player1.name |> key() |> inspect()
-    self = self() |> inspect()
-    game = inspect(game, pretty: true)
-    "\n#{key} #{self}\n#{phrase}\n#{game}\n"
+    """
+
+    #{game.player1.name |> key() |> inspect()} #{self() |> inspect()}
+    #{phrase}
+    #{inspect(game, pretty: true)}
+
+    """
   end
 
   @spec game(String.t(), pid) :: Game.t()
@@ -154,7 +157,7 @@ defmodule Islands.Engine.Server do
       :error ->
         game
         |> Game.update_request({action, player_id})
-        |> Game.update_response({:error, :islands_not_set})
+        |> Game.update_response({:error, :unknown})
         |> save()
         |> reply(player_id)
     end
@@ -162,7 +165,7 @@ defmodule Islands.Engine.Server do
 
   def handle_call({:set_islands = action, player_id}, _from, game) do
     with {:ok, state} <- State.check(game.state, {action, player_id}),
-         %{} = board <- Game.player_board(game, player_id),
+         %Board{} = board <- Game.player_board(game, player_id),
          true <- Board.all_islands_positioned?(board) do
       opponent_id = Game.opponent(player_id)
 
@@ -201,7 +204,7 @@ defmodule Islands.Engine.Server do
     with {:ok, state} <- State.check(game.state, {action, player_id}),
          {:ok, guess} <- Coord.new(row, col),
          opponent_id = Game.opponent(player_id),
-         %{} = opponent_board <- Game.player_board(game, opponent_id),
+         %Board{} = opponent_board <- Game.player_board(game, opponent_id),
          {hit_or_miss, forested_island_type, win_status, opponent_board} <-
            Board.guess(opponent_board, guess),
          {:ok, state} <- State.check(state, {:win_check, win_status}) do

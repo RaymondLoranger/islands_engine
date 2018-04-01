@@ -38,36 +38,36 @@ defmodule Islands.Engine.Grid do
 
   ## Examples
 
-      # iex> {:ok, atoll_coord} = Coord.new(1, 1)
-      # iex> {:ok, atoll_hit} = Coord.new(1, 2)
-      # iex> {:ok, atoll} = Island.new(:atoll, atoll_coord)
-      # iex>
-      # iex> {:hit, :none, :no_win, board} =
-      # iex>   Board.new()
-      # iex>   |> Board.position_island(atoll)
-      # iex>   |> Board.guess(atoll_hit)
-      # iex>
-      # iex> %{1 => row_1} = Grid.new(board)
-      # iex> row_1
-      # %{
-      #   1 => :atoll, 2 => :atoll_hit, 3 => nil, 4 => nil, 5  => nil,
-      #   6 => nil   , 7 => nil       , 8 => nil, 9 => nil, 10 => nil
-      # }
+      iex> {:ok, atoll_coord} = Coord.new(1, 1)
+      iex> {:ok, atoll_hit} = Coord.new(1, 2)
+      iex> {:ok, atoll} = Island.new(:atoll, atoll_coord)
+      iex>
+      iex> {:hit, :none, :no_win, board} =
+      iex>   Board.new()
+      iex>   |> Board.position_island(atoll)
+      iex>   |> Board.guess(atoll_hit)
+      iex>
+      iex> %{1 => row_1} = Grid.new(board)
+      iex> row_1
+      %{
+        1 => :atoll, 2 => :atoll_hit, 3 => nil, 4 => nil, 5  => nil,
+        6 => nil   , 7 => nil       , 8 => nil, 9 => nil, 10 => nil
+      }
 
-      # iex> {:ok, atoll_coord} = Coord.new(1, 1)
-      # iex> {:ok, atoll_hit} = Coord.new(1, 2)
-      # iex>
-      # iex> guesses =
-      # iex>   Guesses.new()
-      # iex>   |> Guesses.add(:miss, atoll_coord)
-      # iex>   |> Guesses.add(:hit, atoll_hit)
-      # iex>
-      # iex> %{1 => row_1} = Grid.new(guesses)
-      # iex> row_1
-      # %{
-      #   1 => :miss, 2 => :hit, 3 => nil, 4 => nil, 5  => nil,
-      #   6 => nil  , 7 => nil , 8 => nil, 9 => nil, 10 => nil
-      # }
+      iex> {:ok, atoll_coord} = Coord.new(1, 1)
+      iex> {:ok, atoll_hit} = Coord.new(1, 2)
+      iex>
+      iex> guesses =
+      iex>   Guesses.new()
+      iex>   |> Guesses.add(:miss, atoll_coord)
+      iex>   |> Guesses.add(:hit, atoll_hit)
+      iex>
+      iex> %{1 => row_1} = Grid.new(guesses)
+      iex> row_1
+      %{
+        1 => :miss, 2 => :hit, 3 => nil, 4 => nil, 5  => nil,
+        6 => nil  , 7 => nil , 8 => nil, 9 => nil, 10 => nil
+      }
   """
   @spec new(Board.t() | Guesses.t()) :: t
   def new(board_or_guesses)
@@ -94,21 +94,21 @@ defmodule Islands.Engine.Grid do
 
   ## Examples
 
-      # iex> {:ok, atoll_coord} = Coord.new(1, 1)
-      # iex> {:ok, atoll_hit} = Coord.new(1, 2)
-      # iex> {:ok, atoll} = Island.new(:atoll, atoll_coord)
-      # iex>
-      # iex> {:hit, :none, :no_win, board} =
-      # iex>   Board.new()
-      # iex>   |> Board.position_island(atoll)
-      # iex>   |> Board.guess(atoll_hit)
-      # iex>
-      # iex> [row_1 | _other_rows] = board |> Grid.new() |> Grid.to_maps(& &1)
-      # iex> row_1
-      # %{"row" => 1,
-      #   1 => :atoll, 2 => :atoll_hit, 3 => nil, 4 => nil, 5  => nil,
-      #   6 => nil   , 7 => nil       , 8 => nil, 9 => nil, 10 => nil
-      # }
+      iex> {:ok, atoll_coord} = Coord.new(1, 1)
+      iex> {:ok, atoll_hit} = Coord.new(1, 2)
+      iex> {:ok, atoll} = Island.new(:atoll, atoll_coord)
+      iex>
+      iex> {:hit, :none, :no_win, board} =
+      iex>   Board.new()
+      iex>   |> Board.position_island(atoll)
+      iex>   |> Board.guess(atoll_hit)
+      iex>
+      iex> [row_1 | _other_rows] = board |> Grid.new() |> Grid.to_maps(& &1)
+      iex> row_1
+      %{"row" => 1,
+        1 => :atoll, 2 => :atoll_hit, 3 => nil, 4 => nil, 5  => nil,
+        6 => nil   , 7 => nil       , 8 => nil, 9 => nil, 10 => nil
+      }
   """
   @spec to_maps(t, (atom -> ANSI.ansidata())) :: [map]
   def to_maps(grid, fun \\ &Format.for/1) when is_function(fun, 1) do
