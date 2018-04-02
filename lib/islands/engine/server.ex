@@ -157,7 +157,7 @@ defmodule Islands.Engine.Server do
       :error ->
         game
         |> Game.update_request({action, player_id})
-        |> Game.update_response({:error, :unknown})
+        |> Game.update_response({:error, :islands_not_set})
         |> save()
         |> reply(player_id)
     end
