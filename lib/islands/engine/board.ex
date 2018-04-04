@@ -19,6 +19,7 @@ defmodule Islands.Engine.Board do
   @typep hit_forested_win :: {:hit, Island.type(), :win, t}
   @typep miss :: {:miss, :none, :no_win, t}
 
+  @board_set_path Application.get_env(@app, :board_set_path)
   @island_types Application.get_env(@app, :island_types)
 
   @spec new() :: t
@@ -39,6 +40,28 @@ defmodule Islands.Engine.Board do
   @spec guess(t, Coord.t()) :: response
   def guess(%Board{} = board, %Coord{} = guess) do
     board |> check_islands(guess) |> response(board)
+  end
+
+  @spec persist(t) :: :ok
+  def persist(%Board{} = board) do
+    @board_set_path
+    |> File.write!(
+      case File.read(@board_set_path) do
+        {:ok, binary} -> :erlang.binary_to_term(binary)
+        {:error, _reason} -> MapSet.new()
+      end
+      |> MapSet.put(board)
+      |> :erlang.term_to_binary()
+    )
+  end
+
+  @spec restore :: t
+  def restore do
+    @board_set_path
+    |> File.read!()
+    |> :erlang.binary_to_term()
+    |> MapSet.to_list()
+    |> Enum.random()
   end
 
   ## Private functions

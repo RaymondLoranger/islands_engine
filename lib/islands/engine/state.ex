@@ -29,6 +29,7 @@ defmodule Islands.Engine.State do
   @typep request ::
            :add_player
            | {:position_island, Game.player_id()}
+           | {:position_all_islands, Game.player_id()}
            | {:set_islands, Game.player_id()}
            | {:guess_coord, Game.player_id()}
            | {:win_check, win_status}
@@ -37,6 +38,7 @@ defmodule Islands.Engine.State do
 
   @player_ids Application.get_env(@app, :player_ids)
   @player_turns [:player1_turn, :player2_turn]
+  @position_actions [:position_island, :position_all_islands]
 
   # Access behaviour
   defdelegate fetch(state, key), to: Map
@@ -52,13 +54,24 @@ defmodule Islands.Engine.State do
     {:ok, put_in(state.game, :players_set)}
   end
 
-  def check(%State{game: :players_set} = state, {:position_island, player_id})
-      when player_id in @player_ids do
+  def check(%State{game: :players_set} = state, {action, player_id})
+      when action in @position_actions and player_id in @player_ids do
     case state[player_id] do
       :islands_set -> :error
       :islands_not_set -> {:ok, state}
     end
   end
+
+  # def check(
+  #       %State{game: :players_set} = state,
+  #       {:position_all_islands, player_id}
+  #     )
+  #     when player_id in @player_ids do
+  #   case state[player_id] do
+  #     :islands_set -> :error
+  #     :islands_not_set -> {:ok, state}
+  #   end
+  # end
 
   def check(%State{game: :players_set} = state, {:set_islands, player_id})
       when player_id in @player_ids do

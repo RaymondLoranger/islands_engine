@@ -55,13 +55,63 @@ defmodule Islands.Engine do
   @doc """
   Stops a game.
 
-  # ## Examples
+  ## Examples
 
-  #     iex> alias Islands.Engine
-  #     iex> me = self()
-  #     iex> Engine.new_game("Ben", me)
-  #     iex> Engine.end_game("Ben")
-  #     :ok
+      iex> alias Islands.Engine
+      iex> alias Islands.Engine.{Grid, Tally}
+      iex> him = self()
+      iex> her = self()
+      iex> {:ok, game_id} = Engine.new_game("Tarzan", him)
+      iex> Engine.add_player("Tarzan", "Jane", her)
+      iex> Engine.position_island("Tarzan", :player2, :atoll, 1, 1)
+      iex> Engine.position_island("Tarzan", :player2, :l_shape, 3, 7)
+      iex> Engine.position_island("Tarzan", :player2, :s_shape, 6, 2)
+      iex> Engine.position_island("Tarzan", :player2, :square, 9, 5)
+      iex> Engine.position_island("Tarzan", :player2, :dot, 9, 9)
+      iex> Engine.set_islands("Tarzan", :player2)
+      iex> tally = Engine.stop_game("Tarzan", :player2)
+      iex> %Tally{
+      ...>   game_state: :players_set,
+      ...>   player1_state: :islands_not_set,
+      ...>   player2_state: :islands_set,
+      ...>   request: {:stop, :player2},
+      ...>   response: {:error, :not_both_players_islands_set},
+      ...>   board: board,
+      ...>   guesses: guesses
+      ...> } = tally
+      iex> is_map(board) and guesses == Grid.new() and is_pid(game_id)
+      true
+
+      iex> alias Islands.Engine
+      iex> alias Islands.Engine.{Grid, Tally}
+      iex> him = self()
+      iex> her = self()
+      iex> {:ok, game_id} = Engine.new_game("Napoleon", him)
+      iex> Engine.add_player("Napoleon", "Josephine", her)
+      iex> Engine.position_island("Napoleon", :player2, :atoll, 1, 1)
+      iex> Engine.position_island("Napoleon", :player2, :l_shape, 3, 7)
+      iex> Engine.position_island("Napoleon", :player2, :s_shape, 6, 2)
+      iex> Engine.position_island("Napoleon", :player2, :square, 9, 5)
+      iex> Engine.position_island("Napoleon", :player2, :dot, 9, 9)
+      iex> Engine.set_islands("Napoleon", :player2)
+      iex> Engine.position_island("Napoleon", :player1, :atoll, 1, 1)
+      iex> Engine.position_island("Napoleon", :player1, :l_shape, 3, 7)
+      iex> Engine.position_island("Napoleon", :player1, :s_shape, 6, 2)
+      iex> Engine.position_island("Napoleon", :player1, :square, 9, 5)
+      iex> Engine.position_island("Napoleon", :player1, :dot, 9, 9)
+      iex> Engine.set_islands("Napoleon", :player1)
+      iex> tally = Engine.stop_game("Napoleon", :player1)
+      iex> %Tally{
+      ...>   game_state: :game_over,
+      ...>   player1_state: :islands_set,
+      ...>   player2_state: :islands_set,
+      ...>   request: {:stop, :player1},
+      ...>   response: {:ok, :stopping},
+      ...>   board: board,
+      ...>   guesses: guesses
+      ...> } = tally
+      iex> is_map(board) and guesses == Grid.new() and is_pid(game_id)
+      true
   """
   @spec stop_game(String.t(), Game.player_id()) :: Tally.t()
   def stop_game(player1_name, player_id)
@@ -140,6 +190,13 @@ defmodule Islands.Engine do
     player1_name
     |> Server.via()
     |> GenServer.call({:position_island, player_id, island_type, row, col})
+  end
+
+  def position_all_islands(player1_name, player_id)
+      when is_binary(player1_name) and player_id in @player_ids do
+    player1_name
+    |> Server.via()
+    |> GenServer.call({:position_all_islands, player_id})
   end
 
   @doc """
@@ -232,7 +289,7 @@ defmodule Islands.Engine do
       iex> him = self()
       iex> her = self()
       iex> {:ok, game_id} = Engine.new_game("Tristan", him)
-      iex> Engine.add_player("Tristan", "Iseult", her)
+      iex> Engine.add_player("Tristan", "Isolde", her)
       iex> Engine.position_island("Tristan", :player2, :atoll, 1, 1)
       iex> Engine.position_island("Tristan", :player2, :l_shape, 3, 7)
       iex> Engine.position_island("Tristan", :player2, :s_shape, 6, 2)
