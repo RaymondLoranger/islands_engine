@@ -5,7 +5,8 @@ defmodule Islands.Engine.Server do
   use PersistConfig
 
   alias __MODULE__
-  alias Islands.Engine.{Board, Coord, Error, Game, Island, State, Tally}
+  alias Islands.Engine.Server.{PositionIsland}
+  alias Islands.Engine.{Board, Coord, Error, Game, State, Tally}
 
   require Logger
 
@@ -26,17 +27,20 @@ defmodule Islands.Engine.Server do
   @spec via(String.t()) :: {:global, tuple}
   def via(player1_name), do: {:global, key(player1_name)}
 
-  ## Private functions
-
-  @spec key(String.t()) :: tuple
-  defp key(player1_name), do: {Server, player1_name}
-
   @spec save(Game.t()) :: Game.t()
-  defp save(game) do
+  def save(game) do
     game |> text() |> Logger.info()
     true = :ets.insert(@ets, {key(game.player1.name), game})
     game
   end
+
+  @spec reply(Game.t(), Game.player_id()) :: {:reply, Tally.t(), Game.t()}
+  def reply(game, player_id), do: {:reply, Tally.new(game, player_id), game}
+
+  ## Private functions
+
+  @spec key(String.t()) :: tuple
+  defp key(player1_name), do: {Server, player1_name}
 
   @spec text(Game.t(), String.t()) :: String.t()
   defp text(game, phrase \\ @phrase) do
@@ -62,9 +66,6 @@ defmodule Islands.Engine.Server do
         game
     end
   end
-
-  @spec reply(Game.t(), Game.player_id()) :: {:reply, Tally.t(), Game.t()}
-  defp reply(game, player_id), do: {:reply, Tally.new(game, player_id), game}
 
   ## Callbacks
 
@@ -96,61 +97,61 @@ defmodule Islands.Engine.Server do
     end
   end
 
-  # def handle_call({:position_island, _, _, _, _} = request, from, game) do
-  #   PositionIsland.handle_call(request, from, game)
-  # end
-
-  def handle_call(
-        {:position_island = action, player_id, island_type, row, col} = request,
-        _from,
-        game
-      ) do
-    with {:ok, state} <- State.check(game.state, {action, player_id}),
-         {:ok, origin} <- Coord.new(row, col),
-         {:ok, island} <- Island.new(island_type, origin),
-         %Board{} = board <- Game.player_board(game, player_id),
-         %Board{} = board <- Board.position_island(board, island) do
-      response =
-        {:ok,
-         if Board.all_islands_positioned?(board) do
-           GenServer.cast(self(), {:persist_board, board})
-           :all_islands_positioned
-         else
-           :island_positioned
-         end}
-
-      game
-      |> Game.update_board(player_id, board)
-      |> Game.update_state(state)
-      |> Game.update_request(request)
-      |> Game.update_response(response)
-      |> save()
-      |> reply(player_id)
-    else
-      :error ->
-        game
-        |> Game.update_request(request)
-        |> Game.update_response({:error, :islands_already_set})
-        |> save()
-        |> reply(player_id)
-
-      {:error, reason} ->
-        game
-        |> Game.update_request(request)
-        |> Game.update_response({:error, reason})
-        |> save()
-        |> reply(player_id)
-
-      non_matched_value ->
-        Error.log(non_matched_value, request)
-
-        game
-        |> Game.update_request(request)
-        |> Game.update_response({:error, :unknown})
-        |> save()
-        |> reply(player_id)
-    end
+  def handle_call({:position_island, _, _, _, _} = request, from, game) do
+    PositionIsland.handle_call(request, from, game)
   end
+
+  # def handle_call(
+  #       {:position_island = action, player_id, island_type, row, col} = request,
+  #       _from,
+  #       game
+  #     ) do
+  #   with {:ok, state} <- State.check(game.state, {action, player_id}),
+  #        {:ok, origin} <- Coord.new(row, col),
+  #        {:ok, island} <- Island.new(island_type, origin),
+  #        %Board{} = board <- Game.player_board(game, player_id),
+  #        %Board{} = board <- Board.position_island(board, island) do
+  #     response =
+  #       {:ok,
+  #        if Board.all_islands_positioned?(board) do
+  #          GenServer.cast(self(), {:persist_board, board})
+  #          :all_islands_positioned
+  #        else
+  #          :island_positioned
+  #        end}
+
+  #     game
+  #     |> Game.update_board(player_id, board)
+  #     |> Game.update_state(state)
+  #     |> Game.update_request(request)
+  #     |> Game.update_response(response)
+  #     |> save()
+  #     |> reply(player_id)
+  #   else
+  #     :error ->
+  #       game
+  #       |> Game.update_request(request)
+  #       |> Game.update_response({:error, :islands_already_set})
+  #       |> save()
+  #       |> reply(player_id)
+
+  #     {:error, reason} ->
+  #       game
+  #       |> Game.update_request(request)
+  #       |> Game.update_response({:error, reason})
+  #       |> save()
+  #       |> reply(player_id)
+
+  #     non_matched_value ->
+  #       Error.log(non_matched_value, request)
+
+  #       game
+  #       |> Game.update_request(request)
+  #       |> Game.update_response({:error, :unknown})
+  #       |> save()
+  #       |> reply(player_id)
+  #   end
+  # end
 
   def handle_call(
         {:position_all_islands = action, player_id} = request,
