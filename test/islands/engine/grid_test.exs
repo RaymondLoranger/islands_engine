@@ -79,4 +79,24 @@ defmodule Islands.Engine.GridTest do
              }
     end
   end
+
+  describe "Grid.to_maps/1" do
+    test "converts a grid to a list of maps", %{board: board} do
+      [row_1 | _] = board |> Grid.new() |> Grid.to_maps(& &1)
+
+      assert row_1 == %{
+               "row" => 1,
+               1 => :atoll,
+               2 => :atoll_hit,
+               3 => nil,
+               4 => nil,
+               5 => nil,
+               6 => nil,
+               7 => nil,
+               8 => nil,
+               9 => nil,
+               10 => nil
+             }
+    end
+  end
 end

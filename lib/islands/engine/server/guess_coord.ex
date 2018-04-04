@@ -1,6 +1,7 @@
 defmodule Islands.Engine.Server.GuessCoord do
   @moduledoc false
 
+  alias Islands.Engine.Server.Error
   alias Islands.Engine.{Board, Coord, Game, Server, State, Tally}
 
   @typep from :: GenServer.from()
@@ -31,7 +32,7 @@ defmodule Islands.Engine.Server.GuessCoord do
       :error ->
         game
         |> Game.update_request(request)
-        |> Game.update_response({:error, :islands_not_set})
+        |> Game.update_response({:error, :not_both_players_islands_set})
         |> Server.save()
         |> Server.reply(player_id)
 
@@ -42,7 +43,9 @@ defmodule Islands.Engine.Server.GuessCoord do
         |> Server.save()
         |> Server.reply(player_id)
 
-      _other ->
+      non_matched_value ->
+        Error.log(non_matched_value, request)
+
         game
         |> Game.update_request(request)
         |> Game.update_response({:error, :unknown})

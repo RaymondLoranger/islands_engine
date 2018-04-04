@@ -62,17 +62,6 @@ defmodule Islands.Engine.State do
     end
   end
 
-  # def check(
-  #       %State{game: :players_set} = state,
-  #       {:position_all_islands, player_id}
-  #     )
-  #     when player_id in @player_ids do
-  #   case state[player_id] do
-  #     :islands_set -> :error
-  #     :islands_not_set -> {:ok, state}
-  #   end
-  # end
-
   def check(%State{game: :players_set} = state, {:set_islands, player_id})
       when player_id in @player_ids do
     state = put_in(state[player_id], :islands_set)

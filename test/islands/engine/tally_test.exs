@@ -3,17 +3,26 @@ defmodule Islands.Engine.TallyTest do
 
   use ExUnit.Case, async: true
 
-  alias Islands.Engine.Tally
+  alias Islands.Engine.{Game, Grid, Tally}
 
   doctest Tally
 
   describe "Tally.new/2" do
-    # test "returns %Tally{} given valid args" do
-    #   assert Tally.new() == %Tally{board: Grid.new(), guesses: Grid.new()}
-    # end
+    test "returns %Tally{} given valid args" do
+      game = Game.new("Jay")
 
-    # test "returns {:error, ...} given invalid args" do
-    #   assert Tally.new('Jim') == {:error, :invalid_tally_args}
-    # end
+      assert %Tally{
+               game_state: :initialized,
+               board: board,
+               guesses: guesses
+             } = Tally.new(game, :player1)
+
+      assert board == Grid.new() and guesses == Grid.new()
+    end
+
+    test "returns {:error, ...} given invalid args" do
+      game = Game.new("John")
+      assert Tally.new(game, :player3) == {:error, :invalid_tally_args}
+    end
   end
 end

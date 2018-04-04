@@ -1,7 +1,8 @@
 defmodule Islands.Engine.Server.PositionAllIslands do
   @moduledoc false
 
-  alias Islands.Engine.{Board, Error, Game, Server, State, Tally}
+  alias Islands.Engine.Server.Error
+  alias Islands.Engine.{Board, Game, Server, State, Tally}
 
   @typep from :: GenServer.from()
 

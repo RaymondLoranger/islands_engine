@@ -1,6 +1,7 @@
 defmodule Islands.Engine.Server.SetIslands do
   @moduledoc false
 
+  alias Islands.Engine.Server.Error
   alias Islands.Engine.{Board, Game, Server, State, Tally}
 
   @typep from :: GenServer.from()
@@ -34,7 +35,9 @@ defmodule Islands.Engine.Server.SetIslands do
         |> Server.save()
         |> Server.reply(player_id)
 
-      _other ->
+      non_matched_value ->
+        Error.log(non_matched_value, request)
+
         game
         |> Game.update_request(request)
         |> Game.update_response({:error, :unknown})
