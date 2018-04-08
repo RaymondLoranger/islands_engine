@@ -15,7 +15,8 @@ defmodule Islands.Engine.Server do
     Stop
   }
 
-  alias Islands.Engine.{Board, Game, Tally}
+  alias Islands.Engine.Board.Set
+  alias Islands.Engine.{Game, Tally}
 
   require Logger
 
@@ -54,7 +55,8 @@ defmodule Islands.Engine.Server do
   @spec text(Game.t(), String.t()) :: String.t()
   defp text(game, phrase \\ @phrase) do
     """
-    \n#{game.player1.name |> key() |> inspect()} #{self() |> inspect()}
+
+    #{game.player1.name |> key() |> inspect()} #{self() |> inspect()}
     #{phrase}
     #{inspect(game, pretty: true)}
     """
@@ -110,7 +112,7 @@ defmodule Islands.Engine.Server do
 
   @spec handle_cast(term, Game.t()) :: {:noreply, Game.t()}
   def handle_cast({:persist_board, board}, game) do
-    :ok = Board.persist(board)
+    :ok = Set.persist_board(board)
     {:noreply, game}
   end
 

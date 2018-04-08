@@ -35,7 +35,7 @@ defmodule Islands.Engine.IslandTest do
     test "returns {:ok, ...} given valid args" do
       {:ok, coord} = Coord.new(4, 6)
 
-      assert {:ok, %Island{type: _type, coords: _coords, hits: _hits}} =
+      assert {:ok, %Island{type: :l_shape, coords: _coords, hits: _hits}} =
                Island.new(:l_shape, coord)
     end
 

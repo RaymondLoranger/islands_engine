@@ -36,7 +36,7 @@ config :logger, compile_time_purge_level: :info
 # config :logger, compile_time_purge_level: :error
 
 # Uncomment to stop logging...
-# config :logger, level: :error
+config :logger, level: :error
 
 #     import_config "#{Mix.env}.exs"
 import_config "persist.exs"

@@ -7,7 +7,7 @@ defmodule Islands.Engine do
   @book_ref Application.get_env(@app, :book_ref)
 
   @moduledoc """
-  Models an Islands game.
+  Models the Game of Islands.
 
   ##### #{@book_ref}
   """
@@ -78,6 +78,7 @@ defmodule Islands.Engine do
   @doc """
   Positions all islands on a player's board.
   """
+  @spec position_all_islands(String.t(), Game.player_id()) :: Tally.t()
   def position_all_islands(player1_name, player_id)
       when is_binary(player1_name) and player_id in @player_ids do
     player1_name

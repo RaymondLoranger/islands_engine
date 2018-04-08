@@ -1,11 +1,13 @@
 defmodule Islands.Engine.Grid do
   # @moduledoc """
-  # Converts a player's board/guesses to a grid (map of maps).
+  # Converts a board or guesses struct to a grid (map of maps).
   # Also converts a grid to a list of maps.
   # """
   @moduledoc false
 
   use PersistConfig
+
+  import Enum, only: [reduce: 3]
 
   alias IO.ANSI.Plus, as: ANSI
   alias Islands.Engine.{Board, Coord, Format, Guesses, Island}
@@ -25,7 +27,7 @@ defmodule Islands.Engine.Grid do
   end
 
   @doc """
-  Converts a board map or a guesses struct to a grid.
+  Converts a board or guesses struct to a grid.
   """
   @spec new(Board.t() | Guesses.t()) :: t
   def new(board_or_guesses)
@@ -33,31 +35,26 @@ defmodule Islands.Engine.Grid do
   def new(%Board{islands: islands, misses: misses}) do
     islands
     |> Map.values()
-    |> Enum.reduce(new(), fn island, grid ->
-      %Island{type: type, coords: coords, hits: hits} = island
-
+    |> reduce(new(), fn %Island{type: type, coords: coords, hits: hits}, grid ->
       grid
       |> update(coords, type)
       |> update(hits, :"#{type}_hit")
-      |> update(misses, :board_miss)
     end)
+    |> update(misses, :board_miss)
   end
 
-  def new(%Guesses{hits: hits, misses: misses}) do
-    new() |> update(hits, :hit) |> update(misses, :miss)
-  end
+  def new(%Guesses{hits: hits, misses: misses}),
+    do: new() |> update(hits, :hit) |> update(misses, :miss)
 
   @doc """
   Converts a grid to a list of maps.
   """
   @spec to_maps(t, (atom -> ANSI.ansidata())) :: [map]
-  def to_maps(grid, fun \\ &Format.for/1) when is_function(fun, 1) do
+  def to_maps(%{} = grid, fun \\ &Format.for/1) when is_function(fun, 1) do
     for {row_num, row_map} <- grid do
       [
         {"row", row_num}
-        | for {col_num, cell_val} <- row_map do
-            {col_num, fun.(cell_val)}
-          end
+        | for({col_num, cell_val} <- row_map, do: {col_num, fun.(cell_val)})
       ]
       |> Map.new()
     end
@@ -69,8 +66,8 @@ defmodule Islands.Engine.Grid do
   defp update(grid, coords, value) do
     coords
     |> MapSet.to_list()
-    |> Enum.reduce(grid, fn %Coord{row: row, col: col}, grid ->
-      put_in(grid, [row, col], value)
+    |> reduce(grid, fn %Coord{row: row, col: col}, grid ->
+      put_in(grid[row][col], value)
     end)
   end
 end

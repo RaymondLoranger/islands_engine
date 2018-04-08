@@ -35,7 +35,6 @@ defmodule Islands.Engine.IE do
         Board,
         Coord,
         DemoProc,
-        Error,
         Format,
         Game,
         Grid,
@@ -47,8 +46,17 @@ defmodule Islands.Engine.IE do
         Server,
         State,
         Sup,
-        Tally,
-        Player
+        Tally
+      }
+
+      alias Islands.Engine.Server.{
+        AddPlayer,
+        Error,
+        GuessCoord,
+        PositionAllIslands,
+        PositionIsland,
+        SetIslands,
+        Stop
       }
 
       :ok

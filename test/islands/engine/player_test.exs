@@ -24,12 +24,12 @@ defmodule Islands.Engine.PlayerTest do
 
   describe "Player.update_player_pid/2" do
     test "updates the pid of a player" do
-      this = self()
+      me = self()
       carl = Player.new("Carl")
 
-      assert Player.update_player_pid(carl, this) == %Player{
+      assert Player.update_player_pid(carl, me) == %Player{
                name: "Carl",
-               pid: this,
+               pid: me,
                board: Board.new(),
                guesses: Guesses.new()
              }

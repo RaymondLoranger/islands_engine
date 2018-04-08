@@ -1,6 +1,7 @@
 defmodule Islands.Engine.Server.PositionAllIslands do
   @moduledoc false
 
+  alias Islands.Engine.Board.Set
   alias Islands.Engine.Server.Error
   alias Islands.Engine.{Board, Game, Server, State, Tally}
 
@@ -13,7 +14,7 @@ defmodule Islands.Engine.Server.PositionAllIslands do
         game
       ) do
     with {:ok, state} <- State.check(game.state, {action, player_id}),
-         %Board{} = board <- Board.restore() do
+         %Board{} = board <- Set.restore_board() do
       game
       |> Game.update_board(player_id, board)
       |> Game.update_state(state)
@@ -29,7 +30,7 @@ defmodule Islands.Engine.Server.PositionAllIslands do
         |> Server.save()
         |> Server.reply(player_id)
 
-      {:error, reason} ->
+      {:error, reason} when is_atom(reason) ->
         game
         |> Game.update_request(request)
         |> Game.update_response({:error, reason})

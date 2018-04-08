@@ -11,11 +11,15 @@ defmodule Islands.Engine.TallyTest do
     test "returns %Tally{} given valid args" do
       game = Game.new("Jay")
 
-      assert %Tally{
-               game_state: :initialized,
-               board: board,
-               guesses: guesses
-             } = Tally.new(game, :player1)
+      %Tally{
+        game_state: :initialized,
+        player1_state: :islands_not_set,
+        player2_state: :islands_not_set,
+        request: {},
+        response: {},
+        board: board,
+        guesses: guesses
+      } = Tally.new(game, :player1)
 
       assert board == Grid.new() and guesses == Grid.new()
     end

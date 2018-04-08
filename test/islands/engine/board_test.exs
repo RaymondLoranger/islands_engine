@@ -62,7 +62,7 @@ defmodule Islands.Engine.BoardTest do
       square = islands.square
       board = Board.new() |> Board.position_island(square)
       %{square: %Island{} = island} = board.islands
-      assert ^square = island
+      assert island == square
     end
 
     test "returns {:error, ...} on overlapping island", %{islands: islands} do
@@ -92,23 +92,13 @@ defmodule Islands.Engine.BoardTest do
     end
 
     test "detects a miss guess", %{coords: coords, boards: boards} do
-      # complete = boards.complete
-      # response = Board.guess(complete, coords.s_shape)
-      # assert {:miss, :none, :no_win, %Board{} = board} = response
-      # assert ^complete = board
       assert {:miss, :none, :no_win, %Board{}} =
                Board.guess(boards.complete, coords.s_shape)
     end
 
     test "detects a win guess", %{coords: coords, boards: boards} do
       square = boards.incomplete.islands.square
-      # square = %Island{square | hits: square.coords}
       square = put_in(square.hits, square.coords)
-
-      # response =
-      # boards.incomplete
-      # |> Board.position_island(square)
-      # |> Board.guess(coords.dot)
 
       assert {:hit, :dot, :win, %Board{}} =
                boards.incomplete

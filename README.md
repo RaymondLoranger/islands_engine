@@ -1,12 +1,12 @@
-# IslandsEngine
+# Islands Engine
 
-Models an Islands game.
+Models the Game of Islands.
 
 ##### Based on the book [Functional Web Development](https://pragprog.com/book/lhelph/functional-web-development-with-elixir-otp-and-phoenix) by Lance Halvorsen.
 
 ## Installation
 
-The package can be installed by adding `islands_engine` to your list of dependencies in `mix.exs`:
+Add the `:islands_engine` dependency to your `mix.exs` file:
 
 ```elixir
 def deps do
@@ -15,3 +15,8 @@ def deps do
   ]
 end
 ```
+
+## Note
+
+Package [Islands Text Client](https://hex.pm/packages/islands_text_client) uses
+`:islands_engine` as a dependency to play the Game of Islands in the console.

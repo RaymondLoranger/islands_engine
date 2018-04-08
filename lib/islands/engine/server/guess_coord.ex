@@ -36,7 +36,7 @@ defmodule Islands.Engine.Server.GuessCoord do
         |> Server.save()
         |> Server.reply(player_id)
 
-      {:error, reason} ->
+      {:error, reason} when is_atom(reason) ->
         game
         |> Game.update_request(request)
         |> Game.update_response({:error, reason})

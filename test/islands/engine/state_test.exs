@@ -51,6 +51,8 @@ defmodule Islands.Engine.StateTest do
       {:ok, ^state} = State.check(state, {:position_island, :player2})
       {:ok, ^state} = State.check(state, {:position_island, :player2})
       assert state.game == :players_set
+      assert state.player1 == :islands_not_set
+      assert state.player2 == :islands_not_set
     end
 
     test "set islands", %{states: states} do
@@ -65,6 +67,8 @@ defmodule Islands.Engine.StateTest do
       :error = State.check(state, {:position_islands, :player1})
       :error = State.check(state, {:position_islands, :player2})
       assert state.game == :player1_turn
+      assert state.player1 == :islands_set
+      assert state.player2 == :islands_set
     end
 
     test "guess coord", %{states: states} do
@@ -85,6 +89,12 @@ defmodule Islands.Engine.StateTest do
     test "win", %{states: states} do
       state = states.player1_turn
       {:ok, state} = State.check(state, {:win_check, :win})
+      assert state.game == :game_over
+    end
+
+    test "stop", %{states: states} do
+      state = states.player1_turn
+      {:ok, state} = State.check(state, :stop)
       assert state.game == :game_over
     end
   end

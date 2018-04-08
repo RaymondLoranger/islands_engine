@@ -32,9 +32,8 @@ defmodule Islands.Engine.State do
            | {:position_all_islands, Game.player_id()}
            | {:set_islands, Game.player_id()}
            | {:guess_coord, Game.player_id()}
-           | {:win_check, win_status}
+           | {:win_check, :no_win | :win}
            | :stop
-  @typep win_status :: :no_win | :win
 
   @player_ids Application.get_env(@app, :player_ids)
   @player_turns [:player1_turn, :player2_turn]
@@ -50,15 +49,14 @@ defmodule Islands.Engine.State do
   def new(), do: %State{}
 
   @spec check(t, request) :: {:ok, t} | :error
-  def check(%State{game: :initialized} = state, :add_player) do
-    {:ok, put_in(state.game, :players_set)}
-  end
+  def check(%State{game: :initialized} = state, :add_player),
+    do: {:ok, put_in(state.game, :players_set)}
 
   def check(%State{game: :players_set} = state, {action, player_id})
       when action in @position_actions and player_id in @player_ids do
     case state[player_id] do
-      :islands_set -> :error
       :islands_not_set -> {:ok, state}
+      :islands_set -> :error
     end
   end
 
@@ -71,35 +69,29 @@ defmodule Islands.Engine.State do
       else: {:ok, state}
   end
 
-  def check(%State{game: :player1_turn} = state, {:guess_coord, :player1}) do
-    {:ok, put_in(state.game, :player2_turn)}
-  end
+  def check(%State{game: :player1_turn} = state, {:guess_coord, :player1}),
+    do: {:ok, put_in(state.game, :player2_turn)}
 
-  def check(%State{game: :player2_turn} = state, {:guess_coord, :player2}) do
-    {:ok, put_in(state.game, :player1_turn)}
-  end
+  def check(%State{game: :player2_turn} = state, {:guess_coord, :player2}),
+    do: {:ok, put_in(state.game, :player1_turn)}
 
   def check(%State{game: player_turn} = state, {:win_check, :no_win})
-      when player_turn in @player_turns do
-    {:ok, state}
-  end
+      when player_turn in @player_turns,
+      do: {:ok, state}
 
   def check(%State{game: player_turn} = state, {:win_check, :win})
-      when player_turn in @player_turns do
-    {:ok, put_in(state.game, :game_over)}
-  end
+      when player_turn in @player_turns,
+      do: {:ok, put_in(state.game, :game_over)}
 
   def check(%State{game: player_turn} = state, :stop)
-      when player_turn in @player_turns do
-    {:ok, put_in(state.game, :game_over)}
-  end
+      when player_turn in @player_turns,
+      do: {:ok, put_in(state.game, :game_over)}
 
   def check(_state, _request), do: :error
 
   ## Private functions
 
   @spec both_players_islands_set?(t) :: boolean
-  defp both_players_islands_set?(state) do
-    state.player1 == :islands_set and state.player2 == :islands_set
-  end
+  defp both_players_islands_set?(state),
+    do: state.player1 == :islands_set and state.player2 == :islands_set
 end

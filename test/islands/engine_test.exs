@@ -13,7 +13,12 @@ defmodule Islands.EngineTest do
       me = self()
       {:ok, game_id} = Engine.new_game("Meg", me)
       assert is_pid(game_id)
-      assert Engine.new_game("Meg", me) == {:error, {:already_started, game_id}}
+    end
+
+    test "fails to start a game" do
+      me = self()
+      {:ok, game_id} = Engine.new_game("Mel", me)
+      assert Engine.new_game("Mel", me) == {:error, {:already_started, game_id}}
     end
   end
 
@@ -62,6 +67,16 @@ defmodule Islands.EngineTest do
       assert %Tally{response: {:ok, :player2_added}} =
                Engine.add_player("Romeo", "Juliet", her)
     end
+
+    test "fails to add second player" do
+      him = self()
+      her = self()
+      Engine.new_game("Brad", him)
+      Engine.add_player("Brad", "Angelina", her)
+
+      assert %Tally{response: {:error, :player2_already_added}} =
+               Engine.add_player("Brad", "Jennifer", her)
+    end
   end
 
   describe "Engine.position_island/5" do
@@ -73,6 +88,17 @@ defmodule Islands.EngineTest do
 
       assert %Tally{response: {:ok, :island_positioned}} =
                Engine.position_island("Bonnie", :player2, :atoll, 1, 1)
+    end
+
+    test "fails to position an island" do
+      her = self()
+      him = self()
+      Engine.new_game("Sally", her)
+      Engine.add_player("Sally", "Harry", him)
+      Engine.position_island("Sally", :player2, :atoll, 1, 1)
+
+      assert %Tally{response: {:error, :overlapping_island}} =
+               Engine.position_island("Sally", :player2, :dot, 1, 1)
     end
   end
 

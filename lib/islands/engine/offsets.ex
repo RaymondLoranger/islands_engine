@@ -1,7 +1,8 @@
 defmodule Islands.Engine.Offsets do
-  @moduledoc """
-  Returns a list of offsets for each island type.
-  """
+  # @moduledoc """
+  # Returns a list of offsets for each island type.
+  # """
+  @moduledoc false
 
   alias Islands.Engine.{Coord, Island}
 

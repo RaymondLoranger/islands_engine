@@ -5,11 +5,14 @@ defmodule Islands.Engine.Server.Error do
 
   @spec log(any, any) :: :ok
   def log(non_matched_value, request) do
-    Logger.error("""
-    \n`handle_call` request:
+    """
+
+    `handle_call` request:
     #{inspect(request, pretty: true)}
-    \n`with` non-matched value:
+
+    `with` non-matched value:
     #{inspect(non_matched_value, pretty: true)}
-    """)
+    """
+    |> Logger.error()
   end
 end

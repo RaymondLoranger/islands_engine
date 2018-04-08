@@ -80,7 +80,7 @@ defmodule Islands.Engine.GridTest do
     end
   end
 
-  describe "Grid.to_maps/1" do
+  describe "Grid.to_maps/2" do
     test "converts a grid to a list of maps", %{board: board} do
       [row_1 | _] = board |> Grid.new() |> Grid.to_maps(& &1)
 
