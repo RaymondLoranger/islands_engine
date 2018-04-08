@@ -22,3 +22,5 @@ erl_crash.dump
 perso*
 tree*
 /log
+.travis.yml
+mix.lock
