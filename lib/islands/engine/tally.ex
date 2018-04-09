@@ -38,8 +38,8 @@ defmodule Islands.Engine.Tally do
           response: Game.response(),
           board: Grid.t(),
           guesses: Grid.t(),
-          board_score: {non_neg_integer, non_neg_integer},
-          guesses_score: {non_neg_integer, non_neg_integer}
+          board_score: {atom, non_neg_integer, non_neg_integer},
+          guesses_score: {atom, non_neg_integer, non_neg_integer}
         }
 
   @player_ids Application.get_env(@app, :player_ids)
