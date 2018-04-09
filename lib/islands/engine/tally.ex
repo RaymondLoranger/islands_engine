@@ -4,6 +4,7 @@ defmodule Islands.Engine.Tally do
   use PersistConfig
 
   alias __MODULE__
+  alias Islands.Engine.Tally.Count
   alias Islands.Engine.{Game, Grid, State}
 
   @enforce_keys [
@@ -13,7 +14,11 @@ defmodule Islands.Engine.Tally do
     :request,
     :response,
     :board,
-    :guesses
+    :guesses,
+    :board_hits,
+    :board_misses,
+    :guesses_hits,
+    :guesses_misses
   ]
   defstruct [
     :game_state,
@@ -22,7 +27,11 @@ defmodule Islands.Engine.Tally do
     :request,
     :response,
     :board,
-    :guesses
+    :guesses,
+    :board_hits,
+    :board_misses,
+    :guesses_hits,
+    :guesses_misses
   ]
 
   @type t :: %Tally{
@@ -32,7 +41,11 @@ defmodule Islands.Engine.Tally do
           request: Game.request(),
           response: Game.response(),
           board: Grid.t(),
-          guesses: Grid.t()
+          guesses: Grid.t(),
+          board_hits: non_neg_integer,
+          board_misses: non_neg_integer,
+          guesses_hits: non_neg_integer,
+          guesses_misses: non_neg_integer
         }
 
   @player_ids Application.get_env(@app, :player_ids)
@@ -46,7 +59,11 @@ defmodule Islands.Engine.Tally do
       request: game.request,
       response: game.response,
       board: game[player_id].board |> Grid.new(),
-      guesses: game[player_id].guesses |> Grid.new()
+      guesses: game[player_id].guesses |> Grid.new(),
+      board_hits: game[player_id].board |> Count.board_hits(),
+      board_misses: game[player_id].board |> Count.board_misses(),
+      guesses_hits: game[player_id].guesses |> Count.guesses_hits(),
+      guesses_misses: game[player_id].guesses |> Count.guesses_misses()
     }
   end
 
