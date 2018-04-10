@@ -17,8 +17,7 @@ defmodule Islands.Engine.Grid.Format do
   def for(:square_hit), do: format(:lawn_green, ">q<")
   def for(:hit), do: format(:islamic_green, ">h<")
   def for(:miss), do: format(:blue_ribbon, "<m>")
-  # def for(:board_miss), do: format(:deep_sky_blue, "<m>")
-  def for(:board_miss), do: format(:pacific_blue, "<m>")
+  def for(:board_miss), do: format(:deep_sky_blue, "<m>")
   def for(nil), do: format(:dodger_blue, "<o>")
 
   ## Private functions
