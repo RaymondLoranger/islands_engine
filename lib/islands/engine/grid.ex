@@ -10,7 +10,8 @@ defmodule Islands.Engine.Grid do
   import Enum, only: [reduce: 3]
 
   alias IO.ANSI.Plus, as: ANSI
-  alias Islands.Engine.{Board, Coord, Format, Guesses, Island}
+  alias Islands.Engine.Grid.Format
+  alias Islands.Engine.{Board, Coord, Guesses, Island}
 
   @type t :: %{Coord.row() => %{Coord.col() => atom}}
 

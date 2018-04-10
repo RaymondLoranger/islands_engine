@@ -22,20 +22,30 @@ defmodule Islands.Engine.IE do
   #   Island.new(:l_shape, coord)
   #   Island.new(:dot, coord)
 
-  alias Islands.Engine.Format
+  alias Islands.Engine.Grid.Format
 
   defmacro __using__(_options) do
     quote do
       import unquote(__MODULE__)
       alias unquote(__MODULE__)
       alias Islands.Engine
+      alias Islands.Engine.Server.Grid.Format
+
+      alias Islands.Engine.Server.{
+        AddPlayer,
+        Error,
+        GuessCoord,
+        PositionAllIslands,
+        PositionIsland,
+        SetIslands,
+        Stop
+      }
 
       alias Islands.Engine.{
         App,
         Board,
         Coord,
         DemoProc,
-        Format,
         Game,
         Grid,
         Guesses,
@@ -47,16 +57,6 @@ defmodule Islands.Engine.IE do
         State,
         Sup,
         Tally
-      }
-
-      alias Islands.Engine.Server.{
-        AddPlayer,
-        Error,
-        GuessCoord,
-        PositionAllIslands,
-        PositionIsland,
-        SetIslands,
-        Stop
       }
 
       :ok
