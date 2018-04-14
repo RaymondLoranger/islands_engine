@@ -82,33 +82,25 @@ defmodule Islands.Engine.Server do
   def init({player1_name, pid}), do: {:ok, game(player1_name, pid)}
 
   @spec handle_call(term, from, Game.t()) :: {:reply, Tally.t(), Game.t()}
-  def handle_call({:add_player, _, _} = request, from, game) do
-    AddPlayer.handle_call(request, from, game)
-  end
+  def handle_call({:add_player, _, _} = request, from, game),
+    do: AddPlayer.handle_call(request, from, game)
 
-  def handle_call({:position_island, _, _, _, _} = request, from, game) do
-    PositionIsland.handle_call(request, from, game)
-  end
+  def handle_call({:position_island, _, _, _, _} = request, from, game),
+    do: PositionIsland.handle_call(request, from, game)
 
-  def handle_call({:position_all_islands, _} = request, from, game) do
-    PositionAllIslands.handle_call(request, from, game)
-  end
+  def handle_call({:position_all_islands, _} = request, from, game),
+    do: PositionAllIslands.handle_call(request, from, game)
 
-  def handle_call({:stop, _} = request, from, game) do
-    Stop.handle_call(request, from, game)
-  end
+  def handle_call({:stop, _} = request, from, game),
+    do: Stop.handle_call(request, from, game)
 
-  def handle_call({:set_islands, _} = request, from, game) do
-    SetIslands.handle_call(request, from, game)
-  end
+  def handle_call({:set_islands, _} = request, from, game),
+    do: SetIslands.handle_call(request, from, game)
 
-  def handle_call({:guess_coord, _, _, _} = request, from, game) do
-    GuessCoord.handle_call(request, from, game)
-  end
+  def handle_call({:guess_coord, _, _, _} = request, from, game),
+    do: GuessCoord.handle_call(request, from, game)
 
-  def handle_call({:tally, player_id}, _from, game) do
-    reply(game, player_id)
-  end
+  def handle_call({:tally, player_id}, _from, game), do: reply(game, player_id)
 
   @spec handle_cast(term, Game.t()) :: {:noreply, Game.t()}
   def handle_cast({:persist_board, board}, game) do
@@ -117,7 +109,6 @@ defmodule Islands.Engine.Server do
   end
 
   @spec terminate(term, Game.t()) :: true
-  def terminate(:shutdown, game) do
-    true = :ets.delete(@ets, key(game.player1.name))
-  end
+  def terminate(:shutdown, game),
+    do: true = :ets.delete(@ets, key(game.player1.name))
 end
