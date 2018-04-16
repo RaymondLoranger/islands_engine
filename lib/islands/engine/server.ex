@@ -5,9 +5,11 @@ defmodule Islands.Engine.Server do
   use PersistConfig
 
   alias __MODULE__
+  alias Islands.Engine.Board.Set
 
   alias Islands.Engine.Server.{
     AddPlayer,
+    Error,
     GuessCoord,
     PositionAllIslands,
     PositionIsland,
@@ -15,7 +17,6 @@ defmodule Islands.Engine.Server do
     Stop
   }
 
-  alias Islands.Engine.Board.Set
   alias Islands.Engine.{Game, Tally}
 
   require Logger
@@ -111,4 +112,9 @@ defmodule Islands.Engine.Server do
   @spec terminate(term, Game.t()) :: true
   def terminate(:shutdown, game),
     do: true = :ets.delete(@ets, key(game.player1.name))
+
+  def terminate(reason, game) do
+    Error.log(:terminate, reason, game)
+    true = :ets.delete(@ets, key(game.player1.name))
+  end
 end

@@ -36,7 +36,7 @@ defmodule Islands.Engine.Server.SetIslands do
         |> Server.reply(player_id)
 
       non_matched_value ->
-        Error.log(non_matched_value, request)
+        Error.log(:handle_call, non_matched_value, request)
 
         game
         |> Game.update_request(request)

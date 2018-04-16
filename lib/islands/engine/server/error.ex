@@ -3,8 +3,8 @@ defmodule Islands.Engine.Server.Error do
 
   require Logger
 
-  @spec log(any, any) :: :ok
-  def log(non_matched_value, request) do
+  @spec log(atom, any, any) :: :ok
+  def log(:handle_call, non_matched_value, request) do
     """
 
     `handle_call` request:
@@ -12,6 +12,18 @@ defmodule Islands.Engine.Server.Error do
 
     `with` non-matched value:
     #{inspect(non_matched_value, pretty: true)}
+    """
+    |> Logger.error()
+  end
+
+  def log(:terminate, reason, game) do
+    """
+
+    `terminate` reason:
+    #{inspect(reason)}
+
+    `game` to clean up:
+    #{inspect(game, pretty: true)}
     """
     |> Logger.error()
   end
