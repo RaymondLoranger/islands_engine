@@ -21,7 +21,10 @@ defmodule Islands.Engine.Server do
 
   require Logger
 
-  @typep from :: GenServer.from()
+  @type from :: GenServer.from()
+  @type reply :: {:reply, Tally.t(), Game.t()}
+  @type request :: tuple
+  @type response :: tuple
 
   @ets Application.get_env(@app, :ets_name)
   @phrase "saving..."
@@ -45,7 +48,7 @@ defmodule Islands.Engine.Server do
     game
   end
 
-  @spec reply(Game.t(), Game.player_id()) :: {:reply, Tally.t(), Game.t()}
+  @spec reply(Game.t(), Game.player_id()) :: reply
   def reply(game, player_id), do: {:reply, Tally.new(game, player_id), game}
 
   ## Private functions
@@ -82,7 +85,7 @@ defmodule Islands.Engine.Server do
   @spec init({String.t(), pid}) :: {:ok, Game.t()}
   def init({player1_name, pid}), do: {:ok, game(player1_name, pid)}
 
-  @spec handle_call(term, from, Game.t()) :: {:reply, Tally.t(), Game.t()}
+  @spec handle_call(request, from, Game.t()) :: reply
   def handle_call({:add_player, _, _} = request, from, game),
     do: AddPlayer.handle_call(request, from, game)
 

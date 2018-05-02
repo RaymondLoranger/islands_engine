@@ -5,7 +5,7 @@ defmodule Islands.Engine.Tally do
 
   alias __MODULE__
   alias Islands.Engine.Tally.Score
-  alias Islands.Engine.{Game, Grid, State}
+  alias Islands.Engine.{Game, Grid, Server, State}
 
   @enforce_keys [
     :game_state,
@@ -34,8 +34,8 @@ defmodule Islands.Engine.Tally do
           game_state: State.game_state(),
           player1_state: State.player_state(),
           player2_state: State.player_state(),
-          request: Game.request(),
-          response: Game.response(),
+          request: Server.request(),
+          response: Server.response(),
           board: Grid.t(),
           guesses: Grid.t(),
           board_score: {atom, non_neg_integer, non_neg_integer},

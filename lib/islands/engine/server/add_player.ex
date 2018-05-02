@@ -1,11 +1,10 @@
 defmodule Islands.Engine.Server.AddPlayer do
   @moduledoc false
 
-  alias Islands.Engine.{Game, Server, State, Tally}
+  alias Islands.Engine.Server.Error
+  alias Islands.Engine.{Game, Server, State}
 
-  @typep from :: GenServer.from()
-
-  @spec handle_call(term, from, Game.t()) :: {:reply, Tally.t(), Game.t()}
+  @spec handle_call(Server.request(), Server.from(), Game.t()) :: Server.reply()
   def handle_call({:add_player = action, name, pid} = request, _from, game) do
     with {:ok, state} <- State.check(game.state, action) do
       game
@@ -19,11 +18,7 @@ defmodule Islands.Engine.Server.AddPlayer do
       |> Server.reply(:player2)
     else
       :error ->
-        game
-        |> Game.update_request(request)
-        |> Game.update_response({:error, :player2_already_added})
-        |> Server.save()
-        |> Server.reply(:player2)
+        Error.reply(game, request, :player2_already_added, :player2)
     end
   end
 end

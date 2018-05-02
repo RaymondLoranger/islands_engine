@@ -1,5 +1,5 @@
-# State machine...
 defmodule Islands.Engine.State do
+  # State machine...
   @moduledoc false
 
   @behaviour Access

@@ -1,11 +1,10 @@
 defmodule Islands.Engine.Server.Stop do
   @moduledoc false
 
-  alias Islands.Engine.{Game, Server, State, Tally}
+  alias Islands.Engine.Server.Error
+  alias Islands.Engine.{Game, Server, State}
 
-  @typep from :: GenServer.from()
-
-  @spec handle_call(term, from, Game.t()) :: {:reply, Tally.t(), Game.t()}
+  @spec handle_call(Server.request(), Server.from(), Game.t()) :: Server.reply()
   def handle_call({:stop = action, player_id} = request, _from, game) do
     with {:ok, state} <- State.check(game.state, action) do
       opponent_id = Game.opponent(player_id)
@@ -19,11 +18,7 @@ defmodule Islands.Engine.Server.Stop do
       |> Server.reply(player_id)
     else
       :error ->
-        game
-        |> Game.update_request(request)
-        |> Game.update_response({:error, :not_both_players_islands_set})
-        |> Server.save()
-        |> Server.reply(player_id)
+        Error.reply(game, request, :not_both_players_islands_set, player_id)
     end
   end
 end

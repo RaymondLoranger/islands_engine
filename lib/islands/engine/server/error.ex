@@ -1,5 +1,6 @@
 defmodule Islands.Engine.Server.Error do
   @moduledoc false
+  alias Islands.Engine.{Game, Server}
 
   require Logger
 
@@ -26,5 +27,15 @@ defmodule Islands.Engine.Server.Error do
     #{inspect(game, pretty: true)}
     """
     |> Logger.error()
+  end
+
+  @spec reply(Game.t(), Server.request(), atom, Game.player_id()) ::
+          Server.reply()
+  def reply(game, request, reason, player_id) do
+    game
+    |> Game.update_request(request)
+    |> Game.update_response({:error, reason})
+    |> Server.save()
+    |> Server.reply(player_id)
   end
 end

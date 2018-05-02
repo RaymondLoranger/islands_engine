@@ -2,11 +2,9 @@ defmodule Islands.Engine.Server.PositionIsland do
   @moduledoc false
 
   alias Islands.Engine.Server.Error
-  alias Islands.Engine.{Board, Coord, Game, Island, Server, State, Tally}
+  alias Islands.Engine.{Board, Coord, Game, Island, Server, State}
 
-  @typep from :: GenServer.from()
-
-  @spec handle_call(term, from, Game.t()) :: {:reply, Tally.t(), Game.t()}
+  @spec handle_call(Server.request(), Server.from(), Game.t()) :: Server.reply()
   def handle_call(
         {:position_island = action, player_id, island_type, row, col} = request,
         _from,
@@ -35,27 +33,14 @@ defmodule Islands.Engine.Server.PositionIsland do
       |> Server.reply(player_id)
     else
       :error ->
-        game
-        |> Game.update_request(request)
-        |> Game.update_response({:error, :islands_already_set})
-        |> Server.save()
-        |> Server.reply(player_id)
+        Error.reply(game, request, :islands_already_set, player_id)
 
       {:error, reason} when is_atom(reason) ->
-        game
-        |> Game.update_request(request)
-        |> Game.update_response({:error, reason})
-        |> Server.save()
-        |> Server.reply(player_id)
+        Error.reply(game, request, reason, player_id)
 
       non_matched_value ->
         Error.log(:handle_call, non_matched_value, request)
-
-        game
-        |> Game.update_request(request)
-        |> Game.update_response({:error, :unknown})
-        |> Server.save()
-        |> Server.reply(player_id)
+        Error.reply(game, request, :unknown, player_id)
     end
   end
 end

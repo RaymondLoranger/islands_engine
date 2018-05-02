@@ -6,7 +6,7 @@ defmodule Islands.Engine.Game do
   use PersistConfig
 
   alias __MODULE__
-  alias Islands.Engine.{Board, Coord, Guesses, Player, State}
+  alias Islands.Engine.{Board, Coord, Guesses, Player, Server, State}
 
   @enforce_keys [:player1, :player2]
   defstruct player1: nil,
@@ -16,13 +16,11 @@ defmodule Islands.Engine.Game do
             state: State.new()
 
   @type player_id :: :player1 | :player2
-  @type request :: tuple
-  @type response :: tuple
   @type t :: %Game{
           player1: Player.t(),
           player2: Player.t(),
-          request: request,
-          response: response,
+          request: Server.request(),
+          response: Server.response(),
           state: State.t()
         }
 
@@ -77,11 +75,11 @@ defmodule Islands.Engine.Game do
   def update_state(%Game{} = game, %State{} = state),
     do: put_in(game.state, state)
 
-  @spec update_request(t, request) :: t
+  @spec update_request(t, Server.request()) :: t
   def update_request(%Game{} = game, request) when is_tuple(request),
     do: put_in(game.request, request)
 
-  @spec update_response(t, response) :: t
+  @spec update_response(t, Server.response()) :: t
   def update_response(%Game{} = game, response) when is_tuple(response),
     do: put_in(game.response, response)
 end
