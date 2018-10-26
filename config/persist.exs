@@ -1,7 +1,7 @@
 use Mix.Config
 
 config :islands_engine, board_range: 1..10
-config :islands_engine, board_set_path: "./assets/board_set.binary"
+config :islands_engine, board_set_path: "#{File.cwd!()}/assets/board_set.binary"
 config :islands_engine, ets_name: Islands.Engine.Ets
 
 config :islands_engine,

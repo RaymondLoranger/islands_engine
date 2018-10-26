@@ -47,9 +47,9 @@ defmodule Islands.Engine.Tally do
   @spec new(Game.t(), Game.player_id()) :: t
   def new(%Game{} = game, player_id) when player_id in @player_ids do
     %Tally{
-      game_state: game.state.game,
-      player1_state: game.state.player1,
-      player2_state: game.state.player2,
+      game_state: game.state.game_state,
+      player1_state: game.state.player1_state,
+      player2_state: game.state.player2_state,
       request: game.request,
       response: game.response,
       board: game[player_id].board |> Grid.new(),

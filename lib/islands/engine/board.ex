@@ -32,7 +32,7 @@ defmodule Islands.Engine.Board do
 
   @spec guess(t, Coord.t()) :: Response.t()
   def guess(%Board{} = board, %Coord{} = guess) do
-    board |> Response.check(guess) |> Response.to(board)
+    guess |> Response.check_for_hit(board) |> Response.format_response(board)
   end
 
   ## Private functions

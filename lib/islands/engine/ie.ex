@@ -29,17 +29,9 @@ defmodule Islands.Engine.IE do
       import unquote(__MODULE__)
       alias unquote(__MODULE__)
       alias Islands.Engine
-      alias Islands.Engine.Server.Grid.Format
-
-      alias Islands.Engine.Server.{
-        AddPlayer,
-        Error,
-        GuessCoord,
-        PositionAllIslands,
-        PositionIsland,
-        SetIslands,
-        Stop
-      }
+      alias Islands.Engine.Board.{Memorizer, Response}
+      alias Islands.Engine.Grid.Format
+      alias Islands.Engine.Tally.Score
 
       alias Islands.Engine.{
         App,
@@ -49,6 +41,7 @@ defmodule Islands.Engine.IE do
         Game,
         Grid,
         Guesses,
+        IE,
         Island,
         Offsets,
         Player,
@@ -57,6 +50,16 @@ defmodule Islands.Engine.IE do
         State,
         Sup,
         Tally
+      }
+
+      alias Islands.Engine.Server.{
+        AddPlayer,
+        Error,
+        GuessCoord,
+        PositionAllIslands,
+        PositionIsland,
+        SetIslands,
+        Stop
       }
 
       :ok

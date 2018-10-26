@@ -1,7 +1,7 @@
 defmodule Islands.Engine.Server.PositionAllIslands do
   @moduledoc false
 
-  alias Islands.Engine.Board.Set
+  alias Islands.Engine.Board.Memorizer
   alias Islands.Engine.Server.Error
   alias Islands.Engine.{Board, Game, Server, State}
 
@@ -12,7 +12,7 @@ defmodule Islands.Engine.Server.PositionAllIslands do
         game
       ) do
     with {:ok, state} <- State.check(game.state, {action, player_id}),
-         %Board{} = board <- Set.restore_board() do
+         %Board{} = board <- Memorizer.restore_board() do
       game
       |> Game.update_board(player_id, board)
       |> Game.update_state(state)

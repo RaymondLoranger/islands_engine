@@ -23,7 +23,6 @@ defmodule Islands.Engine.Grid.Format do
   ## Private functions
 
   @spec format(atom, String.t()) :: ANSI.ansidata()
-  defp format(attr, value) do
-    ANSI.format([attr, :"#{attr}_background", value], true)
-  end
+  defp format(attr, value),
+    do: ANSI.format([attr, :"#{attr}_background", value], true)
 end

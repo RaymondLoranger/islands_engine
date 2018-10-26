@@ -5,8 +5,9 @@ defmodule Islands.Engine.Board.Response do
 
   @type t :: {:hit | :miss, Island.type() | :none, :no_win | :win, Board.t()}
 
-  @spec check(Board.t(), Coord.t()) :: {:hit, Island.t()} | {:miss, Coord.t()}
-  def check(%Board{} = board, %Coord{} = guess) do
+  @spec check_for_hit(Coord.t(), Board.t()) ::
+          {:hit, Island.t()} | {:miss, Coord.t()}
+  def check_for_hit(%Coord{} = guess, %Board{} = board) do
     Enum.find_value(board.islands, {:miss, guess}, fn {_type, island} ->
       case Island.guess(island, guess) do
         {:hit, island} -> {:hit, island}
@@ -15,22 +16,22 @@ defmodule Islands.Engine.Board.Response do
     end)
   end
 
-  @spec to({:hit, Island.t()} | {:miss, Coord.t()}, Board.t()) :: t
-  def to({:hit, island}, board) do
+  @spec format_response({:hit, Island.t()} | {:miss, Coord.t()}, Board.t()) :: t
+  def format_response({:hit, island}, %Board{} = board) do
     board = put_in(board.islands[island.type], island)
-    {:hit, forest_check(board, island), win_check(board), board}
+    {:hit, forest_check(island), win_check(board), board}
   end
 
-  def to({:miss, guess}, board) do
+  def format_response({:miss, guess}, %Board{} = board) do
     board = update_in(board.misses, &MapSet.put(&1, guess))
     {:miss, :none, :no_win, board}
   end
 
   ## Private functions
 
-  @spec forest_check(Board.t(), Island.t()) :: Island.type() | :none
-  defp forest_check(board, %Island{type: type} = _island) do
-    if Island.forested?(board.islands[type]), do: type, else: :none
+  @spec forest_check(Island.t()) :: Island.type() | :none
+  defp forest_check(island) do
+    if Island.forested?(island), do: island.type, else: :none
   end
 
   @spec win_check(Board.t()) :: :win | :no_win

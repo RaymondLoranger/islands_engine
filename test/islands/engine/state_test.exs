@@ -27,9 +27,9 @@ defmodule Islands.Engine.StateTest do
     test "initialized state" do
       assert State.new() ==
                %State{
-                 game: :initialized,
-                 player1: :islands_not_set,
-                 player2: :islands_not_set
+                 game_state: :initialized,
+                 player1_state: :islands_not_set,
+                 player2_state: :islands_not_set
                }
     end
   end
@@ -37,7 +37,7 @@ defmodule Islands.Engine.StateTest do
   describe "State.check/2" do
     test "add player", %{states: states} do
       {:ok, state} = State.check(states.initialized, :add_player)
-      assert state.game == :players_set
+      assert state.game_state == :players_set
     end
 
     test "bad request", %{states: states} do
@@ -50,9 +50,9 @@ defmodule Islands.Engine.StateTest do
       {:ok, ^state} = State.check(state, {:position_island, :player1})
       {:ok, ^state} = State.check(state, {:position_island, :player2})
       {:ok, ^state} = State.check(state, {:position_island, :player2})
-      assert state.game == :players_set
-      assert state.player1 == :islands_not_set
-      assert state.player2 == :islands_not_set
+      assert state.game_state == :players_set
+      assert state.player1_state == :islands_not_set
+      assert state.player2_state == :islands_not_set
     end
 
     test "set islands", %{states: states} do
@@ -66,36 +66,36 @@ defmodule Islands.Engine.StateTest do
       :error = State.check(state, {:set_islands, :player2})
       :error = State.check(state, {:position_islands, :player1})
       :error = State.check(state, {:position_islands, :player2})
-      assert state.game == :player1_turn
-      assert state.player1 == :islands_set
-      assert state.player2 == :islands_set
+      assert state.game_state == :player1_turn
+      assert state.player1_state == :islands_set
+      assert state.player2_state == :islands_set
     end
 
     test "guess coord", %{states: states} do
       state = states.player1_turn
       :error = State.check(state, {:guess_coord, :player2})
       {:ok, state} = State.check(state, {:guess_coord, :player1})
-      assert state.game == :player2_turn
+      assert state.game_state == :player2_turn
       {:ok, state} = State.check(state, {:guess_coord, :player2})
-      assert state.game == :player1_turn
+      assert state.game_state == :player1_turn
     end
 
     test "no win", %{states: states} do
       state = states.player1_turn
       {:ok, ^state} = State.check(state, {:win_check, :no_win})
-      assert state.game == :player1_turn
+      assert state.game_state == :player1_turn
     end
 
     test "win", %{states: states} do
       state = states.player1_turn
       {:ok, state} = State.check(state, {:win_check, :win})
-      assert state.game == :game_over
+      assert state.game_state == :game_over
     end
 
     test "stop", %{states: states} do
       state = states.player1_turn
       {:ok, state} = State.check(state, :stop)
-      assert state.game == :game_over
+      assert state.game_state == :game_over
     end
   end
 end

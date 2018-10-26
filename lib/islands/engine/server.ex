@@ -5,7 +5,7 @@ defmodule Islands.Engine.Server do
   use PersistConfig
 
   alias __MODULE__
-  alias Islands.Engine.Board.Set
+  alias Islands.Engine.Board.Memorizer
 
   alias Islands.Engine.Server.{
     AddPlayer,
@@ -59,8 +59,7 @@ defmodule Islands.Engine.Server do
   @spec text(Game.t(), String.t()) :: String.t()
   defp text(game, phrase \\ @phrase) do
     """
-
-    #{game.player1.name |> key() |> inspect()} #{self() |> inspect()}
+    \n#{game.player1.name |> key() |> inspect()} #{self() |> inspect()}
     #{phrase}
     #{inspect(game, pretty: true)}
     """
@@ -108,7 +107,7 @@ defmodule Islands.Engine.Server do
 
   @spec handle_cast(term, Game.t()) :: {:noreply, Game.t()}
   def handle_cast({:persist_board, board}, game) do
-    :ok = Set.persist_board(board)
+    :ok = Memorizer.persist_board(board)
     {:noreply, game}
   end
 

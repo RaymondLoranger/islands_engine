@@ -59,7 +59,7 @@ defmodule Islands.Engine.Game do
 
   @spec notify_player(t, player_id) :: t
   def notify_player(%Game{} = game, player_id) when player_id in @player_ids do
-    send(game[player_id].pid, game.state.game)
+    send(game[player_id].pid, game.state.game_state)
     game
   end
 
