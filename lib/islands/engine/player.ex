@@ -14,7 +14,7 @@ defmodule Islands.Engine.Player do
           guesses: Guesses.t()
         }
 
-  @spec new(String.t(), Board.t(), Guesses.t()) :: t
+  @spec new(String.t(), Board.t(), Guesses.t()) :: t | {:error, atom}
   def new(name, board \\ Board.new(), guesses \\ Guesses.new())
 
   def new(name, %Board{} = board, %Guesses{} = guesses) when is_binary(name),

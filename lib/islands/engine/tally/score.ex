@@ -1,21 +1,20 @@
 defmodule Islands.Engine.Tally.Score do
   @moduledoc false
 
-  import MapSet, only: [size: 1]
+  alias Islands.Engine.{Board, Guesses}
 
-  alias Islands.Engine.{Board, Guesses, Island}
-
-  @spec for(Board.t() | Guesses.t()) :: {atom, non_neg_integer, non_neg_integer}
+  @spec for(Board.t() | Guesses.t()) ::
+          {atom, non_neg_integer, non_neg_integer} | {:error, atom}
   def for(board_or_guesses)
 
   def for(%Board{islands: islands, misses: misses} = _board) do
     {:board_score,
-     Enum.reduce(islands, 0, fn {_type, %Island{hits: hits}}, sum ->
-       size(hits) + sum
-     end), size(misses)}
+     islands |> Map.values() |> Enum.map(&MapSet.size(&1.hits)) |> Enum.sum(),
+     MapSet.size(misses)}
   end
 
-  def for(%Guesses{hits: hits, misses: misses} = _guesses) do
-    {:guesses_score, size(hits), size(misses)}
-  end
+  def for(%Guesses{hits: hits, misses: misses} = _guesses),
+    do: {:guesses_score, MapSet.size(hits), MapSet.size(misses)}
+
+  def for(_board_or_guesses), do: {:error, :invalid_score_args}
 end

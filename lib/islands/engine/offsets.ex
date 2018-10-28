@@ -4,9 +4,9 @@ defmodule Islands.Engine.Offsets do
   # """
   @moduledoc false
 
-  alias Islands.Engine.{Coord, Island}
+  alias Islands.Engine.Island
 
-  @type t :: [{Coord.row(), Coord.col()}]
+  @type t :: [{0..2, 0..2}]
 
   @doc """
   Returns a list of offsets for a given island type.

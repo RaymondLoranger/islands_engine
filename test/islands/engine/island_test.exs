@@ -67,7 +67,7 @@ defmodule Islands.Engine.IslandTest do
 
   describe "Island.guess/2" do
     test "good guess", %{islands: islands, coords: coords} do
-      assert {:hit, %Island{}} = Island.guess(islands.dot, coords.dot)
+      assert {:hit, %Island{type: :dot}} = Island.guess(islands.dot, coords.dot)
     end
 
     test "bad guess", %{islands: islands} do
@@ -82,7 +82,7 @@ defmodule Islands.Engine.IslandTest do
       assert Island.forested?(dot)
     end
 
-    test "island not forested?", %{islands: islands} do
+    test "island not forested", %{islands: islands} do
       {:ok, coord} = Coord.new(3, 4)
       assert Island.guess(islands.dot, coord) == :miss
       refute Island.forested?(islands.dot)

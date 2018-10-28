@@ -11,6 +11,7 @@ defmodule Islands.Engine.Server do
     AddPlayer,
     Error,
     GuessCoord,
+    Info,
     PositionAllIslands,
     PositionIsland,
     SetIslands,
@@ -19,15 +20,12 @@ defmodule Islands.Engine.Server do
 
   alias Islands.Engine.{Game, Tally}
 
-  require Logger
-
   @type from :: GenServer.from()
   @type reply :: {:reply, Tally.t(), Game.t()}
   @type request :: tuple
   @type response :: tuple
 
   @ets Application.get_env(@app, :ets_name)
-  @phrase "saving..."
   # @reg Application.get_env(@app, :registry)
 
   @spec start_link({String.t(), pid}) :: GenServer.on_start()
@@ -43,7 +41,7 @@ defmodule Islands.Engine.Server do
 
   @spec save(Game.t()) :: Game.t()
   def save(game) do
-    game |> text() |> Logger.info()
+    :ok = Info.log(:save, game)
     true = :ets.insert(@ets, {key(game.player1.name), game})
     game
   end
@@ -55,15 +53,6 @@ defmodule Islands.Engine.Server do
 
   @spec key(String.t()) :: tuple
   defp key(player1_name), do: {Server, player1_name}
-
-  @spec text(Game.t(), String.t()) :: String.t()
-  defp text(game, phrase \\ @phrase) do
-    """
-    \n#{game.player1.name |> key() |> inspect()} #{self() |> inspect()}
-    #{phrase}
-    #{inspect(game, pretty: true)}
-    """
-  end
 
   @spec game(String.t(), pid) :: Game.t()
   defp game(player1_name, pid) do
@@ -112,11 +101,13 @@ defmodule Islands.Engine.Server do
   end
 
   @spec terminate(term, Game.t()) :: true
-  def terminate(:shutdown, game),
-    do: true = :ets.delete(@ets, key(game.player1.name))
+  def terminate(:shutdown = reason, game) do
+    :ok = Info.log(:terminate, reason, game)
+    true = :ets.delete(@ets, key(game.player1.name))
+  end
 
   def terminate(reason, game) do
-    Error.log(:terminate, reason, game)
+    :ok = Error.log(:terminate, reason, game)
     true = :ets.delete(@ets, key(game.player1.name))
   end
 end

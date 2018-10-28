@@ -28,7 +28,7 @@ defmodule Islands.Engine.Server.PositionAllIslands do
         Error.reply(game, request, reason, player_id)
 
       non_matched_value ->
-        Error.log(:handle_call, non_matched_value, request)
+        :ok = Error.log(:handle_call, non_matched_value, request, game)
         Error.reply(game, request, :unknown, player_id)
     end
   end

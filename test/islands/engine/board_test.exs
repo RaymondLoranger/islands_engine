@@ -61,8 +61,7 @@ defmodule Islands.Engine.BoardTest do
     test "returns a board given valid args", %{islands: islands} do
       square = islands.square
       board = Board.new() |> Board.position_island(square)
-      %{square: %Island{} = island} = board.islands
-      assert island == square
+      assert %{square: %Island{} = ^square} = board.islands
     end
 
     test "returns {:error, ...} on overlapping island", %{islands: islands} do

@@ -102,5 +102,6 @@ defmodule Islands.Engine.State do
     state.player1_state == :islands_set and state.player2_state == :islands_set
   end
 
+  @spec state_key(Game.player_id()) :: atom
   defp state_key(player_id), do: :"#{player_id}_state"
 end

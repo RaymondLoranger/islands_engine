@@ -44,7 +44,7 @@ defmodule Islands.Engine.Tally do
 
   @player_ids Application.get_env(@app, :player_ids)
 
-  @spec new(Game.t(), Game.player_id()) :: t
+  @spec new(Game.t(), Game.player_id()) :: t | {:error, atom}
   def new(%Game{} = game, player_id) when player_id in @player_ids do
     %Tally{
       game_state: game.state.game_state,

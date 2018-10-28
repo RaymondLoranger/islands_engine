@@ -20,7 +20,7 @@ defmodule Islands.Engine.Board do
 
   @spec position_island(t, Island.t()) :: t | {:error, atom}
   def position_island(%Board{} = board, %Island{} = island) do
-    if overlaps_other_island?(board.islands, island),
+    if overlaps_board_island?(board.islands, island),
       do: {:error, :overlapping_island},
       else: put_in(board.islands[island.type], island)
   end
@@ -32,13 +32,13 @@ defmodule Islands.Engine.Board do
 
   @spec guess(t, Coord.t()) :: Response.t()
   def guess(%Board{} = board, %Coord{} = guess) do
-    guess |> Response.check_for_hit(board) |> Response.format_response(board)
+    guess |> Response.check_guess(board) |> Response.format_response(board)
   end
 
   ## Private functions
 
-  @spec overlaps_other_island?(Board.islands(), Island.t()) :: boolean
-  defp overlaps_other_island?(islands, new_island) do
+  @spec overlaps_board_island?(Board.islands(), Island.t()) :: boolean
+  defp overlaps_board_island?(islands, new_island) do
     Enum.any?(islands, fn {type, island} ->
       type != new_island.type and Island.overlaps?(island, new_island)
     end)

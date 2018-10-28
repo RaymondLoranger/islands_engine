@@ -4,22 +4,29 @@ defmodule Islands.Engine.Server.Error do
 
   require Logger
 
-  @spec log(atom, any, any) :: :ok
-  def log(:handle_call, non_matched_value, request) do
+  @spec log(atom, any, any, any) :: :ok
+  def log(:handle_call, non_matched_value, request, game) do
     """
-    \n`handle_call` request:
+    \n#{game.player1.name |> Server.via() |> inspect()} #{self() |> inspect()}
+    `handle_call` request...
     #{inspect(request, pretty: true)}
-    \n`with` non-matched value:
+    `with` non-matched value...
     #{inspect(non_matched_value, pretty: true)}
+    game being processed...
+    #{inspect(game, pretty: true)}
     """
     |> Logger.error()
   end
 
+  @spec log(atom, any, any) :: :ok
   def log(:terminate, reason, game) do
     """
-    \n`terminate` reason:
-    #{inspect(reason)}
-    \n`game` to clean up:
+    \n#{game.player1.name |> Server.via() |> inspect()} #{self() |> inspect()}
+    `handle_call` request...
+    #{inspect(game.request, pretty: true)}
+    `terminate` reason...
+    #{inspect(reason, pretty: true)}
+    game being terminated...
     #{inspect(game, pretty: true)}
     """
     |> Logger.error()

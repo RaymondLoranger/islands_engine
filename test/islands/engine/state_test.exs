@@ -58,14 +58,14 @@ defmodule Islands.Engine.StateTest do
     test "set islands", %{states: states} do
       state = states.players_set
       {:ok, state} = State.check(state, {:set_islands, :player1})
-      :error = State.check(state, {:position_islands, :player1})
+      :error = State.check(state, {:position_island, :player1})
       {:ok, ^state} = State.check(state, {:set_islands, :player1})
       {:ok, state} = State.check(state, {:set_islands, :player2})
       :error = State.check(state, :add_player)
       :error = State.check(state, {:set_islands, :player1})
       :error = State.check(state, {:set_islands, :player2})
-      :error = State.check(state, {:position_islands, :player1})
-      :error = State.check(state, {:position_islands, :player2})
+      :error = State.check(state, {:position_island, :player1})
+      :error = State.check(state, {:position_island, :player2})
       assert state.game_state == :player1_turn
       assert state.player1_state == :islands_set
       assert state.player2_state == :islands_set

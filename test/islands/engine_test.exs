@@ -18,7 +18,7 @@ defmodule Islands.EngineTest do
     test "fails to start a game" do
       me = self()
       {:ok, game_id} = Engine.new_game("Mel", me)
-      assert Engine.new_game("Mel", me) == {:error, {:already_started, game_id}}
+      assert {:error, {:already_started, ^game_id}} = Engine.new_game("Mel", me)
     end
   end
 

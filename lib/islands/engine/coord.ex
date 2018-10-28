@@ -8,8 +8,8 @@ defmodule Islands.Engine.Coord do
   @enforce_keys [:row, :col]
   defstruct [:row, :col]
 
-  @type col :: non_neg_integer
-  @type row :: non_neg_integer
+  @type col :: pos_integer
+  @type row :: pos_integer
   @type t :: %Coord{row: row, col: col}
 
   @board_range Application.get_env(@app, :board_range)
