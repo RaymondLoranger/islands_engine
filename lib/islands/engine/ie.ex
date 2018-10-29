@@ -5,7 +5,7 @@ defmodule Islands.Engine.IE do
   #
   # Examples:
   #   use Islands.Engine.IE
-  #   print_tile_colors()
+  #   print_coord_colors()
   #   DemoProc.loop_test()
 
   #   use Islands.Engine.IE
@@ -22,28 +22,40 @@ defmodule Islands.Engine.IE do
   #   Island.new(:l_shape, coord)
   #   Island.new(:dot, coord)
 
-  alias Islands.Engine.Grid.Format
+  alias Islands.Engine.Coord.Color
 
   defmacro __using__(_options) do
     quote do
       import unquote(__MODULE__)
       alias unquote(__MODULE__)
       alias IO.ANSI.Plus, as: ANSI
-      alias Islands.Engine.Board.{Memorizer, Response}
-      alias Islands.Engine.Grid.Format
+      alias Islands.Engine.Board.{Response, Server}
+      alias Islands.Engine.Coord.Color
 
-      alias Islands.Engine.Server.{
+      alias Islands.Engine.Game.Server.{
         AddPlayer,
         Error,
         GuessCoord,
         Info,
         PositionAllIslands,
         PositionIsland,
+        Restart,
         SetIslands,
         Stop
       }
 
-      alias Islands.Engine.Tally.Score
+      alias Islands.Engine.Game.Tally.Score
+
+      alias Islands.Engine.Game.{
+        Grid,
+        Player,
+        Server,
+        State,
+        Sup,
+        Tally
+      }
+
+      alias Islands.Engine.Offsets
 
       alias Islands.Engine.{
         App,
@@ -51,17 +63,9 @@ defmodule Islands.Engine.IE do
         Coord,
         DemoProc,
         Game,
-        Grid,
         Guesses,
         IE,
-        Island,
-        Offsets,
-        Player,
-        Recover,
-        Server,
-        State,
-        Sup,
-        Tally
+        Island
       }
 
       alias Islands.Engine
@@ -69,22 +73,22 @@ defmodule Islands.Engine.IE do
     end
   end
 
-  def print_tile_colors() do
-    IO.puts(":atoll       => #{Format.for(:atoll)}")
-    IO.puts(":dot         => #{Format.for(:dot)}")
-    IO.puts(":l_shape     => #{Format.for(:l_shape)}")
-    IO.puts(":s_shape     => #{Format.for(:s_shape)}")
-    IO.puts(":square      => #{Format.for(:square)}")
+  def print_coord_colors() do
+    IO.puts(":atoll       => #{Color.for(:atoll)}")
+    IO.puts(":dot         => #{Color.for(:dot)}")
+    IO.puts(":l_shape     => #{Color.for(:l_shape)}")
+    IO.puts(":s_shape     => #{Color.for(:s_shape)}")
+    IO.puts(":square      => #{Color.for(:square)}")
 
-    IO.puts(":atoll_hit   => #{Format.for(:atoll_hit)}")
-    IO.puts(":dot_hit     => #{Format.for(:dot_hit)}")
-    IO.puts(":l_shape_hit => #{Format.for(:l_shape_hit)}")
-    IO.puts(":s_shape_hit => #{Format.for(:s_shape_hit)}")
-    IO.puts(":square_hit  => #{Format.for(:square_hit)}")
+    IO.puts(":atoll_hit   => #{Color.for(:atoll_hit)}")
+    IO.puts(":dot_hit     => #{Color.for(:dot_hit)}")
+    IO.puts(":l_shape_hit => #{Color.for(:l_shape_hit)}")
+    IO.puts(":s_shape_hit => #{Color.for(:s_shape_hit)}")
+    IO.puts(":square_hit  => #{Color.for(:square_hit)}")
 
-    IO.puts(":hit         => #{Format.for(:hit)}")
-    IO.puts(":miss        => #{Format.for(:miss)}")
-    IO.puts(":board_miss  => #{Format.for(:board_miss)}")
-    IO.puts(":ocean       => #{Format.for(nil)}")
+    IO.puts(":hit         => #{Color.for(:hit)}")
+    IO.puts(":miss        => #{Color.for(:miss)}")
+    IO.puts(":board_miss  => #{Color.for(:board_miss)}")
+    IO.puts(":ocean       => #{Color.for(nil)}")
   end
 end

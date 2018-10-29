@@ -8,11 +8,11 @@ defmodule Islands.Engine do
 
   @moduledoc """
   Models the Game of Islands.
-
-  ##### #{@book_ref}
+  \n##### #{@book_ref}
   """
 
-  alias __MODULE__.{Coord, Game, Island, Server, Sup, Tally}
+  alias Islands.Engine.Game.{Server, Sup, Tally}
+  alias Islands.Engine.{Coord, Game, Island}
 
   @board_range Application.get_env(@app, :board_range)
   @island_types Application.get_env(@app, :island_types)

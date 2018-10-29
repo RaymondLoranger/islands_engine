@@ -1,16 +1,28 @@
 defmodule Islands.Engine.Sup do
   @moduledoc false
 
-  use DynamicSupervisor
+  use Supervisor
 
-  alias __MODULE__
+  alias Islands.Engine.Game.Server.Restart
+  alias Islands.Engine.Game.Sup
+  alias Islands.Engine.Sup, as: EngineSup
 
   @spec start_link(term) :: Supervisor.on_start()
-  def start_link(:ok), do: DynamicSupervisor.start_link(Sup, :ok, name: Sup)
+  def start_link(:ok),
+    do: Supervisor.start_link(EngineSup, :ok, name: EngineSup, timeout: 10_000)
 
   ## Callbacks
 
-  @dialyzer {:nowarn_function, init: 1}
-  @spec init(term) :: {:ok, DynamicSupervisor.sup_flags()} | :ignore
-  def init(:ok), do: DynamicSupervisor.init(strategy: :one_for_one)
+  @spec init(term) ::
+          {:ok, {:supervisor.sup_flags(), [:supervisor.child_spec()]}} | :ignore
+  def init(:ok) do
+    [
+      # Child spec relying on use DynamicSupervisor...
+      {Sup, :ok},
+
+      # Child spec relying on use GenServer...
+      {Restart, :ok}
+    ]
+    |> Supervisor.init(strategy: :rest_for_one)
+  end
 end

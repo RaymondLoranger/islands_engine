@@ -3,8 +3,8 @@ defmodule Islands.EngineTest do
 
   use ExUnit.Case, async: true
 
+  alias Islands.Engine.Game.Tally
   alias Islands.Engine
-  alias Islands.Engine.Tally
 
   doctest Engine
 
