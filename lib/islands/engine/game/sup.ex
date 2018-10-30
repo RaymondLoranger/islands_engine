@@ -6,7 +6,8 @@ defmodule Islands.Engine.Game.Sup do
   alias __MODULE__
 
   @spec start_link(term) :: Supervisor.on_start()
-  def start_link(:ok), do: DynamicSupervisor.start_link(Sup, :ok, name: Sup)
+  def start_link(:ok),
+    do: DynamicSupervisor.start_link(Sup, :ok, name: Sup, timeout: 10_000)
 
   ## Callbacks
 

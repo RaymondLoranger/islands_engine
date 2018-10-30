@@ -33,6 +33,10 @@ defmodule Islands.Engine.Game.Server do
     GenServer.start_link(Server, {player1_name, pid}, name: via(player1_name))
   end
 
+  @spec start_link(String.t()) :: GenServer.on_start()
+  def start_link(player1_name),
+    do: GenServer.start_link(Server, player1_name, name: via(player1_name))
+
   # @spec via(String.t()) :: {:via, module, {atom, tuple}}
   # def via(player1_name), do: {:via, Registry, {@reg, key(player1_name)}}
 
@@ -56,22 +60,25 @@ defmodule Islands.Engine.Game.Server do
 
   @spec game(String.t(), pid) :: Game.t()
   defp game(player1_name, pid) do
-    case :ets.lookup(@ets, key(player1_name)) do
-      [] ->
-        player1_name
-        |> Game.new()
-        |> Game.update_player_pid(:player1, pid)
-        |> save()
+    player1_name
+    |> Game.new()
+    |> Game.update_player_pid(:player1, pid)
+    |> save()
+  end
 
-      [{_key, game}] ->
-        game
-    end
+  @spec game(String.t()) :: Game.t()
+  defp game(player1_name) do
+    [{_key, game}] = :ets.lookup(@ets, key(player1_name))
+    game
   end
 
   ## Callbacks
 
   @spec init({String.t(), pid}) :: {:ok, Game.t()}
   def init({player1_name, pid}), do: {:ok, game(player1_name, pid)}
+
+  @spec init(String.t()) :: {:ok, Game.t()}
+  def init(player1_name), do: {:ok, game(player1_name)}
 
   @spec handle_call(request, from, Game.t()) :: reply
   def handle_call({:add_player, _, _} = request, from, game),

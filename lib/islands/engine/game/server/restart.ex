@@ -10,7 +10,8 @@ defmodule Islands.Engine.Game.Server.Restart do
   @ets Application.get_env(@app, :ets_name)
 
   @spec start_link(term) :: GenServer.on_start()
-  def start_link(:ok), do: GenServer.start_link(Restart, :ok, name: Restart)
+  def start_link(:ok),
+    do: GenServer.start_link(Restart, :ok, name: Restart, timeout: 10_000)
 
   ## Private functions
 
