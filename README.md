@@ -25,4 +25,4 @@ end
 ## Note
 
 Package [Islands Text Client](https://hex.pm/packages/islands_text_client) uses
-`:islands_engine` as a dependency to play the Game of Islands in the console.
+`:islands_engine` as a dependency to play the _Game of Islands_ in the console.
