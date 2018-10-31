@@ -10,7 +10,7 @@ defmodule Islands.Engine.Game.TallyTest do
 
   describe "Tally.new/2" do
     test "returns %Tally{} given valid args" do
-      game = Game.new("Jay")
+      game = Game.new("Tetra", "Jay", self())
 
       %Tally{
         game_state: :initialized,
@@ -26,7 +26,7 @@ defmodule Islands.Engine.Game.TallyTest do
     end
 
     test "returns {:error, ...} given invalid args" do
-      game = Game.new("John")
+      game = Game.new("Jade", "John", self())
       assert Tally.new(game, :player3) == {:error, :invalid_tally_args}
     end
   end

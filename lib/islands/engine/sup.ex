@@ -3,13 +3,13 @@ defmodule Islands.Engine.Sup do
 
   use Supervisor
 
+  alias __MODULE__
   alias Islands.Engine.Game.Server.Restart
-  alias Islands.Engine.Game.Sup
-  alias Islands.Engine.Sup, as: EngineSup
+  alias Islands.Engine.Game.DynSup
 
   @spec start_link(term) :: Supervisor.on_start()
   def start_link(:ok),
-    do: Supervisor.start_link(EngineSup, :ok, name: EngineSup, timeout: 10_000)
+    do: Supervisor.start_link(Sup, :ok, name: Sup, timeout: 10_000)
 
   ## Callbacks
 
@@ -18,7 +18,7 @@ defmodule Islands.Engine.Sup do
   def init(:ok) do
     [
       # Child spec relying on use DynamicSupervisor...
-      {Sup, :ok},
+      {DynSup, :ok},
 
       # Child spec relying on use GenServer...
       {Restart, :ok}

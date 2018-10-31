@@ -28,20 +28,21 @@ defmodule Islands.Engine.Game.Server do
   @ets Application.get_env(@app, :ets_name)
   # @reg Application.get_env(@app, :registry)
 
-  @spec start_link({String.t(), pid}) :: GenServer.on_start()
-  def start_link({player1_name, pid}) do
-    GenServer.start_link(Server, {player1_name, pid}, name: via(player1_name))
+  @spec start_link({String.t(), String.t(), pid}) :: GenServer.on_start()
+  def start_link({game_name, player1_name, pid}) do
+    import GenServer, only: [start_link: 3]
+    start_link(Server, {game_name, player1_name, pid}, name: via(game_name))
   end
 
   @spec start_link(String.t()) :: GenServer.on_start()
-  def start_link(player1_name),
-    do: GenServer.start_link(Server, player1_name, name: via(player1_name))
+  def start_link(game_name),
+    do: GenServer.start_link(Server, game_name, name: via(game_name))
 
   # @spec via(String.t()) :: {:via, module, {atom, tuple}}
-  # def via(player1_name), do: {:via, Registry, {@reg, key(player1_name)}}
+  # def via(game_name), do: {:via, Registry, {@reg, key(game_name)}}
 
   @spec via(String.t()) :: {:global, tuple}
-  def via(player1_name), do: {:global, key(player1_name)}
+  def via(game_name), do: {:global, key(game_name)}
 
   @spec save(Game.t()) :: Game.t()
   def save(game) do
@@ -56,29 +57,29 @@ defmodule Islands.Engine.Game.Server do
   ## Private functions
 
   @spec key(String.t()) :: tuple
-  defp key(player1_name), do: {Server, player1_name}
+  defp key(game_name), do: {Server, game_name}
 
-  @spec game(String.t(), pid) :: Game.t()
-  defp game(player1_name, pid) do
-    player1_name
-    |> Game.new()
-    |> Game.update_player_pid(:player1, pid)
+  @spec game(String.t(), String.t(), pid) :: Game.t()
+  defp game(game_name, player1_name, pid) do
+    game_name
+    |> Game.new(player1_name, pid)
     |> save()
   end
 
   @spec game(String.t()) :: Game.t()
-  defp game(player1_name) do
-    [{_key, game}] = :ets.lookup(@ets, key(player1_name))
+  defp game(game_name) do
+    [{_key, game}] = :ets.lookup(@ets, key(game_name))
     game
   end
 
   ## Callbacks
 
-  @spec init({String.t(), pid}) :: {:ok, Game.t()}
-  def init({player1_name, pid}), do: {:ok, game(player1_name, pid)}
+  @spec init({String.t(), String.t(), pid}) :: {:ok, Game.t()}
+  def init({game_name, player1_name, pid}),
+    do: {:ok, game(game_name, player1_name, pid)}
 
   @spec init(String.t()) :: {:ok, Game.t()}
-  def init(player1_name), do: {:ok, game(player1_name)}
+  def init(game_name), do: {:ok, game(game_name)}
 
   @spec handle_call(request, from, Game.t()) :: reply
   def handle_call({:add_player, _, _} = request, from, game),
@@ -104,11 +105,11 @@ defmodule Islands.Engine.Game.Server do
   @spec terminate(term, Game.t()) :: true
   def terminate(:shutdown = reason, game) do
     :ok = Info.log(:terminate, reason, game)
-    true = :ets.delete(@ets, key(game.player1.name))
+    true = :ets.delete(@ets, key(game.name))
   end
 
   def terminate(reason, game) do
     :ok = Error.log(:terminate, reason, game)
-    true = :ets.delete(@ets, key(game.player1.name))
+    true = :ets.delete(@ets, key(game.name))
   end
 end

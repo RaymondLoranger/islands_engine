@@ -5,7 +5,7 @@ defmodule Islands.Engine.Game.Server.Restart do
   use PersistConfig
 
   alias __MODULE__
-  alias Islands.Engine.Game.{Server, Sup}
+  alias Islands.Engine.Game.{DynSup, Server}
 
   @ets Application.get_env(@app, :ets_name)
 
@@ -19,9 +19,9 @@ defmodule Islands.Engine.Game.Server.Restart do
   defp restart_servers do
     @ets
     |> :ets.match_object({{Server, :_}, :_})
-    |> Enum.each(fn {{Server, player1_name}, _game} ->
+    |> Enum.each(fn {{Server, game_name}, _game} ->
       # Child may already be started...
-      DynamicSupervisor.start_child(Sup, {Server, player1_name})
+      DynamicSupervisor.start_child(DynSup, {Server, game_name})
     end)
   end
 

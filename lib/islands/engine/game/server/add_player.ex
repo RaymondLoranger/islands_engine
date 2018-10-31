@@ -9,7 +9,7 @@ defmodule Islands.Engine.Game.Server.AddPlayer do
   def handle_call({:add_player = action, name, pid} = request, _from, game) do
     with {:ok, state} <- State.check(game.state, action) do
       game
-      |> Game.update_player2_name(name)
+      |> Game.update_player_name(:player2, name)
       |> Game.update_player_pid(:player2, pid)
       |> Game.update_state(state)
       |> Game.update_request(request)

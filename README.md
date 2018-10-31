@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/RaymondLoranger/islands_engine.svg?branch=master)](https://travis-ci.org/RaymondLoranger/islands_engine)
 
-Models the Game of Islands.
+Models the _Game of Islands_.
 
 ##### Based on the book [Functional Web Development](https://pragprog.com/book/lhelph/functional-web-development-with-elixir-otp-and-phoenix) by Lance Halvorsen.
 
@@ -17,6 +17,10 @@ def deps do
   ]
 end
 ```
+
+## Supervision Tree
+
+## ![engine_app](images/islands_engine_app.png)
 
 ## Note
 

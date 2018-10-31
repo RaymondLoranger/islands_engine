@@ -10,7 +10,16 @@ defmodule Islands.Engine.Game.PlayerTest do
 
   describe "Player.new/1" do
     test "returns %Player{} given valid args" do
-      assert Player.new("Ben") == %Player{
+      me = self()
+
+      assert Player.new("Sue", me) == %Player{
+               name: "Sue",
+               pid: me,
+               board: Board.new(),
+               guesses: Guesses.new()
+             }
+
+      assert Player.new("Ben", nil) == %Player{
                name: "Ben",
                pid: nil,
                board: Board.new(),
@@ -19,21 +28,7 @@ defmodule Islands.Engine.Game.PlayerTest do
     end
 
     test "returns {:error, ...} given invalid args" do
-      assert Player.new('Jim') == {:error, :invalid_player_args}
-    end
-  end
-
-  describe "Player.update_player_pid/2" do
-    test "updates the pid of a player" do
-      me = self()
-      carl = Player.new("Carl")
-
-      assert Player.update_player_pid(carl, me) == %Player{
-               name: "Carl",
-               pid: me,
-               board: Board.new(),
-               guesses: Guesses.new()
-             }
+      assert Player.new('Jim', nil) == {:error, :invalid_player_args}
     end
   end
 end
