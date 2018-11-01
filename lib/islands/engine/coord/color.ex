@@ -1,6 +1,4 @@
 defmodule Islands.Engine.Coord.Color do
-  @moduledoc false
-
   alias IO.ANSI.Plus, as: ANSI
   alias Islands.Engine.Island
 

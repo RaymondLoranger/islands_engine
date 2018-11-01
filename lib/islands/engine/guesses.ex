@@ -1,6 +1,4 @@
 defmodule Islands.Engine.Guesses do
-  @moduledoc false
-
   alias __MODULE__
   alias Islands.Engine.{Coord, Island}
 

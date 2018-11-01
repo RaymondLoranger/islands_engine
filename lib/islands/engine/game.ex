@@ -1,6 +1,4 @@
 defmodule Islands.Engine.Game do
-  @moduledoc false
-
   @behaviour Access
 
   use PersistConfig

@@ -1,6 +1,4 @@
 defmodule Islands.Engine.Island do
-  @moduledoc false
-
   use PersistConfig
 
   alias __MODULE__

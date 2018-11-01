@@ -1,6 +1,4 @@
 defmodule Islands.Engine.Board.Server do
-  @moduledoc false
-
   use GenServer
   use PersistConfig
 

@@ -1,9 +1,8 @@
 defmodule Islands.Engine.Game.Grid do
-  # @moduledoc """
-  # Converts a board or guesses struct to a grid (map of maps).
-  # Also converts a grid to a list of maps.
-  # """
-  @moduledoc false
+  @moduledoc """
+  Converts a board or guesses struct to a grid (map of maps).
+  Also converts a grid to a list of maps.
+  """
 
   use PersistConfig
 

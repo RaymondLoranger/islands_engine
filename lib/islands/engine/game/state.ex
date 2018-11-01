@@ -1,6 +1,5 @@
 defmodule Islands.Engine.Game.State do
-  # State machine...
-  @moduledoc false
+  @moduledoc "State machine..."
 
   @behaviour Access
 

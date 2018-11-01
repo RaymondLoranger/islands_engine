@@ -1,6 +1,4 @@
 defmodule Islands.Engine.Game.Server.PositionAllIslands do
-  @moduledoc false
-
   alias Islands.Engine.Board.Server, as: BoardServer
   alias Islands.Engine.Game.Server.Error
   alias Islands.Engine.Game.{Server, State}

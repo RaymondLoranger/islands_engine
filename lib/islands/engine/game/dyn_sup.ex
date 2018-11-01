@@ -1,6 +1,4 @@
 defmodule Islands.Engine.Game.DynSup do
-  @moduledoc false
-
   use DynamicSupervisor
 
   alias __MODULE__

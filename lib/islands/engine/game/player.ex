@@ -1,6 +1,4 @@
 defmodule Islands.Engine.Game.Player do
-  @moduledoc false
-
   alias __MODULE__
   alias Islands.Engine.{Board, Guesses}
 

@@ -7,7 +7,7 @@ defmodule Islands.Engine do
   @book_ref Application.get_env(@app, :book_ref)
 
   @moduledoc """
-  Models the Game of Islands.
+  Models the _Game of Islands_.
   \n##### #{@book_ref}
   """
 

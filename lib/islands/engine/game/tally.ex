@@ -1,6 +1,4 @@
 defmodule Islands.Engine.Game.Tally do
-  @moduledoc false
-
   use PersistConfig
 
   alias __MODULE__

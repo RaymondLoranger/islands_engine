@@ -1,6 +1,4 @@
 defmodule Islands.Engine.Game.Tally.Score do
-  @moduledoc false
-
   alias Islands.Engine.{Board, Guesses}
 
   @spec for(Board.t() | Guesses.t()) ::

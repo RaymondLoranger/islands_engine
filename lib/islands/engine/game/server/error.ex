@@ -1,6 +1,4 @@
 defmodule Islands.Engine.Game.Server.Error do
-  @moduledoc false
-
   alias Islands.Engine.Game.Server
   alias Islands.Engine.Game
 
@@ -9,7 +7,7 @@ defmodule Islands.Engine.Game.Server.Error do
   @spec log(atom, any, any, any) :: :ok
   def log(:handle_call, non_matched_value, request, game) do
     """
-    \n#{game.player1.name |> Server.via() |> inspect()} #{self() |> inspect()}
+    \n#{game.name |> Server.via() |> inspect()} #{self() |> inspect()}
     `handle_call` request...
     #{inspect(request, pretty: true)}
     `with` non-matched value...
@@ -23,7 +21,7 @@ defmodule Islands.Engine.Game.Server.Error do
   @spec log(atom, any, any) :: :ok
   def log(:terminate, reason, game) do
     """
-    \n#{game.player1.name |> Server.via() |> inspect()} #{self() |> inspect()}
+    \n#{game.name |> Server.via() |> inspect()} #{self() |> inspect()}
     `handle_call` request...
     #{inspect(game.request, pretty: true)}
     `terminate` reason...

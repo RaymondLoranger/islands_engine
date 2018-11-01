@@ -1,6 +1,4 @@
 defmodule Islands.Engine.Coord do
-  @moduledoc false
-
   use PersistConfig
 
   alias __MODULE__

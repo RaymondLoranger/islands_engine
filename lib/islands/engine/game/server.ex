@@ -1,6 +1,4 @@
 defmodule Islands.Engine.Game.Server do
-  @moduledoc false
-
   use GenServer, restart: :transient
   use PersistConfig
 
@@ -34,9 +32,9 @@ defmodule Islands.Engine.Game.Server do
     start_link(Server, {game_name, player1_name, pid}, name: via(game_name))
   end
 
-  @spec start_link(String.t()) :: GenServer.on_start()
-  def start_link(game_name),
-    do: GenServer.start_link(Server, game_name, name: via(game_name))
+  @spec start_link(Game.t()) :: GenServer.on_start()
+  def start_link(game),
+    do: GenServer.start_link(Server, game, name: via(game.name))
 
   # @spec via(String.t()) :: {:via, module, {atom, tuple}}
   # def via(game_name), do: {:via, Registry, {@reg, key(game_name)}}
@@ -47,7 +45,7 @@ defmodule Islands.Engine.Game.Server do
   @spec save(Game.t()) :: Game.t()
   def save(game) do
     :ok = Info.log(:save, game)
-    true = :ets.insert(@ets, {key(game.player1.name), game})
+    true = :ets.insert(@ets, {key(game.name), game})
     game
   end
 
@@ -61,15 +59,10 @@ defmodule Islands.Engine.Game.Server do
 
   @spec game(String.t(), String.t(), pid) :: Game.t()
   defp game(game_name, player1_name, pid) do
-    game_name
-    |> Game.new(player1_name, pid)
-    |> save()
-  end
-
-  @spec game(String.t()) :: Game.t()
-  defp game(game_name) do
-    [{_key, game}] = :ets.lookup(@ets, key(game_name))
-    game
+    case :ets.lookup(@ets, key(game_name)) do
+      [] -> game_name |> Game.new(player1_name, pid) |> save()
+      [{_key, game}] -> game
+    end
   end
 
   ## Callbacks
@@ -78,8 +71,8 @@ defmodule Islands.Engine.Game.Server do
   def init({game_name, player1_name, pid}),
     do: {:ok, game(game_name, player1_name, pid)}
 
-  @spec init(String.t()) :: {:ok, Game.t()}
-  def init(game_name), do: {:ok, game(game_name)}
+  @spec init(Game.t()) :: {:ok, Game.t()}
+  def init(game), do: {:ok, game}
 
   @spec handle_call(request, from, Game.t()) :: reply
   def handle_call({:add_player, _, _} = request, from, game),

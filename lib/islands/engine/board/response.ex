@@ -1,6 +1,4 @@
 defmodule Islands.Engine.Board.Response do
-  @moduledoc false
-
   alias Islands.Engine.{Board, Coord, Island}
 
   @type t :: {:hit | :miss, Island.type() | :none, :no_win | :win, Board.t()}

@@ -47,11 +47,11 @@ defmodule Islands.Engine.IE do
       alias Islands.Engine.Game.Tally.Score
 
       alias Islands.Engine.Game.{
+        DynSup,
         Grid,
         Player,
         Server,
         State,
-        Sup,
         Tally
       }
 
@@ -65,7 +65,8 @@ defmodule Islands.Engine.IE do
         Game,
         Guesses,
         IE,
-        Island
+        Island,
+        Sup
       }
 
       alias Islands.Engine

@@ -1,6 +1,4 @@
 defmodule Islands.Engine.Sup do
-  @moduledoc false
-
   use Supervisor
 
   alias __MODULE__

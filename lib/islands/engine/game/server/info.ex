@@ -1,6 +1,4 @@
 defmodule Islands.Engine.Game.Server.Info do
-  @moduledoc false
-
   alias Islands.Engine.Game.Server
 
   require Logger
@@ -8,7 +6,7 @@ defmodule Islands.Engine.Game.Server.Info do
   @spec log(atom, any) :: :ok
   def log(:save, game) do
     """
-    \n#{game.player1.name |> Server.via() |> inspect()} #{self() |> inspect()}
+    \n#{game.name |> Server.via() |> inspect()} #{self() |> inspect()}
     `handle_call` request...
     #{inspect(game.request, pretty: true)}
     game being saved...
@@ -20,7 +18,7 @@ defmodule Islands.Engine.Game.Server.Info do
   @spec log(atom, any, any) :: :ok
   def log(:terminate, reason, game) do
     """
-    \n#{game.player1.name |> Server.via() |> inspect()} #{self() |> inspect()}
+    \n#{game.name |> Server.via() |> inspect()} #{self() |> inspect()}
     `handle_call` request...
     #{inspect(game.request, pretty: true)}
     `terminate` reason...
