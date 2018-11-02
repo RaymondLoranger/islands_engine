@@ -30,16 +30,25 @@ defmodule Islands.Engine.App do
 
   ## Private functions
 
+  @spec clear_log(Path.t()) :: :ok
   defp clear_log(log_path) do
-    path = Path.expand(log_path)
+    log_path = Path.expand(log_path)
+    dir_path = Path.dirname(log_path)
 
-    case File.write(path, "") do
-      :ok ->
-        :ok
-
-      {:error, reason} ->
-        IO.puts("Couldn't clear log #{inspect(path)}:")
-        reason |> :file.format_error() |> IO.puts()
+    case File.mkdir_p(dir_path) do
+      :ok -> :ok
+      {:error, reason} -> error(reason, "Couldn't create directory", dir_path)
     end
+
+    case File.write(log_path, "") do
+      :ok -> :ok
+      {:error, reason} -> error(reason, "Couldn't clear log file", log_path)
+    end
+  end
+
+  @spec error(File.posix(), String.t(), Path.t()) :: :ok
+  def error(reason, msg, path) do
+    IO.puts("#{msg} #{inspect(path)}:")
+    reason |> :file.format_error() |> IO.puts()
   end
 end
