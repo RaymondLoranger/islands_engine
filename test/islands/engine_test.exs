@@ -1,6 +1,4 @@
 defmodule Islands.EngineTest do
-  @moduledoc false
-
   use ExUnit.Case, async: true
 
   alias Islands.Engine.Game.Tally

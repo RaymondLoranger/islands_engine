@@ -1,6 +1,4 @@
 defmodule Islands.Engine.BoardTest do
-  @moduledoc false
-
   use ExUnit.Case, async: true
 
   alias Islands.Engine.{Board, Coord, Island}
