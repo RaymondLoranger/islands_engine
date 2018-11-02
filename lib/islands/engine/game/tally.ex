@@ -2,7 +2,7 @@ defmodule Islands.Engine.Game.Tally do
   use PersistConfig
 
   alias __MODULE__
-  alias Islands.Engine.Game.Tally.Score
+  alias __MODULE__.Score
   alias Islands.Engine.Game.{Grid, Server, State}
   alias Islands.Engine.Game
 

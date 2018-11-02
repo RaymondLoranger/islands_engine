@@ -2,7 +2,7 @@ defmodule Islands.Engine.Island do
   use PersistConfig
 
   alias __MODULE__
-  alias Islands.Engine.Island.Offsets
+  alias __MODULE__.Offsets
   alias Islands.Engine.Coord
 
   @enforce_keys [:type, :coords, :hits]

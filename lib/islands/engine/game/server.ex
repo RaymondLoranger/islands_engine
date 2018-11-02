@@ -4,7 +4,7 @@ defmodule Islands.Engine.Game.Server do
 
   alias __MODULE__
 
-  alias Islands.Engine.Game.Server.{
+  alias __MODULE__.{
     AddPlayer,
     Error,
     GuessCoord,

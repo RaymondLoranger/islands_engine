@@ -55,7 +55,7 @@ defmodule Islands.Engine.IE do
         Tally
       }
 
-      alias Islands.Engine.Offsets
+      alias Islands.Engine.Islands.Offsets
 
       alias Islands.Engine.{
         App,

@@ -19,11 +19,10 @@ defmodule Islands.Engine.App do
     :ets.new(@ets, [:public, :named_table])
 
     [
-      # Child spec relying on use Supervisor...
-      {Sup, :ok},
-
       # Child spec relying on use GenServer...
-      {Server, :ok}
+      {Server, :ok},
+      # Child spec relying on use Supervisor...
+      {Sup, :ok}
     ]
     |> Supervisor.start_link(name: App, strategy: :one_for_one)
   end

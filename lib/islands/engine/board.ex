@@ -2,7 +2,7 @@ defmodule Islands.Engine.Board do
   use PersistConfig
 
   alias __MODULE__
-  alias Islands.Engine.Board.Response
+  alias __MODULE__.Response
   alias Islands.Engine.{Coord, Island}
 
   @enforce_keys [:islands, :misses]
