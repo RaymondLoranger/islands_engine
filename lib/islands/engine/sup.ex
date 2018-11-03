@@ -2,7 +2,6 @@ defmodule Islands.Engine.Sup do
   use Supervisor
 
   alias __MODULE__
-  # alias __MODULE__.Info
   alias Islands.Engine.Game.Server.Restart
   alias Islands.Engine.Game.DynSup
 
