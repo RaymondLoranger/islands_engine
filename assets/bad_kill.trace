@@ -1,0 +1,209 @@
+19:52:32:039000 (<0.173.0>) exit killed
+19:52:32:039001 (<0.173.0>) unregister 'Elixir.Islands.Engine.Sup'
+19:52:32:039002 (<0.171.0>) << {'EXIT',<0.173.0>,killed}
+19:52:32:039003 (<0.171.0>) getting_unlinked <0.173.0>
+19:52:32:039004 (<0.174.0>) << {'EXIT',<0.173.0>,killed}
+19:52:32:039005 (<0.174.0>) getting_unlinked <0.173.0>
+19:52:32:039006 (<0.171.0>) error_logger ! {notify,
+                                            {error_report,<0.166.0>,
+                                             {<0.171.0>,supervisor_report,
+                                              [{supervisor,{local,'Elixir.Islands.Engine.App'}},
+                                               {errorContext,child_terminated},
+                                               {reason,killed},
+                                               {offender,
+                                                [{pid,<0.173.0>},
+                                                 {id,'Elixir.Islands.Engine.Sup'},
+                                                 {mfargs,
+                                                  {'Elixir.Islands.Engine.Sup',start_link,[ok]}},
+                                                 {restart_type,permanent},
+                                                 {shutdown,infinity},
+                                                 {child_type,supervisor}]}]}}}
+19:52:32:039008 (<0.171.0>) spawn <0.232.0> as proc_lib:init_p('Elixir.Islands.Engine.App',[<0.167.0>],gen,init_it,[gen_server,<0.171.0>,<0.171.0>,
+ {local,'Elixir.Islands.Engine.Sup'},
+ supervisor,
+ {{local,'Elixir.Islands.Engine.Sup'},'Elixir.Islands.Engine.Sup',ok},
+ []])
+19:52:32:039009 (<0.171.0>) link <0.232.0>
+19:52:32:039011 (<0.175.0>) exit killed
+19:52:32:039012 (<0.175.0>) unregister 'Elixir.Islands.Engine.Game.Server.Restart'
+19:52:32:039013 (<0.174.0>) error_logger ! {notify,
+                                            {error,<0.166.0>,
+                                             {<0.174.0>,
+                                              "** Generic server ~tp terminating \n** Last message in was ~tp~n** When Server state == ~tp~n** Reason for termination == ~n** ~tp~n",
+                                              ['Elixir.Islands.Engine.Game.DynSup',
+                                               {'EXIT',<0.173.0>,killed},
+                                               #{'__struct__' => 'Elixir.DynamicSupervisor',
+                                                 args => ok,children => #{},extra_arguments => [],
+                                                 max_children => infinity,max_restarts => 9,
+                                                 max_seconds => 5,
+                                                 mod => 'Elixir.Islands.Engine.Game.DynSup',
+                                                 name =>
+                                                  {local,'Elixir.Islands.Engine.Game.DynSup'},
+                                                 restarts => [],strategy => one_for_one},
+                                               killed]}}}
+19:52:32:039014 (<0.174.0>) code_server ! {code_call,<0.174.0>,{ensure_loaded,sys}}
+19:52:32:039016 (<0.171.0>) << {ack,<0.232.0>,
+                                   {error,
+                                       {shutdown,
+                                           {failed_to_start_child,
+                                               'Elixir.Islands.Engine.Game.DynSup',
+                                               {already_started,<0.174.0>}}}}}
+19:52:32:039017 (<0.171.0>) << {'EXIT',<0.232.0>,
+                                   {shutdown,
+                                       {failed_to_start_child,
+                                           'Elixir.Islands.Engine.Game.DynSup',
+                                           {already_started,<0.174.0>}}}}
+19:52:32:039018 (<0.171.0>) getting_unlinked <0.232.0>
+19:52:32:039019 (<0.171.0>) error_logger ! {notify,
+                                            {error_report,<0.166.0>,
+                                             {<0.171.0>,supervisor_report,
+                                              [{supervisor,{local,'Elixir.Islands.Engine.App'}},
+                                               {errorContext,start_error},
+                                               {reason,
+                                                {shutdown,
+                                                 {failed_to_start_child,
+                                                  'Elixir.Islands.Engine.Game.DynSup',
+                                                  {already_started,<0.174.0>}}}},
+                                               {offender,
+                                                [{pid,<0.173.0>},
+                                                 {id,'Elixir.Islands.Engine.Sup'},
+                                                 {mfargs,
+                                                  {'Elixir.Islands.Engine.Sup',start_link,[ok]}},
+                                                 {restart_type,permanent},
+                                                 {shutdown,infinity},
+                                                 {child_type,supervisor}]}]}}}
+19:52:32:039020 (<0.171.0>) <0.171.0> ! {'$gen_cast',
+                                            {try_again_restart,'Elixir.Islands.Engine.Sup'}}
+19:52:32:039021 (<0.171.0>) << {'$gen_cast',{try_again_restart,'Elixir.Islands.Engine.Sup'}}
+19:52:32:039023 (<0.171.0>) spawn <0.233.0> as proc_lib:init_p('Elixir.Islands.Engine.App',[<0.167.0>],gen,init_it,[gen_server,<0.171.0>,<0.171.0>,
+ {local,'Elixir.Islands.Engine.Sup'},
+ supervisor,
+ {{local,'Elixir.Islands.Engine.Sup'},'Elixir.Islands.Engine.Sup',ok},
+ []])
+19:52:32:039024 (<0.171.0>) link <0.233.0>
+19:52:32:039027 (<0.171.0>) << {ack,<0.233.0>,
+                                   {error,
+                                       {shutdown,
+                                           {failed_to_start_child,
+                                               'Elixir.Islands.Engine.Game.DynSup',
+                                               {already_started,<0.174.0>}}}}}
+19:52:32:039028 (<0.171.0>) << {'EXIT',<0.233.0>,
+                                   {shutdown,
+                                       {failed_to_start_child,
+                                           'Elixir.Islands.Engine.Game.DynSup',
+                                           {already_started,<0.174.0>}}}}
+19:52:32:039029 (<0.171.0>) getting_unlinked <0.233.0>
+19:52:32:039030 (<0.171.0>) error_logger ! {notify,
+                                            {error_report,<0.166.0>,
+                                             {<0.171.0>,supervisor_report,
+                                              [{supervisor,{local,'Elixir.Islands.Engine.App'}},
+                                               {errorContext,start_error},
+                                               {reason,
+                                                {shutdown,
+                                                 {failed_to_start_child,
+                                                  'Elixir.Islands.Engine.Game.DynSup',
+                                                  {already_started,<0.174.0>}}}},
+                                               {offender,
+                                                [{pid,{restarting,<0.173.0>}},
+                                                 {id,'Elixir.Islands.Engine.Sup'},
+                                                 {mfargs,
+                                                  {'Elixir.Islands.Engine.Sup',start_link,[ok]}},
+                                                 {restart_type,permanent},
+                                                 {shutdown,infinity},
+                                                 {child_type,supervisor}]}]}}}
+19:52:32:039031 (<0.171.0>) <0.171.0> ! {'$gen_cast',
+                                            {try_again_restart,'Elixir.Islands.Engine.Sup'}}
+19:52:32:039032 (<0.171.0>) << {'$gen_cast',{try_again_restart,'Elixir.Islands.Engine.Sup'}}
+19:52:32:039034 (<0.171.0>) spawn <0.234.0> as proc_lib:init_p('Elixir.Islands.Engine.App',[<0.167.0>],gen,init_it,[gen_server,<0.171.0>,<0.171.0>,
+ {local,'Elixir.Islands.Engine.Sup'},
+ supervisor,
+ {{local,'Elixir.Islands.Engine.Sup'},'Elixir.Islands.Engine.Sup',ok},
+ []])
+19:52:32:039035 (<0.171.0>) link <0.234.0>
+19:52:32:039038 (<0.171.0>) << {ack,<0.234.0>,
+                                   {error,
+                                       {shutdown,
+                                           {failed_to_start_child,
+                                               'Elixir.Islands.Engine.Game.DynSup',
+                                               {already_started,<0.174.0>}}}}}
+19:52:32:039039 (<0.171.0>) << {'EXIT',<0.234.0>,
+                                   {shutdown,
+                                       {failed_to_start_child,
+                                           'Elixir.Islands.Engine.Game.DynSup',
+                                           {already_started,<0.174.0>}}}}
+19:52:32:039040 (<0.171.0>) getting_unlinked <0.234.0>
+19:52:32:039041 (<0.171.0>) error_logger ! {notify,
+                                            {error_report,<0.166.0>,
+                                             {<0.171.0>,supervisor_report,
+                                              [{supervisor,{local,'Elixir.Islands.Engine.App'}},
+                                               {errorContext,start_error},
+                                               {reason,
+                                                {shutdown,
+                                                 {failed_to_start_child,
+                                                  'Elixir.Islands.Engine.Game.DynSup',
+                                                  {already_started,<0.174.0>}}}},
+                                               {offender,
+                                                [{pid,{restarting,<0.173.0>}},
+                                                 {id,'Elixir.Islands.Engine.Sup'},
+                                                 {mfargs,
+                                                  {'Elixir.Islands.Engine.Sup',start_link,[ok]}},
+                                                 {restart_type,permanent},
+                                                 {shutdown,infinity},
+                                                 {child_type,supervisor}]}]}}}
+19:52:32:039042 (<0.171.0>) <0.171.0> ! {'$gen_cast',
+                                            {try_again_restart,'Elixir.Islands.Engine.Sup'}}
+19:52:32:039043 (<0.171.0>) << {'$gen_cast',{try_again_restart,'Elixir.Islands.Engine.Sup'}}
+19:52:32:039044 (<0.171.0>) error_logger ! {notify,
+                                            {error_report,<0.166.0>,
+                                             {<0.171.0>,supervisor_report,
+                                              [{supervisor,{local,'Elixir.Islands.Engine.App'}},
+                                               {errorContext,shutdown},
+                                               {reason,reached_max_restart_intensity},
+                                               {offender,
+                                                [{pid,{restarting,<0.173.0>}},
+                                                 {id,'Elixir.Islands.Engine.Sup'},
+                                                 {mfargs,
+                                                  {'Elixir.Islands.Engine.Sup',start_link,[ok]}},
+                                                 {restart_type,permanent},
+                                                 {shutdown,infinity},
+                                                 {child_type,supervisor}]}]}}}
+19:52:32:039045 (<0.171.0>) unlink <0.172.0>
+19:52:32:039046 (<0.172.0>) getting_unlinked <0.171.0>
+19:52:32:039047 (<0.171.0>) << timeout
+19:52:32:039048 (<0.172.0>) exit shutdown
+19:52:32:039049 (<0.172.0>) unregister 'Elixir.Islands.Engine.Board.Server'
+19:52:32:039050 (<0.171.0>) << {'DOWN',#Ref<0.2303218742.3786670082.179930>,process,<0.172.0>,
+                                       shutdown}
+19:52:32:039051 (<0.171.0>) exit shutdown
+19:52:32:039052 (<0.171.0>) unregister 'Elixir.Islands.Engine.App'
+19:52:32:055000 (<0.174.0>) << {code_server,{module,sys}}
+19:52:32:055001 (<0.174.0>) error_logger ! {notify,
+                                            {error_report,<0.166.0>,
+                                             {<0.174.0>,crash_report,
+                                              [[{initial_call,
+                                                 {supervisor,'Elixir.Islands.Engine.Game.DynSup',
+                                                  ['Argument__1']}},
+                                                {pid,<0.174.0>},
+                                                {registered_name,
+                                                 'Elixir.Islands.Engine.Game.DynSup'},
+                                                {error_info,
+                                                 {exit,killed,
+                                                  [{gen_server,decode_msg,9,
+                                                    [{file,"gen_server.erl"},{line,410}]},
+                                                   {proc_lib,init_p_do_apply,3,
+                                                    [{file,"proc_lib.erl"},{line,247}]}]}},
+                                                {ancestors,
+                                                 ['Elixir.Islands.Engine.Sup',
+                                                  'Elixir.Islands.Engine.App',<0.167.0>]},
+                                                {message_queue_len,0},
+                                                {messages,[]},
+                                                {links,[]},
+                                                {dictionary,[]},
+                                                {trap_exit,true},
+                                                {status,running},
+                                                {heap_size,610},
+                                                {stack_size,27},
+                                                {reductions,325}],
+                                               []]}}}
+19:52:32:055002 (<0.174.0>) exit killed
+19:52:32:055003 (<0.174.0>) unregister 'Elixir.Islands.Engine.Game.DynSup'
