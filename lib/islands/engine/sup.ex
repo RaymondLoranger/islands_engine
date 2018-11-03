@@ -19,7 +19,6 @@ defmodule Islands.Engine.Sup do
       # Child spec relying on use GenServer...
       {Restart, :ok}
     ]
-    # Max restarts per time frame of 5 seconds defaults to 3 times...
-    |> Supervisor.init(strategy: :rest_for_one, max_restarts: 9)
+    |> Supervisor.init(strategy: :rest_for_one)
   end
 end
