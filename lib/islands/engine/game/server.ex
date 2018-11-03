@@ -25,6 +25,7 @@ defmodule Islands.Engine.Game.Server do
 
   @ets Application.get_env(@app, :ets_name)
   # @reg Application.get_env(@app, :registry)
+  @time_in_ms 500
 
   @spec start_link({String.t(), String.t(), pid}) :: GenServer.on_start()
   def start_link({game_name, player1_name, pid}) do
@@ -95,14 +96,18 @@ defmodule Islands.Engine.Game.Server do
 
   def handle_call({:tally, player_id}, _from, game), do: reply(game, player_id)
 
-  @spec terminate(term, Game.t()) :: true
+  @spec terminate(term, Game.t()) :: :ok
   def terminate(:shutdown = reason, game) do
     :ok = Info.log(:terminate, reason, game)
     true = :ets.delete(@ets, key(game.name))
+    # Ensure message logged before exiting...
+    Process.sleep(@time_in_ms)
   end
 
   def terminate(reason, game) do
     :ok = Error.log(:terminate, reason, game)
     true = :ets.delete(@ets, key(game.name))
+    # Ensure message logged before exiting...
+    Process.sleep(@time_in_ms)
   end
 end
