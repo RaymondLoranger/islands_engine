@@ -46,7 +46,7 @@ defmodule Islands.Engine.App do
   end
 
   @spec error(File.posix(), String.t(), Path.t()) :: :ok
-  def error(reason, msg, path) do
+  defp error(reason, msg, path) do
     IO.puts("#{msg} #{inspect(path)}:")
     reason |> :file.format_error() |> IO.puts()
   end
