@@ -75,21 +75,21 @@ defmodule Islands.Engine.IE do
   end
 
   def print_coord_colors() do
-    IO.puts(":atoll       => #{Color.for(:atoll)}")
-    IO.puts(":dot         => #{Color.for(:dot)}")
-    IO.puts(":l_shape     => #{Color.for(:l_shape)}")
-    IO.puts(":s_shape     => #{Color.for(:s_shape)}")
-    IO.puts(":square      => #{Color.for(:square)}")
+    IO.puts(":atoll       => #{Color.color_for(:atoll)}")
+    IO.puts(":dot         => #{Color.color_for(:dot)}")
+    IO.puts(":l_shape     => #{Color.color_for(:l_shape)}")
+    IO.puts(":s_shape     => #{Color.color_for(:s_shape)}")
+    IO.puts(":square      => #{Color.color_for(:square)}")
 
-    IO.puts(":atoll_hit   => #{Color.for(:atoll_hit)}")
-    IO.puts(":dot_hit     => #{Color.for(:dot_hit)}")
-    IO.puts(":l_shape_hit => #{Color.for(:l_shape_hit)}")
-    IO.puts(":s_shape_hit => #{Color.for(:s_shape_hit)}")
-    IO.puts(":square_hit  => #{Color.for(:square_hit)}")
+    IO.puts(":atoll_hit   => #{Color.color_for(:atoll_hit)}")
+    IO.puts(":dot_hit     => #{Color.color_for(:dot_hit)}")
+    IO.puts(":l_shape_hit => #{Color.color_for(:l_shape_hit)}")
+    IO.puts(":s_shape_hit => #{Color.color_for(:s_shape_hit)}")
+    IO.puts(":square_hit  => #{Color.color_for(:square_hit)}")
 
-    IO.puts(":hit         => #{Color.for(:hit)}")
-    IO.puts(":miss        => #{Color.for(:miss)}")
-    IO.puts(":board_miss  => #{Color.for(:board_miss)}")
-    IO.puts(":ocean       => #{Color.for(nil)}")
+    IO.puts(":hit         => #{Color.color_for(:hit)}")
+    IO.puts(":miss        => #{Color.color_for(:miss)}")
+    IO.puts(":board_miss  => #{Color.color_for(:board_miss)}")
+    IO.puts(":ocean       => #{Color.color_for(nil)}")
   end
 end

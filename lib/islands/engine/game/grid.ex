@@ -50,7 +50,7 @@ defmodule Islands.Engine.Game.Grid do
   Converts a grid to a list of maps.
   """
   @spec to_maps(t, (atom -> ANSI.ansidata())) :: [map]
-  def to_maps(%{} = grid, fun \\ &Color.for/1) when is_function(fun, 1) do
+  def to_maps(%{} = grid, fun \\ &Color.color_for/1) when is_function(fun, 1) do
     for {row_num, row_map} <- grid do
       [
         {"row", row_num}
