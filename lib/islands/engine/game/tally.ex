@@ -53,8 +53,8 @@ defmodule Islands.Engine.Game.Tally do
       response: game.response,
       board: game[player_id].board |> Grid.new(),
       guesses: game[player_id].guesses |> Grid.new(),
-      board_score: game[player_id].board |> Score.for(),
-      guesses_score: game[player_id].guesses |> Score.for()
+      board_score: game[player_id].board |> Score.score_for(),
+      guesses_score: game[player_id].guesses |> Score.score_for()
     }
   end
 
