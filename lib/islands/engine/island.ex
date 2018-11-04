@@ -16,7 +16,7 @@ defmodule Islands.Engine.Island do
 
   @spec new(type, Coord.t()) :: {:ok, t} | {:error, atom}
   def new(type, %Coord{} = origin) when type in @types do
-    with [_ | _] = coords <- type |> Offsets.for() |> coords(origin) do
+    with [_ | _] = coords <- type |> Offsets.offsets_for() |> coords(origin) do
       {:ok, %Island{type: type, coords: MapSet.new(coords), hits: MapSet.new()}}
     else
       :error -> {:error, :invalid_island_location}
