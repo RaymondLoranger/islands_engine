@@ -1,8 +1,8 @@
 defmodule Islands.Engine.Game.TallyTest do
   use ExUnit.Case, async: true
 
-  alias Islands.Engine.Game.{Grid, Tally}
-  alias Islands.Engine.Game
+  alias Islands.Engine.Game.Tally
+  alias Islands.Engine.{Board, Game, Guesses}
 
   doctest Tally
 
@@ -20,7 +20,7 @@ defmodule Islands.Engine.Game.TallyTest do
         guesses: guesses
       } = Tally.new(game, :player1)
 
-      assert board == Grid.new() and guesses == Grid.new()
+      assert board == Board.new() and guesses == Guesses.new()
     end
 
     test "returns {:error, ...} given invalid args" do

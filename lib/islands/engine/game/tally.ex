@@ -2,9 +2,8 @@ defmodule Islands.Engine.Game.Tally do
   use PersistConfig
 
   alias __MODULE__
-  alias __MODULE__.Score
-  alias Islands.Engine.Game.{Grid, Server, State}
-  alias Islands.Engine.Game
+  alias Islands.Engine.Game.{Server, State}
+  alias Islands.Engine.{Board, Game, Guesses}
 
   @enforce_keys [
     :game_state,
@@ -13,9 +12,7 @@ defmodule Islands.Engine.Game.Tally do
     :request,
     :response,
     :board,
-    :guesses,
-    :board_score,
-    :guesses_score
+    :guesses
   ]
   defstruct [
     :game_state,
@@ -24,9 +21,7 @@ defmodule Islands.Engine.Game.Tally do
     :request,
     :response,
     :board,
-    :guesses,
-    :board_score,
-    :guesses_score
+    :guesses
   ]
 
   @type t :: %Tally{
@@ -35,10 +30,8 @@ defmodule Islands.Engine.Game.Tally do
           player2_state: State.player_state(),
           request: Server.request(),
           response: Server.response(),
-          board: Grid.t(),
-          guesses: Grid.t(),
-          board_score: {atom, non_neg_integer, non_neg_integer},
-          guesses_score: {atom, non_neg_integer, non_neg_integer}
+          board: Board.t(),
+          guesses: Guesses.t()
         }
 
   @player_ids Application.get_env(@app, :player_ids)
@@ -51,10 +44,8 @@ defmodule Islands.Engine.Game.Tally do
       player2_state: game.state.player2_state,
       request: game.request,
       response: game.response,
-      board: game[player_id].board |> Grid.new(),
-      guesses: game[player_id].guesses |> Grid.new(),
-      board_score: game[player_id].board |> Score.score_for(),
-      guesses_score: game[player_id].guesses |> Score.score_for()
+      board: game[player_id].board,
+      guesses: game[player_id].guesses
     }
   end
 

@@ -1,5 +1,7 @@
 defmodule Islands.Engine.Game.Grid do
   @moduledoc """
+  Convenience module for client application.
+
   Converts a board or guesses struct to a grid (map of maps).
   Also converts a grid to a list of maps.
   """
@@ -9,7 +11,7 @@ defmodule Islands.Engine.Game.Grid do
   import Enum, only: [reduce: 3]
 
   alias IO.ANSI.Plus, as: ANSI
-  alias Islands.Engine.Coord.Color
+  alias Islands.Engine.Game.Grid.Tile
   alias Islands.Engine.{Board, Coord, Guesses, Island}
 
   @type t :: %{Coord.row() => %{Coord.col() => atom}}
@@ -50,7 +52,7 @@ defmodule Islands.Engine.Game.Grid do
   Converts a grid to a list of maps.
   """
   @spec to_maps(t, (atom -> ANSI.ansidata())) :: [map]
-  def to_maps(%{} = grid, fun \\ &Color.color_for/1) when is_function(fun, 1) do
+  def to_maps(%{} = grid, fun \\ &Tile.new/1) when is_function(fun, 1) do
     for {row_num, row_map} <- grid do
       [
         {"row", row_num}

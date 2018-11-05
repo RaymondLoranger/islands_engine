@@ -5,7 +5,7 @@ defmodule Islands.Engine.IE do
   #
   # Examples:
   #   use Islands.Engine.IE
-  #   print_coord_colors()
+  #   print_tiles()
   #   DemoProc.loop_test()
 
   #   use Islands.Engine.IE
@@ -22,7 +22,7 @@ defmodule Islands.Engine.IE do
   #   Island.new(:l_shape, coord)
   #   Island.new(:dot, coord)
 
-  alias Islands.Engine.Coord.Color
+  alias Islands.Engine.Game.Grid.Tile
 
   defmacro __using__(_options) do
     quote do
@@ -30,7 +30,7 @@ defmodule Islands.Engine.IE do
       alias unquote(__MODULE__)
       alias IO.ANSI.Plus, as: ANSI
       alias Islands.Engine.Board.{Response, Server}
-      alias Islands.Engine.Coord.Color
+      alias Islands.Engine.Game.Grid.Tile
 
       alias Islands.Engine.Game.Server.{
         AddPlayer,
@@ -74,22 +74,22 @@ defmodule Islands.Engine.IE do
     end
   end
 
-  def print_coord_colors() do
-    IO.puts(":atoll       => #{Color.color_for(:atoll)}")
-    IO.puts(":dot         => #{Color.color_for(:dot)}")
-    IO.puts(":l_shape     => #{Color.color_for(:l_shape)}")
-    IO.puts(":s_shape     => #{Color.color_for(:s_shape)}")
-    IO.puts(":square      => #{Color.color_for(:square)}")
+  def print_tiles() do
+    IO.puts(":atoll       => #{Tile.new(:atoll)}")
+    IO.puts(":dot         => #{Tile.new(:dot)}")
+    IO.puts(":l_shape     => #{Tile.new(:l_shape)}")
+    IO.puts(":s_shape     => #{Tile.new(:s_shape)}")
+    IO.puts(":square      => #{Tile.new(:square)}")
 
-    IO.puts(":atoll_hit   => #{Color.color_for(:atoll_hit)}")
-    IO.puts(":dot_hit     => #{Color.color_for(:dot_hit)}")
-    IO.puts(":l_shape_hit => #{Color.color_for(:l_shape_hit)}")
-    IO.puts(":s_shape_hit => #{Color.color_for(:s_shape_hit)}")
-    IO.puts(":square_hit  => #{Color.color_for(:square_hit)}")
+    IO.puts(":atoll_hit   => #{Tile.new(:atoll_hit)}")
+    IO.puts(":dot_hit     => #{Tile.new(:dot_hit)}")
+    IO.puts(":l_shape_hit => #{Tile.new(:l_shape_hit)}")
+    IO.puts(":s_shape_hit => #{Tile.new(:s_shape_hit)}")
+    IO.puts(":square_hit  => #{Tile.new(:square_hit)}")
 
-    IO.puts(":hit         => #{Color.color_for(:hit)}")
-    IO.puts(":miss        => #{Color.color_for(:miss)}")
-    IO.puts(":board_miss  => #{Color.color_for(:board_miss)}")
-    IO.puts(":ocean       => #{Color.color_for(nil)}")
+    IO.puts(":hit         => #{Tile.new(:hit)}")
+    IO.puts(":miss        => #{Tile.new(:miss)}")
+    IO.puts(":board_miss  => #{Tile.new(:board_miss)}")
+    IO.puts(":ocean       => #{Tile.new(nil)}")
   end
 end
