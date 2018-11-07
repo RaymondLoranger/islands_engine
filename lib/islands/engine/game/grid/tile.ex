@@ -16,10 +16,9 @@ defmodule Islands.Engine.Game.Grid.Tile do
   def new(:s_shape_hit), do: format(:pale_green, ">s<")
   def new(:square_hit), do: format(:lawn_green, ">q<")
   def new(:hit), do: format(:islamic_green, ">h<")
-  # def new(:miss), do: format(:blue_ribbon, "<m>")
-  def new(:miss), do: format(:mortar, "<m>")
+  def new(:miss), do: format(:blue_ribbon, "<m>")
   # def new(:board_miss), do: format(:dodger_blue, "<m>")
-  def new(:board_miss), do: format(:mortar, "<m>")
+  def new(:board_miss), do: format(:blue_ribbon, "<m>")
   def new(nil), do: format(:deep_sky_blue, "<o>")
 
   ## Private functions
