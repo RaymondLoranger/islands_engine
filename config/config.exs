@@ -41,6 +41,10 @@ config :logger, compile_time_purge_level: :info
 # Uncomment to stop logging...
 # config :logger, level: :error
 
+truncate_default_in_bytes = 8192
+
+config :logger, truncate: truncate_default_in_bytes * 2
+
 #     import_config "#{Mix.env}.exs"
 import_config "persist.exs"
 import_config "persist_book_ref.exs"

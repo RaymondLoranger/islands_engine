@@ -25,7 +25,7 @@ defmodule Islands.Engine.Game.Server do
 
   @ets Application.get_env(@app, :ets_name)
   # @reg Application.get_env(@app, :registry)
-  @timeout_in_ms 1000
+  @timeout_in_ms 500
 
   @spec start_link({String.t(), String.t(), pid}) :: GenServer.on_start()
   def start_link({game_name, player1_name, pid}) do
