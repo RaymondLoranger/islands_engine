@@ -17,6 +17,8 @@ defmodule Islands.Engine do
   @board_range Application.get_env(@app, :board_range)
   @island_types Application.get_env(@app, :island_types)
   @player_ids Application.get_env(@app, :player_ids)
+  @timeout_in_ms 10
+  @timeout_times 100
 
   @doc """
   Starts a new game.
@@ -106,6 +108,7 @@ defmodule Islands.Engine do
       when is_binary(game_name) and player_id in @player_ids and
              row in @board_range and col in @board_range do
     game_name
+    |> maybe_wait(@timeout_times)
     |> Server.via()
     |> GenServer.call({:guess_coord, player_id, row, col})
   end
@@ -117,5 +120,22 @@ defmodule Islands.Engine do
   def tally(game_name, player_id)
       when is_binary(game_name) and player_id in @player_ids do
     game_name |> Server.via() |> GenServer.call({:tally, player_id})
+  end
+
+  ## Private functions
+
+  # On restarts, wait if name not yet registered...
+  @spec maybe_wait(String.t(), non_neg_integer) :: String.t()
+  defp maybe_wait(game_name, 0), do: game_name
+
+  defp maybe_wait(game_name, timeout_times_left) do
+    case game_name |> Server.via() |> :global.whereis_name() do
+      :undefined ->
+        Process.sleep(@timeout_in_ms)
+        maybe_wait(game_name, timeout_times_left - 1)
+
+      _pid ->
+        game_name
+    end
   end
 end
