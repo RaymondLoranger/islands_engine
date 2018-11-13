@@ -4,14 +4,15 @@ defmodule Islands.Engine.Mixfile do
   def project do
     [
       app: :islands_engine,
-      version: "0.1.51",
+      version: "0.1.52",
       elixir: "~> 1.6",
       start_permanent: Mix.env() == :prod,
       name: "Islands Engine",
       source_url: source_url(),
       description: description(),
       package: package(),
-      deps: deps()
+      deps: deps(),
+      dialyzer: [plt_add_apps: [:mix]]
     ]
   end
 

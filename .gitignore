@@ -21,8 +21,3 @@ erl_crash.dump
 
 # Ignore package tarball (built via "mix hex.build").
 islands_engine-*.tar
-
-perso*
-tree*
-/log
-/.elixir_ls
