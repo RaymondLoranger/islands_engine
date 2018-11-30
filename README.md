@@ -8,7 +8,7 @@ Models the _Game of Islands_.
 
 ## Installation
 
-Add the `:islands_engine` dependency to your `mix.exs` file:
+Add `islands_engine` to your list of dependencies in `mix.exs`:
 
 ```elixir
 def deps do
@@ -32,4 +32,4 @@ a _Game of Islands_. Multiple games can be played simultaneously.
 ## Note
 
 Package [Islands Text Client](https://hex.pm/packages/islands_text_client) uses
-`:islands_engine` as a dependency to play the _Game of Islands_ in the console.
+`islands_engine` as a dependency to play the _Game of Islands_ in the console.
