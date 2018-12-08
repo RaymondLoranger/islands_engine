@@ -33,10 +33,6 @@ defmodule Islands.Engine.Game.Server do
     start_link(Server, {game_name, player1_name, pid}, name: via(game_name))
   end
 
-  @spec start_link(Game.t()) :: GenServer.on_start()
-  def start_link(game),
-    do: GenServer.start_link(Server, game, name: via(game.name))
-
   # @spec via(String.t()) :: {:via, module, {atom, tuple}}
   # def via(game_name), do: {:via, Registry, {@reg, key(game_name)}}
 
@@ -71,9 +67,6 @@ defmodule Islands.Engine.Game.Server do
   @spec init({String.t(), String.t(), pid}) :: {:ok, Game.t()}
   def init({game_name, player1_name, pid}),
     do: {:ok, game(game_name, player1_name, pid)}
-
-  @spec init(Game.t()) :: {:ok, Game.t()}
-  def init(game), do: {:ok, game}
 
   @spec handle_call(request, from, Game.t()) :: reply
   def handle_call({:add_player, _, _} = request, from, game),

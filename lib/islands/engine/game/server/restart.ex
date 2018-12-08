@@ -1,4 +1,6 @@
 defmodule Islands.Engine.Game.Server.Restart do
+  @moduledoc false
+
   use GenServer
   use PersistConfig
 
@@ -18,7 +20,10 @@ defmodule Islands.Engine.Game.Server.Restart do
     |> :ets.match_object({{Server, :_}, :_})
     |> Enum.each(fn {{Server, _game_name}, game} ->
       # Child may already be started...
-      DynamicSupervisor.start_child(DynSup, {Server, game})
+      DynamicSupervisor.start_child(
+        DynSup,
+        {Server, {game.name, game.player1.name, game.player1.pid}}
+      )
     end)
   end
 
