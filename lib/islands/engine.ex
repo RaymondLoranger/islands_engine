@@ -18,7 +18,7 @@ defmodule Islands.Engine do
   @island_types Application.get_env(@app, :island_types)
   @player_ids Application.get_env(@app, :player_ids)
   @timeout_in_ms 10
-  @timeout_times 100
+  @times 100
 
   @doc """
   Starts a new game.
@@ -108,9 +108,14 @@ defmodule Islands.Engine do
       when is_binary(game_name) and player_id in @player_ids and
              row in @board_range and col in @board_range do
     game_name
-    |> maybe_wait(@timeout_times)
     |> Server.via()
     |> GenServer.call({:guess_coord, player_id, row, col})
+  catch
+    :exit, "no process" <> _etc ->
+      game_name
+      |> wait(@times)
+      |> Server.via()
+      |> GenServer.call({:guess_coord, player_id, row, col})
   end
 
   @doc """
@@ -122,20 +127,37 @@ defmodule Islands.Engine do
     game_name |> Server.via() |> GenServer.call({:tally, player_id})
   end
 
+  @doc """
+  Returns a sorted list of registered game names.
+  """
+  @spec game_names :: [String.t()]
+  def game_names do
+    :global.registered_names()
+    |> Enum.filter(&(is_tuple(&1) and elem(&1, 0) == Server))
+    |> Enum.map(&elem(&1, 1))
+  end
+
+  @doc """
+  Returns the `pid` of the game server process registered under the
+  given `game_name`, or `nil` if no process is registered.
+  """
+  @spec game_pid(String.t()) :: pid | nil
+  def game_pid(game_name), do: game_name |> Server.via() |> GenServer.whereis()
+
   ## Private functions
 
   # On restarts, wait if name not yet registered...
-  @spec maybe_wait(String.t(), non_neg_integer) :: String.t()
-  defp maybe_wait(game_name, 0), do: game_name
+  @spec wait(String.t(), non_neg_integer) :: String.t()
+  defp wait(game_name, 0), do: game_name
 
-  defp maybe_wait(game_name, timeout_times_left) do
-    case game_name |> Server.via() |> :global.whereis_name() do
-      :undefined ->
-        Process.sleep(@timeout_in_ms)
-        maybe_wait(game_name, timeout_times_left - 1)
-
-      _pid ->
+  defp wait(game_name, times_left) do
+    case game_pid(game_name) do
+      pid when is_pid(pid) ->
         game_name
+
+      nil ->
+        Process.sleep(@timeout_in_ms)
+        wait(game_name, times_left - 1)
     end
   end
 end

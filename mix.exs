@@ -4,7 +4,7 @@ defmodule Islands.Engine.Mixfile do
   def project do
     [
       app: :islands_engine,
-      version: "0.1.55",
+      version: "0.1.56",
       elixir: "~> 1.6",
       start_permanent: Mix.env() == :prod,
       name: "Islands Engine",
@@ -48,6 +48,7 @@ defmodule Islands.Engine.Mixfile do
     [
       {:mix_tasks,
        github: "RaymondLoranger/mix_tasks", only: :dev, runtime: false},
+      {:log_reset, github: "RaymondLoranger/log_reset"},
       {:persist_config, "~> 0.1"},
       {:io_ansi_plus, "~> 0.1"},
       {:logger_file_backend, "~> 0.0.9"},
