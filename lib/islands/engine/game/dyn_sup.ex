@@ -1,4 +1,8 @@
 defmodule Islands.Engine.Game.DynSup do
+  @moduledoc """
+  A supervisor that starts game server processes dynamically.
+  """
+
   use DynamicSupervisor
 
   alias __MODULE__
