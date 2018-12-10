@@ -12,13 +12,11 @@ defmodule Islands.Engine do
   """
 
   alias Islands.Engine.Game.{DynSup, Server, Tally}
-  alias Islands.Engine.{Coord, Game, Island}
+  alias Islands.Engine.{Coord, Game, Island, Proxy}
 
   @board_range Application.get_env(@app, :board_range)
   @island_types Application.get_env(@app, :island_types)
   @player_ids Application.get_env(@app, :player_ids)
-  @timeout_in_ms 10
-  @times 100
 
   @doc """
   Starts a new game.
@@ -35,18 +33,16 @@ defmodule Islands.Engine do
   Ends a game.
   """
   @spec end_game(String.t()) :: :ok
-  def end_game(game_name) when is_binary(game_name) do
-    game_name |> Server.via() |> GenServer.stop(:shutdown)
-  end
+  def end_game(game_name) when is_binary(game_name),
+    do: game_name |> Server.via() |> GenServer.stop(:shutdown)
 
   @doc """
   Stops a game.
   """
   @spec stop_game(String.t(), Game.player_id()) :: Tally.t()
   def stop_game(game_name, player_id)
-      when is_binary(game_name) and player_id in @player_ids do
-    game_name |> Server.via() |> GenServer.call({:stop, player_id})
-  end
+      when is_binary(game_name) and player_id in @player_ids,
+      do: {:stop, player_id} |> Proxy.call(game_name, __ENV__.function)
 
   @doc """
   Adds the second player of a game.
@@ -55,9 +51,8 @@ defmodule Islands.Engine do
   def add_player(game_name, player2_name, player2_pid)
       when is_binary(game_name) and is_binary(player2_name) and
              is_pid(player2_pid) do
-    game_name
-    |> Server.via()
-    |> GenServer.call({:add_player, player2_name, player2_pid})
+    {:add_player, player2_name, player2_pid}
+    |> Proxy.call(game_name, __ENV__.function)
   end
 
   @doc """
@@ -74,9 +69,8 @@ defmodule Islands.Engine do
       when is_binary(game_name) and player_id in @player_ids and
              island_type in @island_types and row in @board_range and
              col in @board_range do
-    game_name
-    |> Server.via()
-    |> GenServer.call({:position_island, player_id, island_type, row, col})
+    {:position_island, player_id, island_type, row, col}
+    |> Proxy.call(game_name, __ENV__.function)
   end
 
   @doc """
@@ -85,9 +79,8 @@ defmodule Islands.Engine do
   @spec position_all_islands(String.t(), Game.player_id()) :: Tally.t()
   def position_all_islands(game_name, player_id)
       when is_binary(game_name) and player_id in @player_ids do
-    game_name
-    |> Server.via()
-    |> GenServer.call({:position_all_islands, player_id})
+    {:position_all_islands, player_id}
+    |> Proxy.call(game_name, __ENV__.function)
   end
 
   @doc """
@@ -95,9 +88,8 @@ defmodule Islands.Engine do
   """
   @spec set_islands(String.t(), Game.player_id()) :: Tally.t()
   def set_islands(game_name, player_id)
-      when is_binary(game_name) and player_id in @player_ids do
-    game_name |> Server.via() |> GenServer.call({:set_islands, player_id})
-  end
+      when is_binary(game_name) and player_id in @player_ids,
+      do: {:set_islands, player_id} |> Proxy.call(game_name, __ENV__.function)
 
   @doc """
   Allows a player to guess a coordinate.
@@ -107,15 +99,8 @@ defmodule Islands.Engine do
   def guess_coord(game_name, player_id, row, col)
       when is_binary(game_name) and player_id in @player_ids and
              row in @board_range and col in @board_range do
-    game_name
-    |> Server.via()
-    |> GenServer.call({:guess_coord, player_id, row, col})
-  catch
-    :exit, "no process" <> _etc ->
-      game_name
-      |> wait(@times)
-      |> Server.via()
-      |> GenServer.call({:guess_coord, player_id, row, col})
+    {:guess_coord, player_id, row, col}
+    |> Proxy.call(game_name, __ENV__.function)
   end
 
   @doc """
@@ -123,9 +108,8 @@ defmodule Islands.Engine do
   """
   @spec tally(String.t(), Game.player_id()) :: Tally.t()
   def tally(game_name, player_id)
-      when is_binary(game_name) and player_id in @player_ids do
-    game_name |> Server.via() |> GenServer.call({:tally, player_id})
-  end
+      when is_binary(game_name) and player_id in @player_ids,
+      do: {:tally, player_id} |> Proxy.call(game_name, __ENV__.function)
 
   @doc """
   Returns a sorted list of registered game names.
@@ -143,21 +127,4 @@ defmodule Islands.Engine do
   """
   @spec game_pid(String.t()) :: pid | nil
   def game_pid(game_name), do: game_name |> Server.via() |> GenServer.whereis()
-
-  ## Private functions
-
-  # On restarts, wait if name not yet registered...
-  @spec wait(String.t(), non_neg_integer) :: String.t()
-  defp wait(game_name, 0), do: game_name
-
-  defp wait(game_name, times_left) do
-    case game_pid(game_name) do
-      pid when is_pid(pid) ->
-        game_name
-
-      nil ->
-        Process.sleep(@timeout_in_ms)
-        wait(game_name, times_left - 1)
-    end
-  end
 end

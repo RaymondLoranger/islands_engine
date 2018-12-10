@@ -23,6 +23,14 @@ defmodule Islands.Engine.IE do
   #   Island.new(:dot, coord)
 
   alias Islands.Engine.Game.Grid.Tile
+  alias Islands.Engine
+
+  # Supervisor option defaults for :max_restarts and :max_seconds
+  @max_restarts 3
+  @max_seconds 5
+  @seconds_per_restart Float.round(@max_seconds / @max_restarts, 0)
+  @pause_in_ms round(@seconds_per_restart * 1000)
+  @snooze_in_ms 10
 
   defmacro __using__(_options) do
     quote do
@@ -74,6 +82,7 @@ defmodule Islands.Engine.IE do
     end
   end
 
+  @spec print_tiles() :: :ok
   def print_tiles() do
     IO.puts(":atoll       => #{Tile.new(:atoll)}")
     IO.puts(":dot         => #{Tile.new(:dot)}")
@@ -91,5 +100,46 @@ defmodule Islands.Engine.IE do
     IO.puts(":miss        => #{Tile.new(:miss)}")
     IO.puts(":board_miss  => #{Tile.new(:board_miss)}")
     IO.puts(":ocean       => #{Tile.new(nil)}")
+  end
+
+  # :observer.start
+  # use Islands.Engine.IE
+  # pid = keep_killing(Sup)
+  # pid = keep_killing(DynSup)
+  # pid = keep_killing("Eden")
+  # Process.exit(pid, :kill)
+  @spec keep_killing(atom | binary) :: pid
+  def keep_killing(name) do
+    spawn(fn ->
+      for _ <- Stream.cycle([:ok]) do
+        name |> pid() |> Process.exit(:kill)
+        Process.sleep(@pause_in_ms)
+      end
+    end)
+  end
+
+  ## Private functions
+
+  @spec pid(atom | binary) :: pid
+  defp pid(name) when is_atom(name) do
+    case Process.whereis(name) do
+      pid when is_pid(pid) ->
+        pid
+
+      nil ->
+        Process.sleep(@snooze_in_ms)
+        pid(name)
+    end
+  end
+
+  defp pid(name) when is_binary(name) do
+    case Engine.game_pid(name) do
+      pid when is_pid(pid) ->
+        pid
+
+      nil ->
+        Process.sleep(@snooze_in_ms)
+        pid(name)
+    end
   end
 end
