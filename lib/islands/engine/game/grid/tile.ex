@@ -1,5 +1,5 @@
 defmodule Islands.Engine.Game.Grid.Tile do
-  @moduledoc "Convenience module for client application."
+  @moduledoc "Convenience module for client applications."
 
   alias IO.ANSI.Plus, as: ANSI
   alias Islands.Engine.Island
