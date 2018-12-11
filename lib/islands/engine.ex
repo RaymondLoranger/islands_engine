@@ -34,7 +34,7 @@ defmodule Islands.Engine do
   """
   @spec end_game(String.t()) :: :ok
   def end_game(game_name) when is_binary(game_name),
-    do: game_name |> Server.via() |> GenServer.stop(:shutdown)
+    do: Proxy.stop(:shutdown, game_name, __ENV__.function)
 
   @doc """
   Stops a game.
@@ -42,7 +42,7 @@ defmodule Islands.Engine do
   @spec stop_game(String.t(), Game.player_id()) :: Tally.t()
   def stop_game(game_name, player_id)
       when is_binary(game_name) and player_id in @player_ids,
-      do: {:stop, player_id} |> Proxy.call(game_name, __ENV__.function)
+      do: Proxy.call({:stop, player_id}, game_name, __ENV__.function)
 
   @doc """
   Adds the second player of a game.
@@ -89,7 +89,7 @@ defmodule Islands.Engine do
   @spec set_islands(String.t(), Game.player_id()) :: Tally.t()
   def set_islands(game_name, player_id)
       when is_binary(game_name) and player_id in @player_ids,
-      do: {:set_islands, player_id} |> Proxy.call(game_name, __ENV__.function)
+      do: Proxy.call({:set_islands, player_id}, game_name, __ENV__.function)
 
   @doc """
   Allows a player to guess a coordinate.
@@ -109,7 +109,7 @@ defmodule Islands.Engine do
   @spec tally(String.t(), Game.player_id()) :: Tally.t()
   def tally(game_name, player_id)
       when is_binary(game_name) and player_id in @player_ids,
-      do: {:tally, player_id} |> Proxy.call(game_name, __ENV__.function)
+      do: Proxy.call({:tally, player_id}, game_name, __ENV__.function)
 
   @doc """
   Returns a sorted list of registered game names.

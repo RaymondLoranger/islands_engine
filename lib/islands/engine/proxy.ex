@@ -4,31 +4,37 @@ defmodule Islands.Engine.Proxy do
   while providing increased fault-tolerance capability.
   """
 
+  alias __MODULE__.{Error, Info}
   alias Islands.Engine.Game.{Server, Tally}
   alias Islands.Engine
 
-  require Logger
-
-  @timeout_in_ms 10
-  @times 100
+  @timeout 10
+  @times 5
 
   @spec call(tuple, String.t(), tuple) :: Tally.t()
   def call(request, game_name, caller) do
-    game_name
-    |> Server.via()
-    |> GenServer.call(request)
+    game_name |> Server.via() |> GenServer.call(request)
   catch
     :exit, reason ->
-      Logger.error("""
-      \n`exit` caught for calling function #{inspect(caller)}...
-      `exit` reason:
-      #{inspect(reason)}
-      """)
+      Error.log(:exit, reason, caller)
 
       game_name
       |> wait(caller, @times)
       |> Server.via()
       |> GenServer.call(request)
+  end
+
+  @spec stop(atom, String.t(), tuple) :: :ok
+  def stop(reason, game_name, caller) do
+    game_name |> Server.via() |> GenServer.stop(reason)
+  catch
+    :exit, exit_reason ->
+      Error.log(:exit, exit_reason, caller)
+
+      game_name
+      |> wait(caller, @times)
+      |> Server.via()
+      |> GenServer.stop(reason)
   end
 
   ## Private functions
@@ -38,24 +44,12 @@ defmodule Islands.Engine.Proxy do
   defp wait(game_name, _caller, 0), do: game_name
 
   defp wait(game_name, caller, times_left) do
-    Logger.info("""
-    \nGame #{inspect(game_name)} not registered:
-      • Waiting: #{@timeout_in_ms} ms
-      • Waits left: #{times_left}
-      • Calling function: #{inspect(caller)}
-    """)
-
-    Process.sleep(@timeout_in_ms)
+    Info.log(:game_not_registered, game_name, @timeout, times_left, caller)
+    Process.sleep(@timeout)
 
     case Engine.game_pid(game_name) do
       pid when is_pid(pid) ->
-        Logger.info("""
-        \nGame #{inspect(game_name)} registered:
-          • PID: #{inspect(pid)}
-          • Waits left: #{times_left}
-          • Calling function: #{inspect(caller)}
-        """)
-
+        Info.log(:game_registered, game_name, pid, times_left, caller)
         game_name
 
       nil ->

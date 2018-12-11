@@ -29,8 +29,8 @@ defmodule Islands.Engine.IE do
   @max_restarts 3
   @max_seconds 5
   @seconds_per_restart Float.round(@max_seconds / @max_restarts, 0)
-  @pause_in_ms round(@seconds_per_restart * 1000)
-  @snooze_in_ms 10
+  @pause round(@seconds_per_restart * 1000)
+  @snooze 10
 
   defmacro __using__(_options) do
     quote do
@@ -63,7 +63,8 @@ defmodule Islands.Engine.IE do
         Tally
       }
 
-      alias Islands.Engine.Islands.Offsets
+      alias Islands.Engine.Island.Offsets
+      alias Islands.Engine.Proxy.{Error, Info}
 
       alias Islands.Engine.{
         App,
@@ -74,6 +75,7 @@ defmodule Islands.Engine.IE do
         Guesses,
         IE,
         Island,
+        Proxy,
         Sup
       }
 
@@ -113,7 +115,7 @@ defmodule Islands.Engine.IE do
     spawn(fn ->
       for _ <- Stream.cycle([:ok]) do
         name |> pid() |> Process.exit(:kill)
-        Process.sleep(@pause_in_ms)
+        Process.sleep(@pause)
       end
     end)
   end
@@ -127,7 +129,7 @@ defmodule Islands.Engine.IE do
         pid
 
       nil ->
-        Process.sleep(@snooze_in_ms)
+        Process.sleep(@snooze)
         pid(name)
     end
   end
@@ -138,7 +140,7 @@ defmodule Islands.Engine.IE do
         pid
 
       nil ->
-        Process.sleep(@snooze_in_ms)
+        Process.sleep(@snooze)
         pid(name)
     end
   end

@@ -7,8 +7,8 @@ defmodule Islands.Engine.Game.DynSup do
 
   alias __MODULE__
 
-  @timeout_in_ms 10
-  @times 100
+  @timeout 10
+  @times 5
 
   @spec start_link(term) :: Supervisor.on_start()
   def start_link(:ok) do
@@ -28,13 +28,11 @@ defmodule Islands.Engine.Game.DynSup do
   defp wait(name, 0), do: name
 
   defp wait(name, times_left) do
-    case Process.whereis(name) do
-      nil ->
-        name
+    Process.sleep(@timeout)
 
-      _pid ->
-        Process.sleep(@timeout_in_ms)
-        wait(name, times_left - 1)
+    case Process.whereis(name) do
+      nil -> name
+      pid when is_pid(pid) -> wait(name, times_left - 1)
     end
   end
 
