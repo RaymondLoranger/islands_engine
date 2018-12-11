@@ -3,11 +3,11 @@ defmodule Islands.Engine.Proxy.Error do
 
   require Logger
 
-  @spec log(atom, term, tuple) :: :ok
-  def log(:exit, reason, caller) do
+  @spec log(atom, term) :: :ok
+  def log(:exit, reason) do
     Logger.error("""
-    \n`exit` caught for calling function #{inspect(caller)}...
-    `exit` reason:
+    \n`exit` caught...
+    • Reason:
     #{inspect(reason)}
     """)
   end

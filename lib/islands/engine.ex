@@ -34,26 +34,24 @@ defmodule Islands.Engine do
   """
   @spec end_game(String.t()) :: :ok
   def end_game(game_name) when is_binary(game_name),
-    do: Proxy.stop(:shutdown, game_name, __ENV__.function)
+    do: Proxy.stop(:shutdown, game_name)
 
   @doc """
   Stops a game.
   """
-  @spec stop_game(String.t(), Game.player_id()) :: Tally.t()
+  @spec stop_game(String.t(), Game.player_id()) :: Tally.t() | :ok
   def stop_game(game_name, player_id)
       when is_binary(game_name) and player_id in @player_ids,
-      do: Proxy.call({:stop, player_id}, game_name, __ENV__.function)
+      do: Proxy.call({:stop, player_id}, game_name)
 
   @doc """
   Adds the second player of a game.
   """
-  @spec add_player(String.t(), String.t(), pid) :: Tally.t()
+  @spec add_player(String.t(), String.t(), pid) :: Tally.t() | :ok
   def add_player(game_name, player2_name, player2_pid)
       when is_binary(game_name) and is_binary(player2_name) and
-             is_pid(player2_pid) do
-    {:add_player, player2_name, player2_pid}
-    |> Proxy.call(game_name, __ENV__.function)
-  end
+             is_pid(player2_pid),
+      do: Proxy.call({:add_player, player2_name, player2_pid}, game_name)
 
   @doc """
   Positions an island on a player's board.
@@ -64,52 +62,48 @@ defmodule Islands.Engine do
           Island.type(),
           Coord.row(),
           Coord.col()
-        ) :: Tally.t()
+        ) :: Tally.t() | :ok
   def position_island(game_name, player_id, island_type, row, col)
       when is_binary(game_name) and player_id in @player_ids and
              island_type in @island_types and row in @board_range and
              col in @board_range do
     {:position_island, player_id, island_type, row, col}
-    |> Proxy.call(game_name, __ENV__.function)
+    |> Proxy.call(game_name)
   end
 
   @doc """
   Positions all islands on a player's board.
   """
-  @spec position_all_islands(String.t(), Game.player_id()) :: Tally.t()
+  @spec position_all_islands(String.t(), Game.player_id()) :: Tally.t() | :ok
   def position_all_islands(game_name, player_id)
-      when is_binary(game_name) and player_id in @player_ids do
-    {:position_all_islands, player_id}
-    |> Proxy.call(game_name, __ENV__.function)
-  end
+      when is_binary(game_name) and player_id in @player_ids,
+      do: Proxy.call({:position_all_islands, player_id}, game_name)
 
   @doc """
   Declares all islands set for a player.
   """
-  @spec set_islands(String.t(), Game.player_id()) :: Tally.t()
+  @spec set_islands(String.t(), Game.player_id()) :: Tally.t() | :ok
   def set_islands(game_name, player_id)
       when is_binary(game_name) and player_id in @player_ids,
-      do: Proxy.call({:set_islands, player_id}, game_name, __ENV__.function)
+      do: Proxy.call({:set_islands, player_id}, game_name)
 
   @doc """
   Allows a player to guess a coordinate.
   """
   @spec guess_coord(String.t(), Game.player_id(), Coord.row(), Coord.col()) ::
-          Tally.t()
+          Tally.t() | :ok
   def guess_coord(game_name, player_id, row, col)
       when is_binary(game_name) and player_id in @player_ids and
-             row in @board_range and col in @board_range do
-    {:guess_coord, player_id, row, col}
-    |> Proxy.call(game_name, __ENV__.function)
-  end
+             row in @board_range and col in @board_range,
+      do: Proxy.call({:guess_coord, player_id, row, col}, game_name)
 
   @doc """
   Returns the tally of a game for a given player.
   """
-  @spec tally(String.t(), Game.player_id()) :: Tally.t()
+  @spec tally(String.t(), Game.player_id()) :: Tally.t() | :ok
   def tally(game_name, player_id)
       when is_binary(game_name) and player_id in @player_ids,
-      do: Proxy.call({:tally, player_id}, game_name, __ENV__.function)
+      do: Proxy.call({:tally, player_id}, game_name)
 
   @doc """
   Returns a sorted list of registered game names.
