@@ -5,6 +5,7 @@ defmodule Islands.Engine.Proxy do
   """
 
   alias __MODULE__.{Error, GameNotStarted, Info}
+  alias IO.ANSI.Plus, as: ANSI
   alias Islands.Engine.Game.{Server, Tally}
   alias Islands.Engine
 
@@ -24,7 +25,7 @@ defmodule Islands.Engine.Proxy do
 
         {:unregistered, game_name} ->
           Info.log(:game_not_started, game_name)
-          game_name |> GameNotStarted.message() |> IO.puts()
+          game_name |> GameNotStarted.message() |> ANSI.puts()
       end
   end
 
@@ -41,7 +42,7 @@ defmodule Islands.Engine.Proxy do
 
         {:unregistered, game_name} ->
           Info.log(:game_not_started, game_name)
-          game_name |> GameNotStarted.message() |> IO.puts()
+          game_name |> GameNotStarted.message() |> ANSI.puts()
       end
   end
 
