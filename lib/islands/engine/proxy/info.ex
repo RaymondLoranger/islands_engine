@@ -23,11 +23,4 @@ defmodule Islands.Engine.Proxy.Info do
     #{inspect(reason)}
     """)
   end
-
-  @spec log(atom, String.t()) :: :ok
-  def log(:game_not_started, game_name) do
-    Logger.info("""
-    \nGame #{inspect(game_name)} not started.
-    """)
-  end
 end
