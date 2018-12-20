@@ -33,7 +33,7 @@ defmodule Islands.Engine.Game.Server.GuessCoord do
         Error.reply(game, request, reason, player_id)
 
       non_matched_value ->
-        :ok = Error.log(:handle_call, non_matched_value, request, game)
+        :ok = Error.log(:handle_call, {non_matched_value, request, game})
         Error.reply(game, request, :unknown, player_id)
     end
   end

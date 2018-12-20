@@ -4,7 +4,7 @@ defmodule Islands.Engine.Mixfile do
   def project do
     [
       app: :islands_engine,
-      version: "0.1.66",
+      version: "0.1.68",
       elixir: "~> 1.6",
       start_permanent: Mix.env() == :prod,
       name: "Islands Engine",
@@ -28,7 +28,16 @@ defmodule Islands.Engine.Mixfile do
 
   defp package do
     [
-      files: ["lib", "mix.exs", "README*", "assets", "config/persist*.exs"],
+      files: [
+        "lib",
+        "mix.exs",
+        "README*",
+        "assets",
+        "config/persist*.exs",
+        "config/dev.exs",
+        "config/prod.exs",
+        "config/test.exs"
+      ],
       maintainers: ["Raymond Loranger"],
       licenses: ["MIT"],
       links: %{"GitHub" => source_url()}

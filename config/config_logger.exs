@@ -22,14 +22,14 @@ config :logger, :error_log, format: format, path: error_path, level: :error
 
 config :logger,
   backends: [
-    # :console,
+    :console,
     {LoggerFileBackend, :info_log},
     {LoggerFileBackend, :warn_log},
     {LoggerFileBackend, :error_log}
   ]
 
 # Purges debug messages...
-config :logger, compile_time_purge_level: :info
+# config :logger, compile_time_purge_level: :info
 
 # Keeps only error messages...
 # config :logger, compile_time_purge_level: :error
