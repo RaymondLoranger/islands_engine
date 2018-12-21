@@ -31,7 +31,7 @@ defmodule Islands.Engine.Game.Server.Error do
   defp do_log(_event, _details, false = _log?), do: :ok
 
   defp do_log(:handle_call, {non_matched_value, request, game}, true = _log?) do
-    Logger.remove_backend(:console, flush: true)
+    removed = Logger.remove_backend(:console, flush: true)
 
     """
     \n#{game.name |> Server.via() |> inspect()} #{self() |> inspect()}
@@ -44,12 +44,12 @@ defmodule Islands.Engine.Game.Server.Error do
     """
     |> Logger.error()
 
-    Logger.add_backend(:console, flush: true)
+    if removed == :ok, do: Logger.add_backend(:console, flush: true)
     :ok
   end
 
   defp do_log(:terminate, {reason, game}, true) do
-    Logger.remove_backend(:console, flush: true)
+    removed = Logger.remove_backend(:console, flush: true)
 
     """
     \n#{game.name |> Server.via() |> inspect()} #{self() |> inspect()}
@@ -62,7 +62,7 @@ defmodule Islands.Engine.Game.Server.Error do
     """
     |> Logger.error()
 
-    Logger.add_backend(:console, flush: true)
+    if removed == :ok, do: Logger.add_backend(:console, flush: true)
     :ok
   end
 end

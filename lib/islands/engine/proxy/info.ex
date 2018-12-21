@@ -19,7 +19,7 @@ defmodule Islands.Engine.Proxy.Info do
 
   defp do_log(:game_not_registered, details, true = _log?) do
     {game_name, timeout, times_left, reason} = details
-    Logger.remove_backend(:console, flush: true)
+    removed = Logger.remove_backend(:console, flush: true)
 
     Logger.info("""
     \nGame #{inspect(game_name)} not registered:
@@ -29,13 +29,13 @@ defmodule Islands.Engine.Proxy.Info do
     #{inspect(reason)}
     """)
 
-    Logger.add_backend(:console, flush: true)
+    if removed == :ok, do: Logger.add_backend(:console, flush: true)
     :ok
   end
 
   defp do_log(:game_registered, details, true = _log?) do
     {game_name, pid, times_left, reason} = details
-    Logger.remove_backend(:console, flush: true)
+    removed = Logger.remove_backend(:console, flush: true)
 
     Logger.info("""
     \nGame #{inspect(game_name)} registered:
@@ -45,7 +45,7 @@ defmodule Islands.Engine.Proxy.Info do
     #{inspect(reason)}
     """)
 
-    Logger.add_backend(:console, flush: true)
+    if removed == :ok, do: Logger.add_backend(:console, flush: true)
     :ok
   end
 end

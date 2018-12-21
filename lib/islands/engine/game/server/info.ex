@@ -20,7 +20,7 @@ defmodule Islands.Engine.Game.Server.Info do
   defp do_log(_event, _details, false = _log?), do: :ok
 
   defp do_log(:save, {game}, true = _log?) do
-    Logger.remove_backend(:console, flush: true)
+    removed = Logger.remove_backend(:console, flush: true)
 
     """
     \n#{game.name |> Server.via() |> inspect()} #{self() |> inspect()}
@@ -31,12 +31,12 @@ defmodule Islands.Engine.Game.Server.Info do
     """
     |> Logger.info()
 
-    Logger.add_backend(:console, flush: true)
+    if removed == :ok, do: Logger.add_backend(:console, flush: true)
     :ok
   end
 
   defp do_log(:terminate, {reason, game}, true = _log?) do
-    Logger.remove_backend(:console, flush: true)
+    removed = Logger.remove_backend(:console, flush: true)
 
     """
     \n#{game.name |> Server.via() |> inspect()} #{self() |> inspect()}
@@ -49,7 +49,7 @@ defmodule Islands.Engine.Game.Server.Info do
     """
     |> Logger.info()
 
-    Logger.add_backend(:console, flush: true)
+    if removed == :ok, do: Logger.add_backend(:console, flush: true)
     :ok
   end
 end

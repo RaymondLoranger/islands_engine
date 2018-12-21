@@ -18,7 +18,7 @@ defmodule Islands.Engine.Proxy.Error do
   defp do_log(_event, _details, false = _log?), do: :ok
 
   defp do_log(:exit, {reason}, true = _log?) do
-    Logger.remove_backend(:console, flush: true)
+    removed = Logger.remove_backend(:console, flush: true)
 
     Logger.error("""
     \n`exit` caught...
@@ -26,7 +26,7 @@ defmodule Islands.Engine.Proxy.Error do
     #{inspect(reason)}
     """)
 
-    Logger.add_backend(:console, flush: true)
+    if removed == :ok, do: Logger.add_backend(:console, flush: true)
     :ok
   end
 end
