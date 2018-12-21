@@ -18,16 +18,15 @@ defmodule Islands.Engine.Proxy.Error do
   defp do_log(_event, _details, false = _log?), do: :ok
 
   defp do_log(:exit, {reason}, true = _log?) do
-    :ok = Logger.remove_backend(:console, flush: true)
+    Logger.remove_backend(:console, flush: true)
 
-    :ok =
-      Logger.error("""
-      \n`exit` caught...
-      • Reason:
-      #{inspect(reason)}
-      """)
+    Logger.error("""
+    \n`exit` caught...
+    • Reason:
+    #{inspect(reason)}
+    """)
 
-    {:ok, _pid} = Logger.add_backend(:console, flush: true)
+    Logger.add_backend(:console, flush: true)
     :ok
   end
 end

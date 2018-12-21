@@ -19,35 +19,33 @@ defmodule Islands.Engine.Proxy.Info do
 
   defp do_log(:game_not_registered, details, true = _log?) do
     {game_name, timeout, times_left, reason} = details
-    :ok = Logger.remove_backend(:console, flush: true)
+    Logger.remove_backend(:console, flush: true)
 
-    :ok =
-      Logger.info("""
-      \nGame #{inspect(game_name)} not registered:
-      • Waiting: #{timeout} ms
-      • Waits left: #{times_left}
-      • Reason:
-      #{inspect(reason)}
-      """)
+    Logger.info("""
+    \nGame #{inspect(game_name)} not registered:
+    • Waiting: #{timeout} ms
+    • Waits left: #{times_left}
+    • Reason:
+    #{inspect(reason)}
+    """)
 
-    {:ok, _pid} = Logger.add_backend(:console, flush: true)
+    Logger.add_backend(:console, flush: true)
     :ok
   end
 
   defp do_log(:game_registered, details, true = _log?) do
     {game_name, pid, times_left, reason} = details
-    :ok = Logger.remove_backend(:console, flush: true)
+    Logger.remove_backend(:console, flush: true)
 
-    :ok =
-      Logger.info("""
-      \nGame #{inspect(game_name)} registered:
-      • PID: #{inspect(pid)}
-      • Waits left: #{times_left}
-      • Reason:
-      #{inspect(reason)}
-      """)
+    Logger.info("""
+    \nGame #{inspect(game_name)} registered:
+    • PID: #{inspect(pid)}
+    • Waits left: #{times_left}
+    • Reason:
+    #{inspect(reason)}
+    """)
 
-    {:ok, _pid} = Logger.add_backend(:console, flush: true)
+    Logger.add_backend(:console, flush: true)
     :ok
   end
 end
