@@ -7,7 +7,8 @@ defmodule Islands.Engine.Proxy.Info do
   require Logger
 
   @spec log(atom, tuple) :: :ok
-  def log(event, details) do
+  def log(event, details)
+      when event in [:game_not_registered, :game_registered] do
     log? = Application.get_env(@app, :log?)
     do_log(event, details, log?)
   end

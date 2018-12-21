@@ -7,7 +7,7 @@ defmodule Islands.Engine.Proxy.Error do
   require Logger
 
   @spec log(atom, tuple) :: :ok
-  def log(event, details) do
+  def log(event, details) when event in [:exit] do
     log? = Application.get_env(@app, :log?)
     do_log(event, details, log?)
   end

@@ -9,7 +9,7 @@ defmodule Islands.Engine.Game.Server.Info do
   require Logger
 
   @spec log(atom, tuple) :: :ok
-  def log(event, details) do
+  def log(event, details) when event in [:save, :terminate] do
     log? = Application.get_env(@app, :log?)
     do_log(event, details, log?)
   end
