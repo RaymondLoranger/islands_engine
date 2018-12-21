@@ -1,6 +1,6 @@
 defmodule Islands.Engine.Proxy do
   @moduledoc """
-  Runs function `GenServer.call` on behalf of module `Islands.Engine`
+  Runs `GenServer` functions on behalf of module `Islands.Engine`
   while providing increased fault-tolerance capability.
   """
 
