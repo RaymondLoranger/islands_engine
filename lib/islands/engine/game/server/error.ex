@@ -1,17 +1,13 @@
 defmodule Islands.Engine.Game.Server.Error do
   @moduledoc false
 
-  use PersistConfig
-
   alias Islands.Engine.Game.Server
-  alias Islands.Engine.Game
+  alias Islands.Engine.{App, Game}
 
   require Logger
 
-  @log? Application.get_env(@app, :log?)
-
   @spec log(atom, tuple) :: :ok
-  def log(event, details), do: do_log(event, details, @log?)
+  def log(event, details), do: do_log(event, details, App.log?())
 
   @spec reply(Game.t(), Server.request(), atom, Game.player_id()) ::
           Server.reply()
@@ -25,7 +21,6 @@ defmodule Islands.Engine.Game.Server.Error do
 
   ## Private functions
 
-  @dialyzer {:nowarn_function, do_log: 3}
   @spec do_log(atom, tuple, boolean) :: :ok
   defp do_log(_event, _details, false = _log?), do: :ok
 

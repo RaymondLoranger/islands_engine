@@ -23,4 +23,7 @@ defmodule Islands.Engine.App do
     ]
     |> Supervisor.start_link(name: App, strategy: :one_for_one)
   end
+
+  @spec log? :: boolean
+  def log?, do: Application.get_env(@app, :log?)
 end
