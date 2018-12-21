@@ -1,19 +1,18 @@
 defmodule Islands.Engine.Proxy.Error do
   @moduledoc false
 
-  use PersistConfig,
-    files: ["config/dev.exs", "config/prod.exs", "config/test.exs"]
+  use PersistConfig
 
   require Logger
 
+  @log? Application.get_env(@app, :log?)
+
   @spec log(atom, tuple) :: :ok
-  def log(event, details) when event in [:exit] do
-    log? = Application.get_env(@app, :log?)
-    do_log(event, details, log?)
-  end
+  def log(event, details), do: do_log(event, details, @log?)
 
   ## Private functions
 
+  @dialyzer {:nowarn_function, do_log: 3}
   @spec do_log(atom, tuple, boolean) :: :ok
   defp do_log(_event, _details, false = _log?), do: :ok
 
