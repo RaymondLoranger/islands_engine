@@ -4,7 +4,7 @@ defmodule Islands.Engine.Mixfile do
   def project do
     [
       app: :islands_engine,
-      version: "0.1.74",
+      version: "0.1.75",
       elixir: "~> 1.6",
       start_permanent: Mix.env() == :prod,
       name: "Islands Engine",
@@ -49,10 +49,9 @@ defmodule Islands.Engine.Mixfile do
       {:mix_tasks,
        github: "RaymondLoranger/mix_tasks", only: :dev, runtime: false},
       {:log_reset, "~> 0.1"},
-      {:file_only_logger, github: "RaymondLoranger/file_only_logger"},
-      {:dynamic_supervisor_proxy,
-       github: "RaymondLoranger/dynamic_supervisor_proxy"},
-      {:gen_server_proxy, github: "RaymondLoranger/gen_server_proxy"},
+      {:file_only_logger, "~> 0.1"},
+      {:dynamic_supervisor_proxy, "~> 0.1"},
+      {:gen_server_proxy, "~> 0.1"},
       {:persist_config, "~> 0.1"},
       {:io_ansi_plus, "~> 0.1"},
       {:logger_file_backend, "~> 0.0.9"},
