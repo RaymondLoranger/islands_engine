@@ -37,6 +37,6 @@ config :logger,
 # Uncomment to stop logging...
 # config :logger, level: :error
 
-truncate_default_in_bytes = 8192
+truncate_default_in_bytes = 8 * 1024
 
 config :logger, truncate: truncate_default_in_bytes * 2

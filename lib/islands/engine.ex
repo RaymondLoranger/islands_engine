@@ -2,6 +2,7 @@
 # │ Based on the book "Functional Web Development" by Lance Halvorsen. │
 # └────────────────────────────────────────────────────────────────────┘
 defmodule Islands.Engine do
+  use GenServer.Proxy
   use PersistConfig
 
   @book_ref Application.get_env(@app, :book_ref)
@@ -12,7 +13,7 @@ defmodule Islands.Engine do
   """
 
   alias Islands.Engine.Game.{DynSup, Server, Tally}
-  alias Islands.Engine.{Coord, Game, Island, Proxy}
+  alias Islands.Engine.{Coord, Game, Island}
 
   @board_range Application.get_env(@app, :board_range)
   @island_types Application.get_env(@app, :island_types)
@@ -34,7 +35,7 @@ defmodule Islands.Engine do
   """
   @spec end_game(String.t()) :: :ok
   def end_game(game_name) when is_binary(game_name),
-    do: Proxy.stop(:shutdown, game_name)
+    do: stop(:shutdown, game_name)
 
   @doc """
   Stops a game.
@@ -42,7 +43,7 @@ defmodule Islands.Engine do
   @spec stop_game(String.t(), Game.player_id()) :: Tally.t() | :ok
   def stop_game(game_name, player_id)
       when is_binary(game_name) and player_id in @player_ids,
-      do: Proxy.call({:stop, player_id}, game_name)
+      do: call({:stop, player_id}, game_name)
 
   @doc """
   Adds the second player of a game.
@@ -51,7 +52,7 @@ defmodule Islands.Engine do
   def add_player(game_name, player2_name, player2_pid)
       when is_binary(game_name) and is_binary(player2_name) and
              is_pid(player2_pid),
-      do: Proxy.call({:add_player, player2_name, player2_pid}, game_name)
+      do: call({:add_player, player2_name, player2_pid}, game_name)
 
   @doc """
   Positions an island on a player's board.
@@ -66,10 +67,8 @@ defmodule Islands.Engine do
   def position_island(game_name, player_id, island_type, row, col)
       when is_binary(game_name) and player_id in @player_ids and
              island_type in @island_types and row in @board_range and
-             col in @board_range do
-    {:position_island, player_id, island_type, row, col}
-    |> Proxy.call(game_name)
-  end
+             col in @board_range,
+      do: call({:position_island, player_id, island_type, row, col}, game_name)
 
   @doc """
   Positions all islands on a player's board.
@@ -77,7 +76,7 @@ defmodule Islands.Engine do
   @spec position_all_islands(String.t(), Game.player_id()) :: Tally.t() | :ok
   def position_all_islands(game_name, player_id)
       when is_binary(game_name) and player_id in @player_ids,
-      do: Proxy.call({:position_all_islands, player_id}, game_name)
+      do: call({:position_all_islands, player_id}, game_name)
 
   @doc """
   Declares all islands set for a player.
@@ -85,7 +84,7 @@ defmodule Islands.Engine do
   @spec set_islands(String.t(), Game.player_id()) :: Tally.t() | :ok
   def set_islands(game_name, player_id)
       when is_binary(game_name) and player_id in @player_ids,
-      do: Proxy.call({:set_islands, player_id}, game_name)
+      do: call({:set_islands, player_id}, game_name)
 
   @doc """
   Allows a player to guess a coordinate.
@@ -95,7 +94,7 @@ defmodule Islands.Engine do
   def guess_coord(game_name, player_id, row, col)
       when is_binary(game_name) and player_id in @player_ids and
              row in @board_range and col in @board_range,
-      do: Proxy.call({:guess_coord, player_id, row, col}, game_name)
+      do: call({:guess_coord, player_id, row, col}, game_name)
 
   @doc """
   Returns the tally of a game for a given player.
@@ -103,7 +102,7 @@ defmodule Islands.Engine do
   @spec tally(String.t(), Game.player_id()) :: Tally.t() | :ok
   def tally(game_name, player_id)
       when is_binary(game_name) and player_id in @player_ids,
-      do: Proxy.call({:tally, player_id}, game_name)
+      do: call({:tally, player_id}, game_name)
 
   @doc """
   Returns a sorted list of registered game names.

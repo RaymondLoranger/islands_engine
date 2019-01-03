@@ -25,5 +25,5 @@ defmodule Islands.Engine.App do
   end
 
   @spec log? :: boolean
-  def log?, do: Application.get_env(@app, :log?) || false
+  def log?, do: Application.get_env(@app, :log?, false)
 end

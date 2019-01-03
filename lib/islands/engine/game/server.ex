@@ -6,9 +6,7 @@ defmodule Islands.Engine.Game.Server do
 
   alias __MODULE__.{
     AddPlayer,
-    Error,
     GuessCoord,
-    Info,
     PositionAllIslands,
     PositionIsland,
     SetIslands,
@@ -16,7 +14,7 @@ defmodule Islands.Engine.Game.Server do
   }
 
   alias Islands.Engine.Game.Tally
-  alias Islands.Engine.Game
+  alias Islands.Engine.{Game, Log}
 
   @type from :: GenServer.from()
   @type reply :: {:reply, Tally.t(), Game.t()}
@@ -41,7 +39,7 @@ defmodule Islands.Engine.Game.Server do
 
   @spec save(Game.t()) :: Game.t()
   def save(game) do
-    :ok = Info.log(:save, {game})
+    :ok = Log.info(:save, {game})
     true = :ets.insert(@ets, {key(game.name), game})
     game
   end
@@ -91,14 +89,14 @@ defmodule Islands.Engine.Game.Server do
 
   @spec terminate(term, Game.t()) :: :ok
   def terminate(:shutdown = reason, game) do
-    :ok = Info.log(:terminate, {reason, game})
+    :ok = Log.info(:terminate, {reason, game})
     true = :ets.delete(@ets, key(game.name))
     # Ensure message logged before exiting...
     Process.sleep(@wait)
   end
 
   def terminate(reason, game) do
-    :ok = Error.log(:terminate, {reason, game})
+    :ok = Log.error(:terminate, {reason, game})
     true = :ets.delete(@ets, key(game.name))
     # Ensure message logged before exiting...
     Process.sleep(@wait)

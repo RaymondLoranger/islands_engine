@@ -1,7 +1,7 @@
 defmodule Islands.Engine.Game.Server.SetIslands do
   alias Islands.Engine.Game.Server.Error
   alias Islands.Engine.Game.{Server, State}
-  alias Islands.Engine.{Board, Game}
+  alias Islands.Engine.{Board, Game, Log}
 
   @spec handle_call(Server.request(), Server.from(), Game.t()) :: Server.reply()
   def handle_call({:set_islands = action, player_id} = request, _from, game) do
@@ -25,7 +25,7 @@ defmodule Islands.Engine.Game.Server.SetIslands do
         Error.reply(game, request, :not_all_islands_positioned, player_id)
 
       non_matched_value ->
-        :ok = Error.log(:handle_call, {non_matched_value, request, game})
+        :ok = Log.error(:handle_call, {non_matched_value, request, game})
         Error.reply(game, request, :unknown, player_id)
     end
   end

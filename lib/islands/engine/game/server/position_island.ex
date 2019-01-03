@@ -2,7 +2,7 @@ defmodule Islands.Engine.Game.Server.PositionIsland do
   alias Islands.Engine.Board.Server, as: BoardServer
   alias Islands.Engine.Game.Server.Error
   alias Islands.Engine.Game.{Server, State}
-  alias Islands.Engine.{Board, Coord, Game, Island}
+  alias Islands.Engine.{Board, Coord, Game, Island, Log}
 
   @spec handle_call(Server.request(), Server.from(), Game.t()) :: Server.reply()
   def handle_call(
@@ -39,7 +39,7 @@ defmodule Islands.Engine.Game.Server.PositionIsland do
         Error.reply(game, request, reason, player_id)
 
       non_matched_value ->
-        :ok = Error.log(:handle_call, {non_matched_value, request, game})
+        :ok = Log.error(:handle_call, {non_matched_value, request, game})
         Error.reply(game, request, :unknown, player_id)
     end
   end

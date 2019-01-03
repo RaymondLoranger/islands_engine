@@ -36,6 +36,7 @@ defmodule Islands.Engine.IE do
     quote do
       import unquote(__MODULE__)
       alias unquote(__MODULE__)
+      alias GenServer.Proxy.Callback
       alias IO.ANSI.Plus, as: ANSI
       alias Islands.Engine.Board.{Response, Server}
       alias Islands.Engine.Game.Grid.Tile
@@ -44,7 +45,6 @@ defmodule Islands.Engine.IE do
         AddPlayer,
         Error,
         GuessCoord,
-        Info,
         PositionAllIslands,
         PositionIsland,
         Restart,
@@ -64,7 +64,6 @@ defmodule Islands.Engine.IE do
       }
 
       alias Islands.Engine.Island.Offsets
-      alias Islands.Engine.Proxy.{Error, Info}
 
       alias Islands.Engine.{
         App,
@@ -73,9 +72,8 @@ defmodule Islands.Engine.IE do
         DemoProc,
         Game,
         Guesses,
-        IE,
         Island,
-        Proxy,
+        Log,
         Sup
       }
 
