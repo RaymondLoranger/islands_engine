@@ -1,13 +1,14 @@
 defmodule Islands.Engine.IE do
   @moduledoc false
 
-  # Functions for iex session...
+  # Example of an IEx session...
   #
-  # Examples:
   #   use Islands.Engine.IE
   #   print_tiles()
   #   DemoProc.loop_test()
 
+  # Example of an IEx session...
+  #
   #   use Islands.Engine.IE
   #   guesses = Guesses.new()
   #   {:ok, coord1} = Coord.new(1, 1)
