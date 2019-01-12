@@ -1,6 +1,5 @@
 defmodule Islands.Engine.Log do
   use File.Only.Logger
-  use PersistConfig
 
   alias Islands.Engine.Game.Server
 
@@ -9,15 +8,15 @@ defmodule Islands.Engine.Log do
     \n'with' non-matched value on 'handle_call'...
     • Server:
       #{game.name |> Server.via() |> inspect(pretty: true)}
-    • PID: #{self() |> inspect(pretty: true)}
+    • Server PID: #{self() |> inspect(pretty: true)}
     • 'handle_call' request:
       #{inspect(request, pretty: true)}
     • 'with' non-matched value:
       #{inspect(non_matched_value, pretty: true)}
     • Game being processed:
       #{inspect(game, pretty: true)}
-    • App: #{Mix.Project.config()[:app]}
-    • Library: #{@app}
+    • App: #{:application.get_application() |> elem(1)}
+    • Library: #{Application.get_application(__MODULE__)}
     • Module: #{inspect(__MODULE__)}
     """
   end
@@ -27,14 +26,14 @@ defmodule Islands.Engine.Log do
     \nTerminating game...
     • Server:
       #{game.name |> Server.via() |> inspect(pretty: true)}
-    • PID: #{self() |> inspect(pretty: true)}
+    • Server PID: #{self() |> inspect(pretty: true)}
     • 'handle_call' request:
       #{inspect(game.request, pretty: true)}
     • 'terminate' reason: #{inspect(reason, pretty: true)}
     • Game being terminated:
       #{inspect(game, pretty: true)}
-    • App: #{Mix.Project.config()[:app]}
-    • Library: #{@app}
+    • App: #{:application.get_application() |> elem(1)}
+    • Library: #{Application.get_application(__MODULE__)}
     • Module: #{inspect(__MODULE__)}
     """
   end
@@ -44,14 +43,14 @@ defmodule Islands.Engine.Log do
     \nTerminating game...
     • Server:
       #{game.name |> Server.via() |> inspect(pretty: true)}
-    • PID: #{self() |> inspect(pretty: true)}
+    • Server PID: #{self() |> inspect(pretty: true)}
     • 'handle_call' request:
       #{inspect(game.request, pretty: true)}
     • 'terminate' reason: #{inspect(reason, pretty: true)}
     • Game being terminated:
       #{inspect(game, pretty: true)}
-    • App: #{Mix.Project.config()[:app]}
-    • Library: #{@app}
+    • App: #{:application.get_application() |> elem(1)}
+    • Library: #{Application.get_application(__MODULE__)}
     • Module: #{inspect(__MODULE__)}
     """
   end
@@ -61,13 +60,13 @@ defmodule Islands.Engine.Log do
     \nSaving game...
     • Server:
       #{game.name |> Server.via() |> inspect(pretty: true)}
-    • PID: #{self() |> inspect(pretty: true)}
+    • Server PID: #{self() |> inspect(pretty: true)}
     • 'handle_call' request:
       #{inspect(game.request, pretty: true)}
     • Game being saved:
       #{inspect(game, pretty: true)}
-    • App: #{Mix.Project.config()[:app]}
-    • Library: #{@app}
+    • App: #{:application.get_application() |> elem(1)}
+    • Library: #{Application.get_application(__MODULE__)}
     • Module: #{inspect(__MODULE__)}
     """
   end
