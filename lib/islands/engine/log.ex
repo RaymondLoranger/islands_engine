@@ -1,6 +1,5 @@
 defmodule Islands.Engine.Log do
   use File.Only.Logger
-  use PersistConfig
 
   alias Islands.Engine.Game.Server
 
@@ -16,9 +15,7 @@ defmodule Islands.Engine.Log do
       #{inspect(non_matched_value, pretty: true)}
     • Game being processed:
       #{inspect(game, pretty: true)}
-    • App: #{Mix.Project.config()[:app]}
-    • Library: #{@app}
-    • Module: #{inspect(__MODULE__)}
+    #{from()}
     """
   end
 
@@ -33,9 +30,7 @@ defmodule Islands.Engine.Log do
     • 'terminate' reason: #{inspect(reason, pretty: true)}
     • Game being terminated:
       #{inspect(game, pretty: true)}
-    • App: #{Mix.Project.config()[:app]}
-    • Library: #{@app}
-    • Module: #{inspect(__MODULE__)}
+    #{from()}
     """
   end
 
@@ -50,9 +45,7 @@ defmodule Islands.Engine.Log do
     • 'terminate' reason: #{inspect(reason, pretty: true)}
     • Game being terminated:
       #{inspect(game, pretty: true)}
-    • App: #{Mix.Project.config()[:app]}
-    • Library: #{@app}
-    • Module: #{inspect(__MODULE__)}
+    #{from()}
     """
   end
 
@@ -66,9 +59,7 @@ defmodule Islands.Engine.Log do
       #{inspect(game.request, pretty: true)}
     • Game being saved:
       #{inspect(game, pretty: true)}
-    • App: #{Mix.Project.config()[:app]}
-    • Library: #{@app}
-    • Module: #{inspect(__MODULE__)}
+    #{from()}
     """
   end
 end

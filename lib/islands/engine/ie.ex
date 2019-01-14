@@ -3,11 +3,15 @@ defmodule Islands.Engine.IE do
 
   # Example of an IEx session...
   #
+  #   iex --sname islands -S mix
+  #
   #   use Islands.Engine.IE
   #   print_tiles()
   #   DemoProc.loop_test()
 
   # Example of an IEx session...
+  #
+  #   iex --sname islands -S mix
   #
   #   use Islands.Engine.IE
   #   guesses = Guesses.new()
@@ -103,7 +107,17 @@ defmodule Islands.Engine.IE do
     IO.puts(":ocean       => #{Tile.new(nil)}")
   end
 
-  # :observer.start
+  # iex --sname c1 -S mix
+  #
+  # Islands.Text.Client.start("Eden", "Adam", mode: :auto)
+
+  # iex --sname c2 -S mix
+  #
+  # Islands.Text.Client.join("Eden", "Eve", mode: :auto)
+
+  # iex --sname islands -S mix
+  #
+  # :observer.start # optional
   # use Islands.Engine.IE
   # pid = keep_killing(Sup)
   # pid = keep_killing(DynSup)
