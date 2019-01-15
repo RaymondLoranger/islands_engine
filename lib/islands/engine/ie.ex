@@ -42,7 +42,7 @@ defmodule Islands.Engine.IE do
       import unquote(__MODULE__)
       alias unquote(__MODULE__)
       alias IO.ANSI.Plus, as: ANSI
-      alias Islands.Engine.Board.{Response, Server}
+      alias Islands.Engine.Board.{Response, Score, Server}
       alias Islands.Engine.Game.Grid.Tile
 
       alias Islands.Engine.Game.Server.{
@@ -55,8 +55,6 @@ defmodule Islands.Engine.IE do
         SetIslands,
         Stop
       }
-
-      alias Islands.Engine.Game.Tally.Score
 
       alias Islands.Engine.Game.{
         DynSup,

@@ -1,6 +1,6 @@
 defmodule Islands.Engine.Game.Grid do
   @moduledoc """
-  Convenience module for client application.
+  Convenience module for client applications.
 
   Converts a board or guesses struct to a grid (map of maps).
   Also converts a grid to a list of maps.
