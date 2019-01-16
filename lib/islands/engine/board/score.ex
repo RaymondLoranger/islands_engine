@@ -20,16 +20,22 @@ defmodule Islands.Engine.Board.Score do
 
   @player_ids Application.get_env(@app, :player_ids)
 
-  @spec new(String.t(), Game.player_id(), atom) :: t
-  def new(game_name, player_id, type)
-      when is_binary(game_name) and player_id in @player_ids and
-             type in [:player, :opponent] do
-    player_id =
-      case type do
-        :player -> player_id
-        :opponent -> Game.opponent(player_id)
-      end
+  @spec players_side(String.t(), Game.player_id()) :: t
+  def players_side(game_name, player_id)
+      when is_binary(game_name) and player_id in @player_ids do
+    new(game_name, player_id, :player)
+  end
 
+  @spec opponents_side(String.t(), Game.player_id()) :: t
+  def opponents_side(game_name, player_id)
+      when is_binary(game_name) and player_id in @player_ids do
+    new(game_name, Game.opponent(player_id), :opponent)
+  end
+
+  ## Private functions
+
+  @spec new(String.t(), Game.player_id(), atom) :: t
+  defp new(game_name, player_id, type) do
     %Tally{board: board} = Engine.tally(game_name, player_id)
     %Board{islands: islands, misses: misses} = board
 
@@ -48,6 +54,4 @@ defmodule Islands.Engine.Board.Score do
         |> Enum.map(& &1.type)
     }
   end
-
-  def new(_game_name, _player_id, _type), do: {:error, :invalid_score_args}
 end
