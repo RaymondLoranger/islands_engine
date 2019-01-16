@@ -12,7 +12,7 @@ defmodule Islands.Engine.Board.Score do
   defstruct [:type, :hits, :misses, :forested]
 
   @type t :: %Score{
-          type: :player | :opponent,
+          type: :board_side | :guesses_side,
           hits: non_neg_integer,
           misses: non_neg_integer,
           forested: [Island.type()]
@@ -20,16 +20,16 @@ defmodule Islands.Engine.Board.Score do
 
   @player_ids Application.get_env(@app, :player_ids)
 
-  @spec players_side(String.t(), Game.player_id()) :: t
-  def players_side(game_name, player_id)
+  @spec board_side(String.t(), Game.player_id()) :: t
+  def board_side(game_name, player_id)
       when is_binary(game_name) and player_id in @player_ids do
-    new(game_name, player_id, :player)
+    new(game_name, player_id, :board_side)
   end
 
-  @spec opponents_side(String.t(), Game.player_id()) :: t
-  def opponents_side(game_name, player_id)
+  @spec guesses_side(String.t(), Game.player_id()) :: t
+  def guesses_side(game_name, player_id)
       when is_binary(game_name) and player_id in @player_ids do
-    new(game_name, Game.opponent(player_id), :opponent)
+    new(game_name, Game.opponent(player_id), :guesses_side)
   end
 
   ## Private functions
