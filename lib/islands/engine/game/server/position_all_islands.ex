@@ -2,7 +2,8 @@ defmodule Islands.Engine.Game.Server.PositionAllIslands do
   alias Islands.Engine.Board.Server, as: BoardServer
   alias Islands.Engine.Game.Server.Error
   alias Islands.Engine.Game.{Server, State}
-  alias Islands.Engine.{Board, Game, Log}
+  alias Islands.Engine.{Game, Log}
+  alias Islands.Board
 
   @spec handle_call(Server.request(), Server.from(), Game.t()) :: Server.reply()
   def handle_call(

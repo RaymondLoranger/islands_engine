@@ -1,7 +1,8 @@
 defmodule Islands.Engine.Game.Server.SetIslands do
   alias Islands.Engine.Game.Server.Error
   alias Islands.Engine.Game.{Server, State}
-  alias Islands.Engine.{Board, Game, Log}
+  alias Islands.Engine.{Game, Log}
+  alias Islands.Board
 
   @spec handle_call(Server.request(), Server.from(), Game.t()) :: Server.reply()
   def handle_call({:set_islands = action, player_id} = request, _from, game) do

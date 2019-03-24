@@ -2,7 +2,7 @@ defmodule Islands.Engine.Game.Grid.Tile do
   @moduledoc "Convenience module for client applications."
 
   alias IO.ANSI.Plus, as: ANSI
-  alias Islands.Engine.Island
+  alias Islands.Island
 
   @spec new(Island.type() | nil) :: ANSI.ansidata()
   def new(:atoll), do: format(:sandy_brown, "<a>")

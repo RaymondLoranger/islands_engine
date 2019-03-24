@@ -5,8 +5,8 @@ defmodule Islands.Engine.Board.Score do
 
   alias __MODULE__
   alias Islands.Engine.Game.Tally
-  alias Islands.Engine.{Board, Game, Island}
-  alias Islands.Engine
+  alias Islands.Engine.Game
+  alias Islands.{Board, Engine, Island}
 
   @enforce_keys [:type, :hits, :misses, :forested]
   defstruct [:type, :hits, :misses, :forested]

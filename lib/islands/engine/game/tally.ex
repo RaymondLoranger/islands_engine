@@ -3,7 +3,8 @@ defmodule Islands.Engine.Game.Tally do
 
   alias __MODULE__
   alias Islands.Engine.Game.{Server, State}
-  alias Islands.Engine.{Board, Game, Guesses}
+  alias Islands.Engine.Game
+  alias Islands.{Board, Guesses}
 
   @enforce_keys [
     :game_state,

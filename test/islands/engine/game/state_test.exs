@@ -22,7 +22,7 @@ defmodule Islands.Engine.Game.StateTest do
   end
 
   describe "State.new/0" do
-    test "initialized state" do
+    test "returns initialized state struct" do
       assert State.new() ==
                %State{
                  game_state: :initialized,
@@ -33,16 +33,16 @@ defmodule Islands.Engine.Game.StateTest do
   end
 
   describe "State.check/2" do
-    test "add player", %{states: states} do
+    test "reacts to add player", %{states: states} do
       {:ok, state} = State.check(states.initialized, :add_player)
       assert state.game_state == :players_set
     end
 
-    test "bad request", %{states: states} do
+    test "reacts to bad request", %{states: states} do
       assert State.check(states.initialized, :bad_request) == :error
     end
 
-    test "position island", %{states: states} do
+    test "reacts to position island", %{states: states} do
       state = states.players_set
       {:ok, state} = State.check(state, {:position_island, :player1})
       {:ok, ^state} = State.check(state, {:position_island, :player1})
@@ -53,7 +53,7 @@ defmodule Islands.Engine.Game.StateTest do
       assert state.player2_state == :islands_not_set
     end
 
-    test "set islands", %{states: states} do
+    test "reacts to set islands", %{states: states} do
       state = states.players_set
       {:ok, state} = State.check(state, {:set_islands, :player1})
       :error = State.check(state, {:position_island, :player1})
@@ -69,7 +69,7 @@ defmodule Islands.Engine.Game.StateTest do
       assert state.player2_state == :islands_set
     end
 
-    test "guess coord", %{states: states} do
+    test "reacts to guess coord", %{states: states} do
       state = states.player1_turn
       :error = State.check(state, {:guess_coord, :player2})
       {:ok, state} = State.check(state, {:guess_coord, :player1})
@@ -78,19 +78,19 @@ defmodule Islands.Engine.Game.StateTest do
       assert state.game_state == :player1_turn
     end
 
-    test "no win", %{states: states} do
+    test "detects no win", %{states: states} do
       state = states.player1_turn
       {:ok, ^state} = State.check(state, {:win_check, :no_win})
       assert state.game_state == :player1_turn
     end
 
-    test "win", %{states: states} do
+    test "detects win", %{states: states} do
       state = states.player1_turn
       {:ok, state} = State.check(state, {:win_check, :win})
       assert state.game_state == :game_over
     end
 
-    test "stop", %{states: states} do
+    test "reacts to stop", %{states: states} do
       state = states.player1_turn
       {:ok, state} = State.check(state, :stop)
       assert state.game_state == :game_over

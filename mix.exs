@@ -4,7 +4,7 @@ defmodule Islands.Engine.Mixfile do
   def project do
     [
       app: :islands_engine,
-      version: "0.2.13",
+      version: "0.2.14",
       elixir: "~> 1.6",
       start_permanent: Mix.env() == :prod,
       name: "Islands Engine",
@@ -53,6 +53,10 @@ defmodule Islands.Engine.Mixfile do
       {:dynamic_supervisor_proxy, "~> 0.1"},
       {:gen_server_proxy, "~> 0.1"},
       {:persist_config, "~> 0.1"},
+      {:islands_coord, path: "../islands_coord"},
+      {:islands_island, path: "../islands_island"},
+      {:islands_guesses, path: "../islands_guesses"},
+      {:islands_board, path: "../islands_board"},
       {:io_ansi_plus, "~> 0.1"},
       {:logger_file_backend, "~> 0.0.9"},
       {:earmark, "~> 1.0", only: :dev},

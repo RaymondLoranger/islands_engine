@@ -65,22 +65,25 @@ defmodule Islands.Engine.IE do
         Tally
       }
 
-      alias Islands.Engine.Island.Offsets
-
       alias Islands.Engine.{
         App,
-        Board,
         Callback,
-        Coord,
         DemoProc,
         Game,
-        Guesses,
-        Island,
         Log,
         Sup
       }
 
-      alias Islands.Engine
+      alias Islands.Island.Offsets
+
+      alias Islands.{
+        Board,
+        Coord,
+        Engine,
+        Guesses,
+        Island
+      }
+
       :ok
     end
   end

@@ -5,7 +5,7 @@ defmodule Islands.Engine.Game do
 
   alias __MODULE__
   alias __MODULE__.{Player, Server, State}
-  alias Islands.Engine.{Board, Coord, Guesses}
+  alias Islands.{Board, Coord, Guesses}
 
   @enforce_keys [:name, :player1, :player2]
   defstruct name: nil,

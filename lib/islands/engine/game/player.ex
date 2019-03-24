@@ -1,6 +1,6 @@
 defmodule Islands.Engine.Game.Player do
   alias __MODULE__
-  alias Islands.Engine.{Board, Guesses}
+  alias Islands.{Board, Guesses}
 
   @enforce_keys [:name, :pid]
   defstruct name: "", pid: nil, board: Board.new(), guesses: Guesses.new()

@@ -13,7 +13,8 @@ defmodule Islands.Engine do
   """
 
   alias Islands.Engine.Game.{DynSup, Server, Tally}
-  alias Islands.Engine.{Coord, Game, Island}
+  alias Islands.Engine.Game
+  alias Islands.{Coord, Island}
 
   @board_range Application.get_env(@app, :board_range)
   @island_types Application.get_env(@app, :island_types)

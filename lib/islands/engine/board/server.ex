@@ -3,7 +3,7 @@ defmodule Islands.Engine.Board.Server do
   use PersistConfig
 
   alias __MODULE__
-  alias Islands.Engine.Board
+  alias Islands.Board
 
   @typep from :: GenServer.from()
 

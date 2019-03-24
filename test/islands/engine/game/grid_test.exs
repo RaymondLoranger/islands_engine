@@ -2,7 +2,7 @@ defmodule Islands.Engine.Game.GridTest do
   use ExUnit.Case, async: true
 
   alias Islands.Engine.Game.Grid
-  alias Islands.Engine.{Board, Coord, Guesses, Island}
+  alias Islands.{Board, Coord, Guesses, Island}
 
   doctest Grid
 

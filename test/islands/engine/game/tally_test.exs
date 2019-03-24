@@ -2,7 +2,8 @@ defmodule Islands.Engine.Game.TallyTest do
   use ExUnit.Case, async: true
 
   alias Islands.Engine.Game.Tally
-  alias Islands.Engine.{Board, Game, Guesses}
+  alias Islands.Engine.Game
+  alias Islands.{Board, Guesses}
 
   doctest Tally
 

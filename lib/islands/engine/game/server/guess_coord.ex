@@ -1,7 +1,8 @@
 defmodule Islands.Engine.Game.Server.GuessCoord do
   alias Islands.Engine.Game.Server.Error
   alias Islands.Engine.Game.{Server, State}
-  alias Islands.Engine.{Board, Coord, Game, Log}
+  alias Islands.Engine.{Game, Log}
+  alias Islands.{Board, Coord}
 
   @spec handle_call(Server.request(), Server.from(), Game.t()) :: Server.reply()
   def handle_call(

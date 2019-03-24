@@ -12,7 +12,7 @@ defmodule Islands.Engine.Game.Grid do
 
   alias IO.ANSI.Plus, as: ANSI
   alias Islands.Engine.Game.Grid.Tile
-  alias Islands.Engine.{Board, Coord, Guesses, Island}
+  alias Islands.{Board, Coord, Guesses, Island}
 
   @type t :: %{Coord.row() => %{Coord.col() => atom}}
 
