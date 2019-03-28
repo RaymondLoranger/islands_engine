@@ -18,8 +18,12 @@ defmodule Islands.Engine.Game.TallyTest do
         request: {},
         response: {},
         board: board,
-        guesses: guesses,
+        board_hits: 0,
+        board_misses: 0,
         board_forested_types: [],
+        guesses: guesses,
+        guesses_hits: 0,
+        guesses_misses: 0,
         guesses_forested_types: []
       } = Tally.new(game, :player1)
 
