@@ -1,8 +1,8 @@
 defmodule Islands.Engine.GameTest do
   use ExUnit.Case, async: true
 
-  alias Islands.Engine.Game.Player
   alias Islands.Engine.Game
+  alias Islands.Player
 
   doctest Game
 

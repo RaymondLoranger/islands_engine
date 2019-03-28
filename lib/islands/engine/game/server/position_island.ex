@@ -1,8 +1,8 @@
 defmodule Islands.Engine.Game.Server.PositionIsland do
-  alias Islands.Engine.Board.Server, as: BoardServer
   alias Islands.Engine.Game.Server.Error
   alias Islands.Engine.Game.{Server, State}
   alias Islands.Engine.{Game, Log}
+  alias Islands.Board.Cache
   alias Islands.{Board, Coord, Island}
 
   @spec handle_call(Server.request(), Server.from(), Game.t()) :: Server.reply()
@@ -19,7 +19,7 @@ defmodule Islands.Engine.Game.Server.PositionIsland do
       response =
         {:ok,
          if Board.all_islands_positioned?(board) do
-           BoardServer.persist_board(board)
+           Cache.persist_board(board)
            :all_islands_positioned
          else
            :island_positioned

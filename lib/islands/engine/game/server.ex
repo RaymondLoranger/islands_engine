@@ -1,4 +1,8 @@
 defmodule Islands.Engine.Game.Server do
+  @moduledoc """
+  A server process that holds a game struct as its state.
+  """
+
   use GenServer, restart: :transient
   use PersistConfig
 

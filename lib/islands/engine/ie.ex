@@ -27,7 +27,7 @@ defmodule Islands.Engine.IE do
   #   Island.new(:l_shape, coord)
   #   Island.new(:dot, coord)
 
-  alias Islands.Engine.Game.Grid.Tile
+  alias Islands.Grid.Tile
   alias Islands.Engine
 
   # Supervisor option defaults for :max_restarts and :max_seconds
@@ -42,8 +42,6 @@ defmodule Islands.Engine.IE do
       import unquote(__MODULE__)
       alias unquote(__MODULE__)
       alias IO.ANSI.Plus, as: ANSI
-      alias Islands.Engine.Board.{Response, Score, Server}
-      alias Islands.Engine.Game.Grid.Tile
 
       alias Islands.Engine.Game.Server.{
         AddPlayer,
@@ -58,8 +56,6 @@ defmodule Islands.Engine.IE do
 
       alias Islands.Engine.Game.{
         DynSup,
-        Grid,
-        Player,
         Server,
         State,
         Tally
@@ -74,22 +70,27 @@ defmodule Islands.Engine.IE do
         Sup
       }
 
+      alias Islands.Grid.Tile
       alias Islands.Island.Offsets
+      alias Islands.Board.{Cache, Response}
 
       alias Islands.{
         Board,
         Coord,
         Engine,
+        Grid,
         Guesses,
-        Island
+        Island,
+        Player
       }
 
       :ok
     end
   end
 
-  @spec print_tiles() :: :ok
-  def print_tiles() do
+  @dialyzer {:nowarn_function, print_tiles: 0}
+  @spec print_tiles :: :ok
+  def print_tiles do
     IO.puts(":atoll       => #{Tile.new(:atoll)}")
     IO.puts(":dot         => #{Tile.new(:dot)}")
     IO.puts(":l_shape     => #{Tile.new(:l_shape)}")

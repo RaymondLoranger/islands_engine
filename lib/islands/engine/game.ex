@@ -4,8 +4,8 @@ defmodule Islands.Engine.Game do
   use PersistConfig
 
   alias __MODULE__
-  alias __MODULE__.{Player, Server, State}
-  alias Islands.{Board, Coord, Guesses}
+  alias __MODULE__.{Server, State}
+  alias Islands.{Board, Coord, Guesses, Player}
 
   @enforce_keys [:name, :player1, :player2]
   defstruct name: nil,

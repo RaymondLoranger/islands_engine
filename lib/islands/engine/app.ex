@@ -5,8 +5,8 @@ defmodule Islands.Engine.App do
   use PersistConfig
 
   alias __MODULE__
-  alias Islands.Engine.Board.Server
-  alias Islands.Engine.Sup
+  alias Islands.Engine.Game.Server.Restart
+  alias Islands.Engine.Game.DynSup
 
   @ets Application.get_env(@app, :ets_name)
   # @reg Application.get_env(@app, :registry)
@@ -16,11 +16,11 @@ defmodule Islands.Engine.App do
     :ets.new(@ets, [:public, :named_table])
 
     [
+      # Child spec relying on use DynamicSupervisor...
+      {DynSup, :ok},
       # Child spec relying on use GenServer...
-      {Server, :ok},
-      # Child spec relying on use Supervisor...
-      {Sup, :ok}
+      {Restart, :ok}
     ]
-    |> Supervisor.start_link(name: App, strategy: :one_for_one)
+    |> Supervisor.start_link(name: App, strategy: :rest_for_one)
   end
 end

@@ -4,15 +4,15 @@ defmodule Islands.Engine.Mixfile do
   def project do
     [
       app: :islands_engine,
-      version: "0.2.14",
+      version: "0.2.15",
       elixir: "~> 1.6",
       start_permanent: Mix.env() == :prod,
       name: "Islands Engine",
       source_url: source_url(),
       description: description(),
       package: package(),
-      deps: deps(),
-      dialyzer: [plt_add_apps: [:mix]]
+      deps: deps()
+      # dialyzer: [plt_add_apps: [:mix]]
     ]
   end
 
@@ -28,7 +28,7 @@ defmodule Islands.Engine.Mixfile do
 
   defp package do
     [
-      files: ["lib", "mix.exs", "README*", "assets", "config/persist*.exs"],
+      files: ["lib", "mix.exs", "README*", "config/persist*.exs"],
       maintainers: ["Raymond Loranger"],
       licenses: ["MIT"],
       links: %{"GitHub" => source_url()}
@@ -53,10 +53,13 @@ defmodule Islands.Engine.Mixfile do
       {:dynamic_supervisor_proxy, "~> 0.1"},
       {:gen_server_proxy, "~> 0.1"},
       {:persist_config, "~> 0.1"},
-      {:islands_coord, path: "../islands_coord"},
-      {:islands_island, path: "../islands_island"},
-      {:islands_guesses, path: "../islands_guesses"},
-      {:islands_board, path: "../islands_board"},
+      {:islands_coord, "~> 0.1"},
+      {:islands_island, "~> 0.1"},
+      {:islands_guesses, "~> 0.1"},
+      {:islands_board, "~> 0.1"},
+      {:islands_player, "~> 0.1"},
+      {:islands_grid, "~> 0.1"},
+      {:islands_board_cache, "~> 0.1"},
       {:io_ansi_plus, "~> 0.1"},
       {:logger_file_backend, "~> 0.0.9"},
       {:earmark, "~> 1.0", only: :dev},

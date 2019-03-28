@@ -18,7 +18,9 @@ defmodule Islands.Engine.Game.TallyTest do
         request: {},
         response: {},
         board: board,
-        guesses: guesses
+        guesses: guesses,
+        board_forested_types: [],
+        guesses_forested_types: []
       } = Tally.new(game, :player1)
 
       assert board == Board.new() and guesses == Guesses.new()
