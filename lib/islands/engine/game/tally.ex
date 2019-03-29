@@ -4,7 +4,7 @@ defmodule Islands.Engine.Game.Tally do
   alias __MODULE__
   alias Islands.Engine.Game.{Server, State}
   alias Islands.Engine.Game
-  alias Islands.{Board, Guesses, Island}
+  alias Islands.{Board, Guesses, Island, Score}
 
   @enforce_keys [
     :game_state,
@@ -13,13 +13,9 @@ defmodule Islands.Engine.Game.Tally do
     :request,
     :response,
     :board,
-    :board_hits,
-    :board_misses,
-    :board_forested_types,
+    :board_score,
     :guesses,
-    :guesses_hits,
-    :guesses_misses,
-    :guesses_forested_types
+    :guesses_score
   ]
   defstruct [
     :game_state,
@@ -28,13 +24,9 @@ defmodule Islands.Engine.Game.Tally do
     :request,
     :response,
     :board,
-    :board_hits,
-    :board_misses,
-    :board_forested_types,
+    :board_score,
     :guesses,
-    :guesses_hits,
-    :guesses_misses,
-    :guesses_forested_types
+    :guesses_score
   ]
 
   @type t :: %Tally{
@@ -44,13 +36,9 @@ defmodule Islands.Engine.Game.Tally do
           request: Server.request(),
           response: Server.response(),
           board: Board.t(),
-          board_hits: non_neg_integer,
-          board_misses: non_neg_integer,
-          board_forested_types: [Island.type()],
+          board_score: Score.t(),
           guesses: Guesses.t(),
-          guesses_hits: non_neg_integer,
-          guesses_misses: non_neg_integer,
-          guesses_forested_types: [Island.type()]
+          guesses_score: Score.t()
         }
 
   @player_ids Application.get_env(@app, :player_ids)
@@ -68,13 +56,9 @@ defmodule Islands.Engine.Game.Tally do
       request: game.request,
       response: game.response,
       board: player.board,
-      board_hits: Board.hits(player.board),
-      board_misses: Board.misses(player.board),
-      board_forested_types: Board.forested_types(player.board),
+      board_score: Score.new(player.board),
       guesses: player.guesses,
-      guesses_hits: Guesses.hits(player.guesses),
-      guesses_misses: Guesses.misses(player.guesses),
-      guesses_forested_types: Board.forested_types(opponent.board)
+      guesses_score: Score.new(opponent.board)
     }
   end
 

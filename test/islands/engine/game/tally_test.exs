@@ -3,7 +3,7 @@ defmodule Islands.Engine.Game.TallyTest do
 
   alias Islands.Engine.Game.Tally
   alias Islands.Engine.Game
-  alias Islands.{Board, Guesses}
+  alias Islands.{Board, Guesses, Score}
 
   doctest Tally
 
@@ -18,16 +18,14 @@ defmodule Islands.Engine.Game.TallyTest do
         request: {},
         response: {},
         board: board,
-        board_hits: 0,
-        board_misses: 0,
-        board_forested_types: [],
+        board_score: board_score,
         guesses: guesses,
-        guesses_hits: 0,
-        guesses_misses: 0,
-        guesses_forested_types: []
+        guesses_score: guesses_score
       } = Tally.new(game, :player1)
 
       assert board == Board.new() and guesses == Guesses.new()
+      assert board_score = %Score{hits: 0, misses: 0, forested_types: []}
+      assert guesses_score = %Score{hits: 0, misses: 0, forested_types: []}
     end
 
     test "returns {:error, ...} given invalid args" do
