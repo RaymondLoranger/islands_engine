@@ -24,8 +24,8 @@ defmodule Islands.Engine.Game.TallyTest do
       } = Tally.new(game, :player1)
 
       assert board == Board.new() and guesses == Guesses.new()
-      assert board_score = %Score{hits: 0, misses: 0, forested_types: []}
-      assert guesses_score = %Score{hits: 0, misses: 0, forested_types: []}
+      assert board_score == %Score{hits: 0, misses: 0, forested_types: []}
+      assert guesses_score == %Score{hits: 0, misses: 0, forested_types: []}
     end
 
     test "returns {:error, ...} given invalid args" do
