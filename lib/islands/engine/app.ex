@@ -5,8 +5,8 @@ defmodule Islands.Engine.App do
   use PersistConfig
 
   alias __MODULE__
-  alias Islands.Engine.Game.Server.Restart
-  alias Islands.Engine.Game.DynSup
+  alias Islands.Engine.Server.Restart
+  alias Islands.Engine.DynSup
 
   @ets Application.get_env(@app, :ets_name)
   # @reg Application.get_env(@app, :registry)

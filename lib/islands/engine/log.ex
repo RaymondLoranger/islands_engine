@@ -1,7 +1,7 @@
 defmodule Islands.Engine.Log do
   use File.Only.Logger
 
-  alias Islands.Engine.Game.Server
+  alias Islands.Engine.Server
 
   error :handle_call, {non_matched_value, request, game} do
     """

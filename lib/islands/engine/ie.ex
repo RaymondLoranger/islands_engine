@@ -43,7 +43,7 @@ defmodule Islands.Engine.IE do
       alias unquote(__MODULE__)
       alias IO.ANSI.Plus, as: ANSI
 
-      alias Islands.Engine.Game.Server.{
+      alias Islands.Engine.Server.{
         AddPlayer,
         Error,
         GuessCoord,
@@ -54,20 +54,13 @@ defmodule Islands.Engine.IE do
         Stop
       }
 
-      alias Islands.Engine.Game.{
-        DynSup,
-        Server,
-        State,
-        Tally
-      }
-
       alias Islands.Engine.{
         App,
         Callback,
         DemoProc,
-        Game,
+        DynSup,
         Log,
-        Sup
+        Server
       }
 
       alias Islands.Grid.Tile
@@ -78,10 +71,17 @@ defmodule Islands.Engine.IE do
         Board,
         Coord,
         Engine,
+        Game,
         Grid,
         Guesses,
         Island,
-        Player
+        Player,
+        PlayerID,
+        Request,
+        Response,
+        Score,
+        State,
+        Tally
       }
 
       :ok

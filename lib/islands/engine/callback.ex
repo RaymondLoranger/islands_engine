@@ -2,7 +2,7 @@ defmodule Islands.Engine.Callback do
   @behaviour GenServer.Proxy.Behaviour
 
   alias IO.ANSI.Plus, as: ANSI
-  alias Islands.Engine.Game.Server
+  alias Islands.Engine.Server
 
   @impl GenServer.Proxy.Behaviour
   @spec server_name(String.t()) :: GenServer.name()
