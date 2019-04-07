@@ -47,6 +47,7 @@ defmodule Islands.Engine.IE do
         AddPlayer,
         Error,
         GuessCoord,
+        Log,
         PositionAllIslands,
         PositionIsland,
         Restart,
@@ -59,7 +60,6 @@ defmodule Islands.Engine.IE do
         Callback,
         DemoProc,
         DynSup,
-        Log,
         Server
       }
 
@@ -75,8 +75,8 @@ defmodule Islands.Engine.IE do
         Grid,
         Guesses,
         Island,
-        Player,
         PlayerID,
+        Player,
         Request,
         Response,
         Score,
@@ -88,7 +88,6 @@ defmodule Islands.Engine.IE do
     end
   end
 
-  @dialyzer {:nowarn_function, print_tiles: 0}
   @spec print_tiles :: :ok
   def print_tiles do
     IO.puts(":atoll       => #{Tile.new(:atoll)}")

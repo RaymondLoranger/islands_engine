@@ -1,6 +1,4 @@
 defmodule Islands.Engine.Server.Error do
-  @moduledoc false
-
   alias Islands.Engine.Server
   alias Islands.{Game, PlayerID, Request}
 

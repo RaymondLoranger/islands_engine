@@ -11,13 +11,13 @@ defmodule Islands.Engine.Server do
   alias __MODULE__.{
     AddPlayer,
     GuessCoord,
+    Log,
     PositionAllIslands,
     PositionIsland,
     SetIslands,
     Stop
   }
 
-  alias Islands.Engine.Log
   alias Islands.{Game, Player, PlayerID, Request, Tally}
 
   @type from :: GenServer.from()

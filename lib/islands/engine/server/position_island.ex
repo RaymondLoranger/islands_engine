@@ -1,6 +1,6 @@
 defmodule Islands.Engine.Server.PositionIsland do
-  alias Islands.Engine.Server.Error
-  alias Islands.Engine.{Log, Server}
+  alias Islands.Engine.Server.{Error, Log}
+  alias Islands.Engine.Server
   alias Islands.Board.Cache
   alias Islands.{Board, Coord, Game, Island, Request, State}
 

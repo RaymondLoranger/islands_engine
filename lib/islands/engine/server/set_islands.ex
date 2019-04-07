@@ -1,6 +1,6 @@
 defmodule Islands.Engine.Server.SetIslands do
-  alias Islands.Engine.Server.Error
-  alias Islands.Engine.{Log, Server}
+  alias Islands.Engine.Server.{Error, Log}
+  alias Islands.Engine.Server
   alias Islands.{Board, Game, Request, State}
 
   @spec handle_call(Request.t(), Server.from(), Game.t()) :: Server.reply()

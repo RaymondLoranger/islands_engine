@@ -4,7 +4,7 @@ defmodule Islands.Engine.Mixfile do
   def project do
     [
       app: :islands_engine,
-      version: "0.2.19",
+      version: "0.2.20",
       elixir: "~> 1.6",
       start_permanent: Mix.env() == :prod,
       name: "Islands Engine",
@@ -48,19 +48,16 @@ defmodule Islands.Engine.Mixfile do
     [
       {:mix_tasks,
        github: "RaymondLoranger/mix_tasks", only: :dev, runtime: false},
+      {:logger_file_backend, "~> 0.0.9"},
       {:log_reset, "~> 0.1"},
       {:file_only_logger, "~> 0.1"},
       {:dynamic_supervisor_proxy, "~> 0.1"},
       {:gen_server_proxy, "~> 0.1"},
-      {:poison, "~> 4.0"},
-      {:jason, "~> 1.0"},
       {:persist_config, "~> 0.1"},
       {:islands_coord, "~> 0.1"},
       {:islands_island, "~> 0.1"},
-      {:islands_guesses, "~> 0.1"},
       {:islands_board, "~> 0.1"},
       {:islands_grid, "~> 0.1"},
-      {:islands_score, "~> 0.1"},
       {:islands_player, "~> 0.1"},
       {:islands_player_id, "~> 0.1"},
       {:islands_request, "~> 0.1"},
@@ -69,7 +66,6 @@ defmodule Islands.Engine.Mixfile do
       {:islands_tally, "~> 0.1"},
       {:islands_board_cache, "~> 0.1"},
       {:io_ansi_plus, "~> 0.1"},
-      {:logger_file_backend, "~> 0.0.9"},
       {:earmark, "~> 1.0", only: :dev},
       {:ex_doc, "~> 0.14", only: :dev, runtime: false},
       {:dialyxir, "~> 0.5", only: :dev, runtime: false}
