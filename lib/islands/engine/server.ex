@@ -1,6 +1,6 @@
 defmodule Islands.Engine.Server do
   @moduledoc """
-  A server process that holds a game struct as its state.
+  A server process that holds a `game` struct as its state.
   """
 
   use GenServer, restart: :transient
@@ -20,12 +20,12 @@ defmodule Islands.Engine.Server do
 
   alias Islands.{Game, Player, PlayerID, Request, Tally}
 
-  @type from :: GenServer.from()
-  @type reply :: {:reply, Tally.t(), Game.t()}
-
   @ets Application.get_env(@app, :ets_name)
   # @reg Application.get_env(@app, :registry)
-  @wait 500
+  @wait 50
+
+  @type from :: GenServer.from()
+  @type reply :: {:reply, Tally.t(), Game.t()}
 
   @spec start_link({String.t(), String.t(), Player.gender(), pid}) ::
           GenServer.on_start()

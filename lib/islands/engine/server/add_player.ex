@@ -11,9 +11,7 @@ defmodule Islands.Engine.Server.AddPlayer do
       ) do
     with {:ok, state} <- State.check(game.state, action) do
       game
-      |> Game.update_player_name(:player2, name)
-      |> Game.update_player_gender(:player2, gender)
-      |> Game.update_player_pid(:player2, pid)
+      |> Game.update_player(:player2, name, gender, pid)
       |> Game.update_state(state)
       |> Game.update_request(request)
       |> Game.update_response({:ok, :player2_added})

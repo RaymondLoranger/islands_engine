@@ -19,11 +19,11 @@ defmodule Islands.Engine.Server.Restart do
     @ets
     |> :ets.match_object({{Server, :_}, :_})
     |> Enum.each(fn {{Server, _game_name}, game} ->
+      player1 = game.player1
       # Child may already be started...
       DynamicSupervisor.start_child(
         DynSup,
-        {Server,
-         {game.name, game.player1.name, game.player1.gender, game.player1.pid}}
+        {Server, {game.name, player1.name, player1.gender, player1.pid}}
       )
     end)
   end
