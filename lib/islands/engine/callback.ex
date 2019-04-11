@@ -1,4 +1,6 @@
 defmodule Islands.Engine.Callback do
+  @moduledoc false
+
   @behaviour GenServer.Proxy.Behaviour
 
   alias IO.ANSI.Plus, as: ANSI
