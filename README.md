@@ -20,7 +20,7 @@ end
 
 ## Supervision Tree
 
-The highlighted processes below (supervisors and servers) are fault-tolerant:
+The highlighted processes below (supervisor and servers) are fault-tolerant:
 if any crashes (or is killed), it is immediately restarted and the system
 remains undisturbed.
 

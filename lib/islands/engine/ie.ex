@@ -33,8 +33,9 @@ defmodule Islands.Engine.IE do
   # Supervisor option defaults for :max_restarts and :max_seconds
   @max_restarts 3
   @max_seconds 5
-  @seconds_per_restart Float.round(@max_seconds / @max_restarts, 0)
-  @pause round(@seconds_per_restart * 1000)
+  @buffer 333
+  @seconds_per_restart Float.round(@max_seconds / @max_restarts, 3)
+  @pause round(@seconds_per_restart * 1000) + @buffer
   @snooze 10
 
   defmacro __using__(_options) do
@@ -102,9 +103,9 @@ defmodule Islands.Engine.IE do
     IO.puts(":s_shape_hit => #{Tile.new(:s_shape_hit)}")
     IO.puts(":square_hit  => #{Tile.new(:square_hit)}")
 
+    IO.puts(":board_miss  => #{Tile.new(:board_miss)}")
     IO.puts(":hit         => #{Tile.new(:hit)}")
     IO.puts(":miss        => #{Tile.new(:miss)}")
-    IO.puts(":board_miss  => #{Tile.new(:board_miss)}")
     IO.puts(":ocean       => #{Tile.new(nil)}")
   end
 
@@ -120,12 +121,13 @@ defmodule Islands.Engine.IE do
   #
   # :observer.start # optional
   # use Islands.Engine.IE
-  # pid = keep_killing(Sup)
   # pid = keep_killing(DynSup)
   # pid = keep_killing("Eden")
   # Process.exit(pid, :kill)
   @spec keep_killing(atom | binary) :: pid
   def keep_killing(name) do
+    IO.puts("Pause between kills: #{@pause} ms...")
+
     spawn(fn ->
       for _ <- Stream.cycle([:ok]) do
         name |> pid() |> Process.exit(:kill)
