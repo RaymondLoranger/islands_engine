@@ -8,12 +8,6 @@ defmodule Islands.Engine.IE do
   #   use Islands.Engine.IE
   #   print_tiles()
   #   DemoProc.loop_test()
-
-  # Example of an IEx session...
-  #
-  #   iex --sname islands -S mix
-  #
-  #   use Islands.Engine.IE
   #   guesses = Guesses.new()
   #   {:ok, coord1} = Coord.new(1, 1)
   #   {:ok, coord2} = Coord.new(2, 2)
@@ -27,12 +21,35 @@ defmodule Islands.Engine.IE do
   #   Island.new(:l_shape, coord)
   #   Island.new(:dot, coord)
 
+  # Example of IEx sessions in different nodes...
+  #
+  #   iex --sname c1 -S mix
+  #
+  #   Islands.Text.Client.start("Eden", "Adam", :m, mode: :auto)
+  #
+  #   iex --sname c2 -S mix
+  #
+  #   Islands.Text.Client.join("Eden", "Eve", :f, mode: :auto)
+  #
+  #   iex --sname islands -S mix
+  #
+  #   :observer.start # optional
+  #   use Islands.Engine.IE
+  #
+  #   pid = keep_killing(DynSup)
+  #   -- or --
+  #   pid = keep_killing("Eden")
+  #
+  #   Process.exit(pid, :kill)
+
   alias Islands.Grid.Tile
   alias Islands.Engine
 
   # Supervisor option defaults for :max_restarts and :max_seconds
   @max_restarts 3
   @max_seconds 5
+
+  # Pause of 2 seconds between kills...
   @buffer 333
   @seconds_per_restart Float.round(@max_seconds / @max_restarts, 3)
   @pause round(@seconds_per_restart * 1000) + @buffer
@@ -109,21 +126,6 @@ defmodule Islands.Engine.IE do
     IO.puts(":ocean       => #{Tile.new(nil)}")
   end
 
-  # iex --sname c1 -S mix
-  #
-  # Islands.Text.Client.start("Eden", "Adam", mode: :auto)
-
-  # iex --sname c2 -S mix
-  #
-  # Islands.Text.Client.join("Eden", "Eve", mode: :auto)
-
-  # iex --sname islands -S mix
-  #
-  # :observer.start # optional
-  # use Islands.Engine.IE
-  # pid = keep_killing(DynSup)
-  # pid = keep_killing("Eden")
-  # Process.exit(pid, :kill)
   @spec keep_killing(atom | binary) :: pid
   def keep_killing(name) do
     IO.puts("Pause between kills: #{@pause} ms...")
