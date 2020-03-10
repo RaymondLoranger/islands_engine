@@ -1,4 +1,4 @@
-defmodule Islands.Engine.App do
+defmodule Islands.Engine.Top do
   @moduledoc false
 
   use Application
@@ -16,11 +16,11 @@ defmodule Islands.Engine.App do
     :ets.new(@ets, [:public, :named_table])
 
     [
-      # Child spec relying on use DynamicSupervisor...
+      # Child spec relying on `use DynamicSupervisor`...
       {DynSup, :ok},
-      # Child spec relying on use GenServer...
+      # Child spec relying on `use GenServer`...
       {Restart, :ok}
     ]
-    |> Supervisor.start_link(name: App, strategy: :rest_for_one)
+    |> Supervisor.start_link(name: Top, strategy: :rest_for_one)
   end
 end

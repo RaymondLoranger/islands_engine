@@ -74,11 +74,11 @@ defmodule Islands.Engine.IE do
       }
 
       alias Islands.Engine.{
-        App,
         Callback,
         DemoProc,
         DynSup,
-        Server
+        Server,
+        Top
       }
 
       alias Islands.Grid.Tile
