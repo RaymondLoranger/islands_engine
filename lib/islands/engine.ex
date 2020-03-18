@@ -12,26 +12,20 @@ defmodule Islands.Engine do
   \n##### #{@book_ref}
   """
 
+  import Islands.Engine.Guards
+
   alias Islands.Engine.{DynSup, Server}
   alias Islands.{Coord, Island, Player, PlayerID, Tally}
-
-  @coord_range 1..10
-  @genders [:f, :m]
-  @island_types [:atoll, :dot, :l_shape, :s_shape, :square]
-  @player_ids [:player1, :player2]
 
   @doc """
   Starts a new game.
   """
   @spec new_game(String.t(), String.t(), Player.gender(), pid) ::
           Supervisor.on_start_child()
-  def new_game(game_name, player1_name, gender, player1_pid)
-      when is_binary(game_name) and is_binary(player1_name) and
-             is_pid(player1_pid) and gender in @genders do
-    DynamicSupervisor.start_child(
-      DynSup,
-      {Server, {game_name, player1_name, gender, player1_pid}}
-    )
+  def new_game(game_name, player1_name, gender, pid)
+      when valid_player_args(game_name, player1_name, gender, pid) do
+    child_spec = {Server, {game_name, player1_name, gender, pid}}
+    DynamicSupervisor.start_child(DynSup, child_spec)
   end
 
   @doc """
@@ -46,7 +40,7 @@ defmodule Islands.Engine do
   """
   @spec stop_game(String.t(), PlayerID.t()) :: Tally.t() | :ok
   def stop_game(game_name, player_id)
-      when is_binary(game_name) and player_id in @player_ids,
+      when valid_player_args(game_name, player_id),
       do: call({:stop, player_id}, game_name)
 
   @doc """
@@ -54,10 +48,9 @@ defmodule Islands.Engine do
   """
   @spec add_player(String.t(), String.t(), Player.gender(), pid) ::
           Tally.t() | :ok
-  def add_player(game_name, player2_name, gender, player2_pid)
-      when is_binary(game_name) and is_binary(player2_name) and
-             is_pid(player2_pid) and gender in @genders,
-      do: call({:add_player, player2_name, gender, player2_pid}, game_name)
+  def add_player(game_name, player2_name, gender, pid)
+      when valid_player_args(game_name, player2_name, gender, pid),
+      do: call({:add_player, player2_name, gender, pid}, game_name)
 
   @doc """
   Positions an island on the specified player's board.
@@ -70,9 +63,7 @@ defmodule Islands.Engine do
           Coord.col()
         ) :: Tally.t() | :ok
   def position_island(game_name, player_id, island_type, row, col)
-      when is_binary(game_name) and player_id in @player_ids and
-             island_type in @island_types and row in @coord_range and
-             col in @coord_range,
+      when valid_island_args(game_name, player_id, island_type, row, col),
       do: call({:position_island, player_id, island_type, row, col}, game_name)
 
   @doc """
@@ -80,7 +71,7 @@ defmodule Islands.Engine do
   """
   @spec position_all_islands(String.t(), PlayerID.t()) :: Tally.t() | :ok
   def position_all_islands(game_name, player_id)
-      when is_binary(game_name) and player_id in @player_ids,
+      when valid_player_args(game_name, player_id),
       do: call({:position_all_islands, player_id}, game_name)
 
   @doc """
@@ -88,7 +79,7 @@ defmodule Islands.Engine do
   """
   @spec set_islands(String.t(), PlayerID.t()) :: Tally.t() | :ok
   def set_islands(game_name, player_id)
-      when is_binary(game_name) and player_id in @player_ids,
+      when valid_player_args(game_name, player_id),
       do: call({:set_islands, player_id}, game_name)
 
   @doc """
@@ -97,16 +88,29 @@ defmodule Islands.Engine do
   @spec guess_coord(String.t(), PlayerID.t(), Coord.row(), Coord.col()) ::
           Tally.t() | :ok
   def guess_coord(game_name, player_id, row, col)
-      when is_binary(game_name) and player_id in @player_ids and
-             row in @coord_range and col in @coord_range,
+      when valid_coord_args(game_name, player_id, row, col),
       do: call({:guess_coord, player_id, row, col}, game_name)
+
+  @doc """
+  Allows to update the specified player.
+  """
+  @spec update_player(
+          String.t(),
+          PlayerID.t(),
+          String.t(),
+          Player.gender(),
+          pid
+        ) :: Tally.t() | :ok
+  def update_player(game_name, player_id, player_name, gender, pid)
+      when valid_player_args(game_name, player_id, player_name, gender, pid),
+      do: call({:update_player, player_id, player_name, gender, pid}, game_name)
 
   @doc """
   Returns the tally of the game for the specified player.
   """
   @spec tally(String.t(), PlayerID.t()) :: Tally.t() | :ok
   def tally(game_name, player_id)
-      when is_binary(game_name) and player_id in @player_ids,
+      when valid_player_args(game_name, player_id),
       do: call({:tally, player_id}, game_name)
 
   @doc """
