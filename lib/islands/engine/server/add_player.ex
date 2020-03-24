@@ -19,8 +19,7 @@ defmodule Islands.Engine.Server.AddPlayer do
       |> Server.save()
       |> Server.reply(:player2)
     else
-      :error ->
-        Error.reply(game, request, :player2_already_added, :player2)
+      :error -> Error.reply(game, request, :player2_already_added, :player2)
     end
   end
 end

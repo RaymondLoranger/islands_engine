@@ -19,7 +19,7 @@ defmodule Islands.Engine.Server.SetIslands do
       |> Server.reply(player_id)
     else
       :error ->
-        Error.reply(game, request, :both_players_islands_set, player_id)
+        Error.reply(game, request, action, player_id)
 
       false ->
         Error.reply(game, request, :not_all_islands_positioned, player_id)

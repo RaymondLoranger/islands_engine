@@ -27,7 +27,7 @@ defmodule Islands.Engine.Server.GuessCoord do
       |> Server.reply(player_id)
     else
       :error ->
-        Error.reply(game, request, :not_both_players_islands_set, player_id)
+        Error.reply(game, request, action, player_id)
 
       {:error, reason} when is_atom(reason) ->
         Error.reply(game, request, reason, player_id)
