@@ -31,7 +31,10 @@ defmodule Islands.Engine.Server.Error do
 
   def reply(game, request, :guess_coord, player_id) do
     case game.state.game_state do
-      state when state in [:initialized, :players_set] ->
+      :initialized ->
+        reply(game, request, :player2_not_added, player_id)
+
+      :players_set ->
         reply(game, request, :not_both_players_islands_set, player_id)
 
       state when state in [:player1_turn, :player2_turn] ->
