@@ -33,14 +33,14 @@ defmodule Islands.Engine.Server.PositionIsland do
       |> Server.reply(player_id)
     else
       :error ->
-        Error.reply(game, request, :islands_already_set, player_id)
+        Error.reply(:islands_already_set, game, request, player_id)
 
       {:error, reason} when is_atom(reason) ->
-        Error.reply(game, request, reason, player_id)
+        Error.reply(reason, game, request, player_id)
 
       non_matched_value ->
         :ok = Log.error(:handle_call, {non_matched_value, request, game})
-        Error.reply(game, request, :unknown, player_id)
+        Error.reply(:unknown, game, request, player_id)
     end
   end
 end

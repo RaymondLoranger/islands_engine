@@ -16,7 +16,7 @@ defmodule Islands.Engine.Server.Stop do
       |> Server.save()
       |> Server.reply(player_id)
     else
-      :error -> Error.reply(game, request, action, player_id)
+      :error -> Error.reply(action, game, request, player_id)
     end
   end
 end
