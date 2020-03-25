@@ -21,7 +21,7 @@ defmodule Islands.Engine.Server.PositionAllIslands do
       |> Server.reply(player_id)
     else
       :error ->
-        Error.reply(:islands_already_set, game, request, player_id)
+        Error.reply(action, game, request, player_id)
 
       {:error, reason} when is_atom(reason) ->
         Error.reply(reason, game, request, player_id)
