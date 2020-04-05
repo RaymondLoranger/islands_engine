@@ -15,8 +15,7 @@ defmodule Islands.Engine.Server do
     PositionAllIslands,
     PositionIsland,
     SetIslands,
-    Stop,
-    UpdatePlayer
+    Stop
   }
 
   alias Islands.{Game, Player, PlayerID, Request, Tally}
@@ -91,9 +90,6 @@ defmodule Islands.Engine.Server do
 
   def handle_call({:guess_coord, _, _, _} = request, from, game),
     do: GuessCoord.handle_call(request, from, game)
-
-  def handle_call({:update_player, _, _, _, _} = request, from, game),
-    do: UpdatePlayer.handle_call(request, from, game)
 
   def handle_call({:tally, player_id}, _from, game), do: reply(game, player_id)
 
