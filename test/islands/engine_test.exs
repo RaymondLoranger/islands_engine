@@ -52,8 +52,11 @@ defmodule Islands.EngineTest do
       Engine.position_all_islands("Songs", :player1)
       Engine.set_islands("Songs", :player1)
 
-      assert %Tally{response: {:ok, :stopping}} =
+      assert %Tally{response: {:error, :not_player_turn}} =
                Engine.stop_game("Songs", :player2)
+
+      assert %Tally{response: {:ok, :stopping}} =
+               Engine.stop_game("Songs", :player1)
     end
   end
 

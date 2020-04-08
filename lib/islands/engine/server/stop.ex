@@ -5,7 +5,7 @@ defmodule Islands.Engine.Server.Stop do
 
   @spec handle_call(Request.t(), Server.from(), Game.t()) :: Server.reply()
   def handle_call({:stop = action, player_id} = request, _from, game) do
-    with {:ok, state} <- State.check(game.state, action) do
+    with {:ok, state} <- State.check(game.state, {action, player_id}) do
       opponent_id = Game.opponent_id(player_id)
 
       game

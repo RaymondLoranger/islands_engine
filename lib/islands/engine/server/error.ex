@@ -60,7 +60,7 @@ defmodule Islands.Engine.Server.Error do
       case game.state.game_state do
         :initialized -> :player2_not_added
         :players_set -> :not_both_players_islands_set
-        game_state when game_state in @player_turns -> :unexpected
+        game_state when game_state in @player_turns -> :not_player_turn
         :game_over -> :game_over
       end
 
