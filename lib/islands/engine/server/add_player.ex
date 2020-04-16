@@ -10,7 +10,7 @@ defmodule Islands.Engine.Server.AddPlayer do
         game
       ) do
     with {:ok, state} <- State.check(game.state, action),
-         false <- name == game[:player1].name do
+         false <- name == game.player1.name do
       game
       |> Game.update_player(:player2, name, gender, pid)
       |> Game.update_state(state)
