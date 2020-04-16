@@ -9,7 +9,8 @@ defmodule Islands.Engine.Server.AddPlayer do
         _from,
         game
       ) do
-    with {:ok, state} <- State.check(game.state, action) do
+    with {:ok, state} <- State.check(game.state, action),
+         false <- name == game[:player1].name do
       game
       |> Game.update_player(:player2, name, gender, pid)
       |> Game.update_state(state)
@@ -20,6 +21,7 @@ defmodule Islands.Engine.Server.AddPlayer do
       |> Server.reply(:player2)
     else
       :error -> Error.reply(action, game, request, :player2)
+      true -> Error.reply(:duplicate_player_name, game, request, :player2)
     end
   end
 end
