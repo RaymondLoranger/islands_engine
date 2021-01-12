@@ -1,4 +1,4 @@
-defmodule Islands.Engine.Server do
+defmodule Islands.Engine.GameServer do
   @moduledoc """
   A server process that holds a `game` struct as its state.
   """
@@ -11,36 +11,34 @@ defmodule Islands.Engine.Server do
   alias __MODULE__.{
     AddPlayer,
     GuessCoord,
-    Log,
     PositionAllIslands,
     PositionIsland,
+    ReplyTuple,
     SetIslands,
     Stop
   }
 
-  alias Islands.{Game, Player, PlayerID, Request, Tally}
+  alias Islands.Engine.Log
+  alias Islands.{Game, Player, Request}
 
-  @ets Application.get_env(@app, :ets_name)
-  # @reg Application.get_env(@app, :registry)
+  @ets get_env(:ets_name)
+  # @reg get_env(:registry)
   @wait 50
 
-  @type from :: GenServer.from()
-  @type reply :: {:reply, Tally.t(), Game.t()}
-
-  @spec start_link({String.t(), String.t(), Player.gender(), pid}) ::
+  @spec start_link({Game.name(), Player.name(), Player.gender(), pid}) ::
           GenServer.on_start()
-  def start_link({game_name, player1_name, gender, pid}) do
+  def start_link({game_name, player1_name, gender, pid} = _init_arg) do
     GenServer.start_link(
-      Server,
+      GameServer,
       {game_name, player1_name, gender, pid},
       name: via(game_name)
     )
   end
 
-  # @spec via(String.t()) :: {:via, module, {atom, tuple}}
+  # @spec via(Game.name()) :: {:via, module, {atom, tuple}}
   # def via(game_name), do: {:via, Registry, {@reg, key(game_name)}}
 
-  @spec via(String.t()) :: {:global, tuple}
+  @spec via(Game.name()) :: {:global, tuple}
   def via(game_name), do: {:global, key(game_name)}
 
   @spec save(Game.t()) :: Game.t()
@@ -50,29 +48,32 @@ defmodule Islands.Engine.Server do
     game
   end
 
-  @spec reply(Game.t(), PlayerID.t()) :: reply
-  def reply(game, player_id), do: {:reply, Tally.new(game, player_id), game}
-
   ## Private functions
 
-  @spec key(String.t()) :: tuple
-  defp key(game_name), do: {Server, game_name}
+  @spec key(Game.name()) :: tuple
+  defp key(game_name), do: {GameServer, game_name}
 
-  @spec game(String.t(), String.t(), Player.gender(), pid) :: Game.t()
+  @spec game(Game.name(), Player.name(), Player.gender(), pid) :: Game.t()
   defp game(game_name, player1_name, gender, pid) do
     case :ets.lookup(@ets, key(game_name)) do
-      [] -> game_name |> Game.new(player1_name, gender, pid) |> save()
-      [{_key, game}] -> game
+      [] ->
+        :ok = Log.info(:spawned, {game_name, player1_name})
+        Game.new(game_name, player1_name, gender, pid) |> save()
+
+      [{_key, game}] ->
+        :ok = Log.info(:restarted, {game_name, player1_name})
+        game
     end
   end
 
   ## Callbacks
 
-  @spec init({String.t(), String.t(), Player.gender(), pid}) :: {:ok, Game.t()}
-  def init({game_name, player1_name, gender, pid}),
+  @spec init({Game.name(), Player.name(), Player.gender(), pid}) ::
+          {:ok, Game.t()}
+  def init({game_name, player1_name, gender, pid} = _init_arg),
     do: {:ok, game(game_name, player1_name, gender, pid)}
 
-  @spec handle_call(Request.t(), from, Game.t()) :: reply
+  @spec handle_call(Request.t(), GenServer.from(), Game.t()) :: ReplyTuple.t()
   def handle_call({:add_player, _, _, _} = request, from, game),
     do: AddPlayer.handle_call(request, from, game)
 
@@ -91,7 +92,8 @@ defmodule Islands.Engine.Server do
   def handle_call({:guess_coord, _, _, _} = request, from, game),
     do: GuessCoord.handle_call(request, from, game)
 
-  def handle_call({:tally, player_id}, _from, game), do: reply(game, player_id)
+  def handle_call({:tally, player_id}, _from, game),
+    do: ReplyTuple.new(game, player_id)
 
   @spec terminate(term, Game.t()) :: :ok
   def terminate(:shutdown = reason, game) do

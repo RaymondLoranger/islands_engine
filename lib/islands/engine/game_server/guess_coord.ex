@@ -1,9 +1,9 @@
-defmodule Islands.Engine.Server.GuessCoord do
-  alias Islands.Engine.Server.{Error, Log}
-  alias Islands.Engine.Server
+defmodule Islands.Engine.GameServer.GuessCoord do
+  alias Islands.Engine.GameServer.ReplyTuple
+  alias Islands.Engine.GameServer
   alias Islands.{Board, Coord, Game, Request, State}
 
-  @spec handle_call(Request.t(), Server.from(), Game.t()) :: Server.reply()
+  @spec handle_call(Request.t(), GenServer.from(), Game.t()) :: ReplyTuple.t()
   def handle_call(
         {:guess_coord = action, player_id, row, col} = request,
         _from,
@@ -23,18 +23,14 @@ defmodule Islands.Engine.Server.GuessCoord do
       |> Game.update_request(request)
       |> Game.update_response({hit_or_miss, forested_island_type, win_status})
       |> Game.notify_player(opponent_id)
-      |> Server.save()
-      |> Server.reply(player_id)
+      |> GameServer.save()
+      |> ReplyTuple.new(player_id)
     else
       :error ->
-        Error.reply(action, game, request, player_id)
+        ReplyTuple.new(action, game, request, player_id)
 
       {:error, reason} when is_atom(reason) ->
-        Error.reply(reason, game, request, player_id)
-
-      non_matched_value ->
-        :ok = Log.error(:handle_call, {non_matched_value, request, game})
-        Error.reply(:unknown, game, request, player_id)
+        ReplyTuple.new(reason, game, request, player_id)
     end
   end
 end

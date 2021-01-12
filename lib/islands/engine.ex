@@ -2,50 +2,48 @@
 # │ Based on the book "Functional Web Development" by Lance Halvorsen. │
 # └────────────────────────────────────────────────────────────────────┘
 defmodule Islands.Engine do
-  use GenServer.Proxy
-  use PersistConfig
-
-  @book_ref Application.get_env(@app, :book_ref)
-
   @moduledoc """
   Models the _Game of Islands_.
-  \n##### #{@book_ref}
+
+  ##### Based on the book [Functional Web Development](https://pragprog.com/book/lhelph/functional-web-development-with-elixir-otp-and-phoenix) by Lance Halvorsen.
   """
+
+  use GenServer.Proxy
 
   import Islands.Engine.Guards
 
-  alias Islands.Engine.{DynSup, Server}
-  alias Islands.{Coord, Island, Player, PlayerID, Tally}
+  alias Islands.Engine.{DynGameSup, GameServer}
+  alias Islands.{Coord, Game, Island, Player, PlayerID, Tally}
 
   @doc """
-  Starts a new game.
+  Starts a new game server process and supervises it.
   """
-  @spec new_game(String.t(), String.t(), Player.gender(), pid) ::
+  @spec new_game(Game.name(), Player.name(), Player.gender(), pid) ::
           Supervisor.on_start_child()
   def new_game(game_name, player1_name, gender, pid)
       when valid?(game_name, player1_name, gender, pid) do
-    child_spec = {Server, {game_name, player1_name, gender, pid}}
-    DynamicSupervisor.start_child(DynSup, child_spec)
+    child_spec = {GameServer, {game_name, player1_name, gender, pid}}
+    DynamicSupervisor.start_child(DynGameSup, child_spec)
   end
 
   @doc """
-  Ends a game.
+  Stops a game server process normally. It won't be restarted.
   """
-  @spec end_game(String.t()) :: :ok | {:error, term}
+  @spec end_game(Game.name()) :: :ok | {:error, term}
   def end_game(game_name) when is_binary(game_name),
     do: stop(:shutdown, game_name)
 
   @doc """
-  Stops a game.
+  Stops a game at a player's request.
   """
-  @spec stop_game(String.t(), PlayerID.t()) :: Tally.t() | {:error, term}
+  @spec stop_game(Game.name(), PlayerID.t()) :: Tally.t() | {:error, term}
   def stop_game(game_name, player_id) when valid?(game_name, player_id),
     do: call({:stop, player_id}, game_name)
 
   @doc """
   Adds the second player of a game.
   """
-  @spec add_player(String.t(), String.t(), Player.gender(), pid) ::
+  @spec add_player(Game.name(), Player.name(), Player.gender(), pid) ::
           Tally.t() | {:error, term}
   def add_player(game_name, player2_name, gender, pid)
       when valid?(game_name, player2_name, gender, pid),
@@ -55,7 +53,7 @@ defmodule Islands.Engine do
   Positions an island on the specified player's board.
   """
   @spec position_island(
-          String.t(),
+          Game.name(),
           PlayerID.t(),
           Island.type(),
           Coord.row(),
@@ -68,7 +66,7 @@ defmodule Islands.Engine do
   @doc """
   Positions all islands on the specified player's board.
   """
-  @spec position_all_islands(String.t(), PlayerID.t()) ::
+  @spec position_all_islands(Game.name(), PlayerID.t()) ::
           Tally.t() | {:error, term}
   def position_all_islands(game_name, player_id)
       when valid?(game_name, player_id),
@@ -77,40 +75,48 @@ defmodule Islands.Engine do
   @doc """
   Declares all islands set for the specified player.
   """
-  @spec set_islands(String.t(), PlayerID.t()) :: Tally.t() | {:error, term}
+  @spec set_islands(Game.name(), PlayerID.t()) :: Tally.t() | {:error, term}
   def set_islands(game_name, player_id) when valid?(game_name, player_id),
     do: call({:set_islands, player_id}, game_name)
 
   @doc """
-  Allows the specified player to guess a coordinate.
+  Lets the specified player guess a coordinate.
   """
-  @spec guess_coord(String.t(), PlayerID.t(), Coord.row(), Coord.col()) ::
+  @spec guess_coord(Game.name(), PlayerID.t(), Coord.row(), Coord.col()) ::
           Tally.t() | {:error, term}
   def guess_coord(game_name, player_id, row, col)
-      when correct?(game_name, player_id, row, col),
+      when valid_args?(game_name, player_id, row, col),
       do: call({:guess_coord, player_id, row, col}, game_name)
 
   @doc """
-  Returns the tally of the game for the specified player.
+  Returns the tally of a game for the specified player.
   """
-  @spec tally(String.t(), PlayerID.t()) :: Tally.t() | {:error, term}
+  @spec tally(Game.name(), PlayerID.t()) :: Tally.t() | {:error, term}
   def tally(game_name, player_id) when valid?(game_name, player_id),
     do: call({:tally, player_id}, game_name)
 
   @doc """
   Returns a sorted list of registered game names.
   """
-  @spec game_names :: [String.t()]
+  @spec game_names :: [Game.name()]
   def game_names do
     :global.registered_names()
-    |> Enum.filter(&(is_tuple(&1) and elem(&1, 0) == Server))
-    |> Enum.map(&elem(&1, 1))
+    |> Enum.map(&game_name/1)
+    |> Enum.reject(&is_nil/1)
+    |> Enum.sort()
   end
 
   @doc """
-  Returns the `pid` of the game server process registered under the
+  Returns the `pid` of the game server process registered via the
   given `game_name`, or `nil` if no such process is registered.
   """
-  @spec game_pid(String.t()) :: pid | nil
-  def game_pid(game_name), do: game_name |> Server.via() |> GenServer.whereis()
+  @spec game_pid(Game.name()) :: pid | nil
+  def game_pid(game_name),
+    do: GameServer.via(game_name) |> GenServer.whereis()
+
+  ## Private functions
+
+  @spec game_name(term) :: Game.name() | atom
+  defp game_name({GameServer, game_name}), do: game_name
+  defp game_name(_), do: nil
 end

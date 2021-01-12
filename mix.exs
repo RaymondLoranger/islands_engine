@@ -4,15 +4,14 @@ defmodule Islands.Engine.Mixfile do
   def project do
     [
       app: :islands_engine,
-      version: "0.2.41",
-      elixir: "~> 1.6",
+      version: "0.2.42",
+      elixir: "~> 1.11",
       start_permanent: Mix.env() == :prod,
       name: "Islands Engine",
       source_url: source_url(),
       description: description(),
       package: package(),
       deps: deps()
-      # dialyzer: [plt_add_apps: [:mix]]
     ]
   end
 
@@ -39,24 +38,22 @@ defmodule Islands.Engine.Mixfile do
   def application do
     [
       extra_applications: [:logger],
-      mod: {Islands.Engine.Top, :ok}
+      mod: {Islands.Engine.TopSup, :ok}
     ]
   end
 
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:mix_tasks,
-       github: "RaymondLoranger/mix_tasks", only: :dev, runtime: false},
-      {:logger_file_backend, "~> 0.0.9"},
-      {:log_reset, "~> 0.1"},
-      {:file_only_logger, "~> 0.1"},
+      {:dialyxir, "~> 1.0", only: :dev, runtime: false},
       {:dynamic_supervisor_proxy, "~> 0.1"},
+      {:ex_doc, "~> 0.22", only: :dev, runtime: false},
+      {:file_only_logger, "~> 0.1"},
       {:gen_server_proxy, "~> 0.1"},
-      {:persist_config, "~> 0.2", runtime: false},
+      {:io_ansi_plus, "~> 0.1"},
       {:islands_board, "~> 0.1"},
       {:islands_board_cache, "~> 0.1"},
-      {:islands_coord, "~> 0.1"},
+      {:islands_coord, "~> 0.1.15"},
       {:islands_game, "~> 0.1"},
       {:islands_grid, "~> 0.1"},
       {:islands_guesses, "~> 0.1"},
@@ -68,10 +65,10 @@ defmodule Islands.Engine.Mixfile do
       {:islands_score, "~> 0.1"},
       {:islands_state, "~> 0.1"},
       {:islands_tally, "~> 0.1"},
-      {:io_ansi_plus, "~> 0.1"},
-      {:earmark, "~> 1.0", only: :dev},
-      {:ex_doc, "~> 0.14", only: :dev, runtime: false},
-      {:dialyxir, "~> 0.5", only: :dev, runtime: false}
+      {:log_reset, "~> 0.1"},
+      {:mix_tasks,
+       github: "RaymondLoranger/mix_tasks", only: :dev, runtime: false},
+      {:persist_config, "~> 0.4", runtime: false}
     ]
   end
 end

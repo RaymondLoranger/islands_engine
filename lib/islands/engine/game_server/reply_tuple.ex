@@ -1,12 +1,17 @@
-defmodule Islands.Engine.Server.Error do
-  alias Islands.Engine.Server
-  alias Islands.{Game, PlayerID, Request}
+defmodule Islands.Engine.GameServer.ReplyTuple do
+  alias Islands.Engine.GameServer
+  alias Islands.{Game, PlayerID, Request, Tally}
 
   @player_turns [:player1_turn, :player2_turn]
   @position_actions [:position_island, :position_all_islands]
 
-  @spec reply(atom, Game.t(), Request.t(), PlayerID.t()) :: Server.reply()
-  def reply(:add_player = _action, game, request, player_id) do
+  @type t :: {:reply, Tally.t(), Game.t()}
+
+  @spec new(Game.t(), PlayerID.t()) :: t
+  def new(game, player_id), do: {:reply, Tally.new(game, player_id), game}
+
+  @spec new(action_or_reason :: atom, Game.t(), Request.t(), PlayerID.t()) :: t
+  def new(:add_player = _action, game, request, player_id) do
     reason =
       case game.state.game_state do
         :initialized -> :unexpected
@@ -15,11 +20,10 @@ defmodule Islands.Engine.Server.Error do
         :game_over -> :game_over
       end
 
-    reply(reason, game, request, player_id)
+    new(reason, game, request, player_id)
   end
 
-  def reply(action, game, request, player_id)
-      when action in @position_actions do
+  def new(action, game, request, player_id) when action in @position_actions do
     reason =
       case game.state.game_state do
         :initialized -> :player2_not_added
@@ -28,10 +32,10 @@ defmodule Islands.Engine.Server.Error do
         :game_over -> :game_over
       end
 
-    reply(reason, game, request, player_id)
+    new(reason, game, request, player_id)
   end
 
-  def reply(:set_islands = _action, game, request, player_id) do
+  def new(:set_islands = _action, game, request, player_id) do
     reason =
       case game.state.game_state do
         :initialized -> :player2_not_added
@@ -40,10 +44,10 @@ defmodule Islands.Engine.Server.Error do
         :game_over -> :game_over
       end
 
-    reply(reason, game, request, player_id)
+    new(reason, game, request, player_id)
   end
 
-  def reply(:guess_coord = _action, game, request, player_id) do
+  def new(:guess_coord = _action, game, request, player_id) do
     reason =
       case game.state.game_state do
         :initialized -> :player2_not_added
@@ -52,10 +56,10 @@ defmodule Islands.Engine.Server.Error do
         :game_over -> :game_over
       end
 
-    reply(reason, game, request, player_id)
+    new(reason, game, request, player_id)
   end
 
-  def reply(:stop = _action, game, request, player_id) do
+  def new(:stop = _action, game, request, player_id) do
     reason =
       case game.state.game_state do
         :initialized -> :player2_not_added
@@ -64,14 +68,14 @@ defmodule Islands.Engine.Server.Error do
         :game_over -> :game_over
       end
 
-    reply(reason, game, request, player_id)
+    new(reason, game, request, player_id)
   end
 
-  def reply(reason, game, request, player_id) do
+  def new(reason, game, request, player_id) do
     game
     |> Game.update_request(request)
     |> Game.update_response({:error, reason})
-    |> Server.save()
-    |> Server.reply(player_id)
+    |> GameServer.save()
+    |> new(player_id)
   end
 end

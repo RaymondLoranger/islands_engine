@@ -1,15 +1,12 @@
-defmodule Islands.Engine.Top do
-  @moduledoc false
-
+defmodule Islands.Engine.TopSup do
   use Application
   use PersistConfig
 
   alias __MODULE__
-  alias Islands.Engine.Server.Restart
-  alias Islands.Engine.DynSup
+  alias Islands.Engine.{DynGameSup, GameRecovery}
 
-  @ets Application.get_env(@app, :ets_name)
-  # @reg Application.get_env(@app, :registry)
+  @ets get_env(:ets_name)
+  # @reg get_env(:registry)
 
   @spec start(Application.start_type(), term) :: {:ok, pid}
   def start(_type, :ok) do
@@ -17,10 +14,10 @@ defmodule Islands.Engine.Top do
 
     [
       # Child spec relying on `use DynamicSupervisor`...
-      {DynSup, :ok},
+      {DynGameSup, :ok},
       # Child spec relying on `use GenServer`...
-      {Restart, :ok}
+      {GameRecovery, :ok}
     ]
-    |> Supervisor.start_link(name: Top, strategy: :rest_for_one)
+    |> Supervisor.start_link(name: TopSup, strategy: :rest_for_one)
   end
 end

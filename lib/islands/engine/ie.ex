@@ -36,7 +36,7 @@ defmodule Islands.Engine.IE do
   #   :observer.start # optional
   #   use Islands.Engine.IE
   #
-  #   pid = keep_killing(DynSup)
+  #   pid = keep_killing(DynGameSup)
   #   -- or --
   #   pid = keep_killing("Eden")
   #
@@ -61,29 +61,29 @@ defmodule Islands.Engine.IE do
       alias unquote(__MODULE__)
       alias IO.ANSI.Plus, as: ANSI
 
-      alias Islands.Engine.Server.{
+      alias Islands.Engine.GameServer.{
         AddPlayer,
-        Error,
         GuessCoord,
-        Log,
         PositionAllIslands,
         PositionIsland,
-        Restart,
+        ReplyTuple,
         SetIslands,
         Stop
       }
 
       alias Islands.Engine.{
-        Callback,
         DemoProc,
-        DynSup,
-        Server,
-        Top
+        DynGameSup,
+        GameRecovery,
+        GameServer,
+        GenServerProxy,
+        Log,
+        TopSup
       }
 
+      alias Islands.Board.{Cache, Response}
       alias Islands.Grid.Tile
       alias Islands.Island.Offsets
-      alias Islands.Board.{Cache, Response}
 
       alias Islands.{
         Board,
@@ -132,7 +132,7 @@ defmodule Islands.Engine.IE do
 
     spawn(fn ->
       for _ <- Stream.cycle([:ok]) do
-        name |> pid() |> Process.exit(:kill)
+        pid(name) |> Process.exit(:kill)
         Process.sleep(@pause)
       end
     end)

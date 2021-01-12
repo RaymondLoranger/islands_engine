@@ -1,9 +1,9 @@
-defmodule Islands.Engine.Server.AddPlayer do
-  alias Islands.Engine.Server.Error
-  alias Islands.Engine.Server
+defmodule Islands.Engine.GameServer.AddPlayer do
+  alias Islands.Engine.GameServer.ReplyTuple
+  alias Islands.Engine.GameServer
   alias Islands.{Game, Request, State}
 
-  @spec handle_call(Request.t(), Server.from(), Game.t()) :: Server.reply()
+  @spec handle_call(Request.t(), GenServer.from(), Game.t()) :: ReplyTuple.t()
   def handle_call(
         {:add_player = action, name, gender, pid} = request,
         _from,
@@ -17,11 +17,11 @@ defmodule Islands.Engine.Server.AddPlayer do
       |> Game.update_request(request)
       |> Game.update_response({:ok, :player2_added})
       |> Game.notify_player(:player1)
-      |> Server.save()
-      |> Server.reply(:player2)
+      |> GameServer.save()
+      |> ReplyTuple.new(:player2)
     else
-      :error -> Error.reply(action, game, request, :player2)
-      true -> Error.reply(:duplicate_player_name, game, request, :player2)
+      :error -> ReplyTuple.new(action, game, request, :player2)
+      true -> ReplyTuple.new(:duplicate_player_name, game, request, :player2)
     end
   end
 end

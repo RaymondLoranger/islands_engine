@@ -1,29 +1,28 @@
-defmodule Islands.Engine.Server.Restart do
-  @moduledoc false
-
+defmodule Islands.Engine.GameRecovery do
   use GenServer
   use PersistConfig
 
   alias __MODULE__
-  alias Islands.Engine.{DynSup, Server}
+  alias Islands.Engine.{DynGameSup, GameServer}
 
-  @ets Application.get_env(@app, :ets_name)
+  @ets get_env(:ets_name)
 
   @spec start_link(term) :: GenServer.on_start()
-  def start_link(:ok), do: GenServer.start_link(Restart, :ok, name: Restart)
+  def start_link(:ok),
+    do: GenServer.start_link(GameRecovery, :ok, name: GameRecovery)
 
   ## Private functions
 
   @spec restart_servers :: :ok
   defp restart_servers do
     @ets
-    |> :ets.match_object({{Server, :_}, :_})
-    |> Enum.each(fn {{Server, _game_name}, game} ->
+    |> :ets.match_object({{GameServer, :_}, :_})
+    |> Enum.each(fn {{GameServer, _game_name}, game} ->
       player1 = game.player1
       # Child may already be started...
       DynamicSupervisor.start_child(
-        DynSup,
-        {Server, {game.name, player1.name, player1.gender, player1.pid}}
+        DynGameSup,
+        {GameServer, {game.name, player1.name, player1.gender, player1.pid}}
       )
     end)
   end

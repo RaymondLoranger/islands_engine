@@ -1,9 +1,9 @@
-defmodule Islands.Engine.Server.SetIslands do
-  alias Islands.Engine.Server.{Error, Log}
-  alias Islands.Engine.Server
+defmodule Islands.Engine.GameServer.SetIslands do
+  alias Islands.Engine.GameServer.ReplyTuple
+  alias Islands.Engine.GameServer
   alias Islands.{Board, Game, Request, State}
 
-  @spec handle_call(Request.t(), Server.from(), Game.t()) :: Server.reply()
+  @spec handle_call(Request.t(), GenServer.from(), Game.t()) :: ReplyTuple.t()
   def handle_call({:set_islands = action, player_id} = request, _from, game) do
     with {:ok, state} <- State.check(game.state, {action, player_id}),
          %Board{} = board <- Game.player_board(game, player_id),
@@ -15,18 +15,14 @@ defmodule Islands.Engine.Server.SetIslands do
       |> Game.update_request(request)
       |> Game.update_response({:ok, :islands_set})
       |> Game.notify_player(opponent_id)
-      |> Server.save()
-      |> Server.reply(player_id)
+      |> GameServer.save()
+      |> ReplyTuple.new(player_id)
     else
       :error ->
-        Error.reply(action, game, request, player_id)
+        ReplyTuple.new(action, game, request, player_id)
 
       false ->
-        Error.reply(:not_all_islands_positioned, game, request, player_id)
-
-      non_matched_value ->
-        :ok = Log.error(:handle_call, {non_matched_value, request, game})
-        Error.reply(:unknown, game, request, player_id)
+        ReplyTuple.new(:not_all_islands_positioned, game, request, player_id)
     end
   end
 end

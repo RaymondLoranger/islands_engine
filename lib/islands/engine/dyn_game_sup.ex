@@ -1,4 +1,4 @@
-defmodule Islands.Engine.DynSup do
+defmodule Islands.Engine.DynGameSup do
   @moduledoc """
   A supervisor that starts game server processes dynamically.
   """
@@ -8,7 +8,7 @@ defmodule Islands.Engine.DynSup do
   alias __MODULE__
 
   @spec start_link(term) :: Supervisor.on_start()
-  def start_link(:ok), do: start_link(DynSup, :ok, name: DynSup)
+  def start_link(:ok), do: start_link(DynGameSup, :ok, name: DynGameSup)
 
   ## Callbacks
 
