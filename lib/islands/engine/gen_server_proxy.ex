@@ -16,11 +16,9 @@ defmodule Islands.Engine.GenServerProxy do
       :fuchsia_background,
       :light_white,
       "Game ",
-      :fuchsia_background,
-      :stratos,
+      :italic,
       "#{game_name}",
-      :fuchsia_background,
-      :light_white,
+      :not_italic,
       " not started."
     ])
   end
