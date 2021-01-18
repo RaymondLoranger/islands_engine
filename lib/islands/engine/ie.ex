@@ -42,24 +42,17 @@ defmodule Islands.Engine.IE do
   #
   #   Process.exit(pid, :kill)
 
+  use PersistConfig
+
   alias Islands.Grid.Tile
-  alias Islands.Engine
-
-  # Supervisor option defaults for :max_restarts and :max_seconds
-  @max_restarts 3
-  @max_seconds 5
-
-  # Pause of 2 seconds between kills...
-  @buffer 333
-  @seconds_per_restart Float.round(@max_seconds / @max_restarts, 3)
-  @pause round(@seconds_per_restart * 1000) + @buffer
-  @snooze 10
+  alias Islands.{Coord, Engine, Game, Island, Player, PlayerID, Tally}
 
   defmacro __using__(_options) do
     quote do
       import unquote(__MODULE__)
       alias unquote(__MODULE__)
       alias IO.ANSI.Plus, as: ANSI
+      alias Log.Reset
 
       alias Islands.Engine.GameServer.{
         AddPlayer,
@@ -93,8 +86,8 @@ defmodule Islands.Engine.IE do
         Grid,
         Guesses,
         Island,
-        PlayerID,
         Player,
+        PlayerID,
         Request,
         Response,
         Score,
@@ -126,19 +119,72 @@ defmodule Islands.Engine.IE do
     IO.puts(":ocean       => #{Tile.new(nil)}")
   end
 
-  @spec keep_killing(atom | binary) :: pid
-  def keep_killing(name) do
-    IO.puts("Pause between kills: #{@pause} ms...")
+  @spec player_name :: Player.name()
+  def player_name, do: "Ray"
 
+  @spec gender :: Player.gender()
+  def gender, do: :m
+
+  @spec pid :: pid
+  def pid, do: self()
+
+  @spec player_id :: PlayerID.t()
+  def player_id, do: :player1
+
+  @spec island_type :: Island.type()
+  def island_type, do: :atoll
+
+  @spec blue_moon :: Game.name()
+  def blue_moon, do: "blue-moon"
+
+  @spec keep_killing(atom | binary) :: pid
+  def keep_killing(name) when is_atom(name) or is_binary(name) do
     spawn(fn ->
       for _ <- Stream.cycle([:ok]) do
         pid(name) |> Process.exit(:kill)
-        Process.sleep(@pause)
+        pause(name) |> Process.sleep()
       end
     end)
   end
 
+  @spec new_games(pos_integer) :: [{Game.name(), Supervisor.on_start_child()}]
+  def new_games(count) when count in 2..200 do
+    Enum.reduce(0..(count - 2), [blue_moon()], fn _, acc ->
+      [Game.haiku_name() | acc]
+    end)
+    |> Enum.map(fn name ->
+      {name, Engine.new_game(name, player_name(), gender(), pid())}
+    end)
+  end
+
+  @spec position_island(atom | binary, Coord.row(), Coord.col()) :: :ok
+  def position_island(target, row, col)
+      when (is_atom(target) or is_binary(target)) and row in 1..10 and
+             col in 1..10 do
+    keep_killing(target) |> do_position_island(row, col)
+  end
+
   ## Private functions
+
+  @spec do_position_island(pid, Coord.row(), Coord.col()) :: :ok
+  defp do_position_island(killer_pid, row, col) do
+    for _ <- 1..10 do
+      Engine.position_island(blue_moon(), player_id(), island_type(), row, col)
+      Process.sleep(10)
+      Engine.game_pid(blue_moon())
+    end
+    |> Enum.any?(&is_nil/1)
+    |> if(
+      do: print_summary(killer_pid),
+      else: do_position_island(killer_pid, row, col)
+    )
+  end
+
+  @spec print_summary(pid) :: :ok
+  defp print_summary(killer_pid) do
+    true = Process.exit(killer_pid, :kill)
+    :ok = Engine.tally(blue_moon(), player_id()) |> Tally.summary(player_id())
+  end
 
   @spec pid(atom | binary) :: pid
   defp pid(name) when is_atom(name) do
@@ -147,7 +193,7 @@ defmodule Islands.Engine.IE do
         pid
 
       nil ->
-        Process.sleep(@snooze)
+        snooze() |> Process.sleep()
         pid(name)
     end
   end
@@ -158,8 +204,20 @@ defmodule Islands.Engine.IE do
         pid
 
       nil ->
-        Process.sleep(@snooze)
+        snooze() |> Process.sleep()
         pid(name)
     end
   end
+
+  @spec pause(atom | binary) :: pos_integer
+  defp pause(Islands.Engine.DynGameSup),
+    do: get_env(:between_dyn_sup_kills)
+
+  defp pause(Islands.Engine.GameSup),
+    do: get_env(:between_sup_kills)
+
+  defp pause(_), do: get_env(:between_server_kills)
+
+  @spec snooze :: pos_integer
+  defp snooze, do: get_env(:between_registration_checks)
 end

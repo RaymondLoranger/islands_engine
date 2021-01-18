@@ -80,7 +80,7 @@ defmodule Islands.Engine do
     do: call({:set_islands, player_id}, game_name)
 
   @doc """
-  Lets the specified player guess a coordinate.
+  Lets the specified player guess square (`row`, `col`).
   """
   @spec guess_coord(Game.name(), PlayerID.t(), Coord.row(), Coord.col()) ::
           Tally.t() | {:error, term}
