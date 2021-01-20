@@ -8,13 +8,15 @@ defmodule Islands.Engine.GameServer.ReplyTuple do
   @position_actions [:position_island, :position_all_islands]
   @timeout get_env(:timeout)
 
+  @typedoc "Action like :add_player and reason like :duplicate_player_name"
+  @type action_or_reason :: atom
   @type t :: {:reply, Tally.t(), Game.t(), timeout}
 
   @spec new(Game.t(), PlayerID.t()) :: t
   def new(game, player_id),
     do: {:reply, Tally.new(game, player_id), game, @timeout}
 
-  @spec new(action_or_reason :: atom, Game.t(), Request.t(), PlayerID.t()) :: t
+  @spec new(action_or_reason, Game.t(), Request.t(), PlayerID.t()) :: t
   def new(:add_player = _action, game, request, player_id) do
     reason =
       case game.state.game_state do
