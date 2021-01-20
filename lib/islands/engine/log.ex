@@ -66,4 +66,14 @@ defmodule Islands.Engine.Log do
     #{from()}
     """
   end
+
+  info :timeout, {timeout, game} do
+    """
+    \nGame server process timed out...
+    • Game name: #{game.name}
+    • Timeout: #{round(timeout / 1000 / 60)} min
+    • Server PID: #{self() |> inspect()}
+    #{from()}
+    """
+  end
 end

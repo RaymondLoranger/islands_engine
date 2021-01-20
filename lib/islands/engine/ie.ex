@@ -1,9 +1,9 @@
 defmodule Islands.Engine.IE do
   @moduledoc false
 
-  # Example of an IEx session...
+  ## Example of an IEx session in a named node...
   #
-  #   iex --sname islands -S mix
+  #   iex --sname islands_engine -S mix  (Xterm colors)
   #
   #   use Islands.Engine.IE
   #   print_tiles()
@@ -21,26 +21,36 @@ defmodule Islands.Engine.IE do
   #   Island.new(:l_shape, coord)
   #   Island.new(:dot, coord)
 
-  # Example of IEx sessions in different nodes...
+  ## Example of IEx sessions in different nodes...
   #
-  #   iex --sname c1 -S mix
+  #   iex --sname c1 -S mix (Xterm colors)
   #
   #   Islands.Text.Client.start("Eden", "Adam", :m, mode: :auto)
   #
-  #   iex --sname c2 -S mix
+  #   iex --sname c2 -S mix (Xterm colors)
   #
   #   Islands.Text.Client.join("Eden", "Eve", :f, mode: :auto)
+
+  ## Example of an IEx session...
   #
-  #   iex --sname islands -S mix
+  #   iex -S mix (Xterm colors)
   #
-  #   :observer.start # optional
   #   use Islands.Engine.IE
-  #
-  #   pid = keep_killing(DynGameSup)
-  #   -- or --
-  #   pid = keep_killing("Eden")
-  #
-  #   Process.exit(pid, :kill)
+  #   import Engine, only: [position_all_islands: 2]
+  #   :observer.start
+  #   pid = self()
+  #   {:ok, red_sun_pid} = Engine.new_game("red-sun", "Ed", :m, pid)
+  #   {:error, error} = Engine.new_game("red-sun", "Al", :m, pid)
+  #   error = {:already_started, red_sun_pid}
+  #   {:ok, icy_moon_pid} = Engine.new_game("icy-moon", "Eve", :f, pid)
+  #   red_sun_pid = Engine.game_pid("red-sun")
+  #   icy_moon_pid = Engine.game_pid("icy-moon")
+  #   ["icy-moon", "red-sun"] = Engine.game_names
+  #   game_names = :ets.match(Ets, {{GameServer, :"$1"}, :_})
+  #   [["icy-moon"], ["red-sun"]] = game_names
+  #   %Tally{} = Engine.add_player("red-sun", "Liz", :f, pid)
+  #   :ok = position_all_islands("red-sun", :player1) |> Tally.summary(:player1)
+  #   etc.
 
   use PersistConfig
 
@@ -67,6 +77,7 @@ defmodule Islands.Engine.IE do
       alias Islands.Engine.{
         DemoProc,
         DynGameSup,
+        Ets,
         GameRecovery,
         GameServer,
         GenServerProxy,
@@ -98,6 +109,60 @@ defmodule Islands.Engine.IE do
       :ok
     end
   end
+
+  ## Example of an IEx session...
+  #
+  #   iex -S mix (Xterm colors)
+  #
+  #   use Islands.Engine.IE
+  #   import Engine, only: [position_all_islands: 2]
+  #   :observer.start # optional
+  #   pid = self()
+  #   new_games(2) # starts 2 new games with last called "blue-moon"
+  #   Reset.reset_logs([:debug]) # optional
+  #   :ets.match(Ets, {{GameServer, :"$1"}, :_})
+  #   Engine.game_names
+  #   %Tally{} = Engine.add_player(blue_moon, "Liz", :f, pid)
+  #   :ok = position_all_islands(blue_moon, :player1) |> Tally.summary(:player1)
+  #   :ok = position_island(blue_moon, <row>, <col>) # and then check the logs
+  #   :ok = Engine.tally(blue_moon, :player1) |> Tally.summary(:player1)
+
+  ## Example of an IEx session...
+  #
+  #   iex -S mix (Xterm colors)
+
+  ## Example of an IEx session...
+  #
+  #   iex -S mix (Xterm colors)
+  #
+  #   use Islands.Engine.IE
+  #   import Engine, only: [position_all_islands: 2]
+  #   :observer.start # optional
+  #   pid = self()
+  #   new_games(166) # starts 166 new games with last called "blue-moon"
+  #   Reset.reset_logs([:debug]) # optional
+  #   :ets.match(Ets, {{GameServer, :"$1"}, :_})
+  #   Engine.game_names
+  #   %Tally{} = Engine.add_player(blue_moon, "Liz", :f, pid)
+  #   :ok = position_all_islands(blue_moon, :player1) |> Tally.summary(:player1)
+  #   :ok = position_island(DynGameSup, <row>, <col>) # and then check the logs
+  #   :ok = Engine.tally(blue_moon, :player1) |> Tally.summary(:player1)
+
+  ## Example of an IEx session...
+  #
+  #   iex -S mix (Xterm colors)
+  #
+  #   use Islands.Engine.IE
+  #   import Engine, only: [position_all_islands: 2]
+  #   :observer.start # optional
+  #   pid = self()
+  #   new_games(2) # starts 2 games with last called "blue-moon"
+  #   Reset.reset_logs([:debug]) # optional
+  #   %Tally{} = Engine.add_player(blue_moon, "Liz", :f, pid)
+  #   :ok = position_all_islands(blue_moon, :player1) |> Tally.summary(:player1)
+  #   pid = keep_killing(blue_moon)
+  #   true = Process.exit(pid, :kill) # and then check the logs
+  #   :ok = Engine.tally(blue_moon, :player1) |> Tally.summary(:player1)
 
   @spec print_tiles :: :ok
   def print_tiles do
@@ -141,14 +206,19 @@ defmodule Islands.Engine.IE do
   def keep_killing(name) when is_atom(name) or is_binary(name) do
     spawn(fn ->
       for _ <- Stream.cycle([:ok]) do
-        pid(name) |> Process.exit(:kill)
-        pause(name) |> Process.sleep()
+        pid(name)
+        |> IO.inspect(label: "Killing #{inspect(name)}")
+        |> Process.exit(:kill)
+
+        pause(name)
+        |> IO.inspect(label: "Between kills (ms)")
+        |> Process.sleep()
       end
     end)
   end
 
   @spec new_games(pos_integer) :: [{Game.name(), Supervisor.on_start_child()}]
-  def new_games(count) when count in 2..200 do
+  def new_games(count) when count in 2..500 do
     Enum.reduce(0..(count - 2), [blue_moon()], fn _, acc ->
       [Game.haiku_name() | acc]
     end)
