@@ -8,7 +8,7 @@ defmodule Islands.Engine.GameServer.ReplyTuple do
   @position_actions [:position_island, :position_all_islands]
   @timeout get_env(:timeout)
 
-  @typedoc "Action like :add_player and reason like :duplicate_player_name"
+  @typedoc "Action like `:add_player` or reason like `:duplicate_player_name`"
   @type action_or_reason :: atom
   @type t :: {:reply, Tally.t(), Game.t(), timeout}
 
