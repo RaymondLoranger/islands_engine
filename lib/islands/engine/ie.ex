@@ -124,7 +124,7 @@ defmodule Islands.Engine.IE do
   #   Engine.game_names
   #   %Tally{} = Engine.add_player(blue_moon, "Liz", :f, pid)
   #   :ok = position_all_islands(blue_moon, :player1) |> Tally.summary(:player1)
-  #   :ok = position_island(blue_moon, <row>, <col>) # and then check the logs
+  #   :ok = position_island(blue_moon, <row>, <col>, -60) # and check the logs
   #   :ok = Engine.tally(blue_moon, :player1) |> Tally.summary(:player1)
 
   ## Example of an IEx session...
@@ -145,7 +145,7 @@ defmodule Islands.Engine.IE do
   #   Engine.game_names
   #   %Tally{} = Engine.add_player(blue_moon, "Liz", :f, pid)
   #   :ok = position_all_islands(blue_moon, :player1) |> Tally.summary(:player1)
-  #   :ok = position_island(DynGameSup, <row>, <col>) # and then check the logs
+  #   :ok = position_island(DynGameSup, <row>, <col>, -222) # and check the logs
   #   :ok = Engine.tally(blue_moon, :player1) |> Tally.summary(:player1)
 
   ## Example of an IEx session...
@@ -160,7 +160,8 @@ defmodule Islands.Engine.IE do
   #   Reset.reset_logs([:debug]) # optional
   #   %Tally{} = Engine.add_player(blue_moon, "Liz", :f, pid)
   #   :ok = position_all_islands(blue_moon, :player1) |> Tally.summary(:player1)
-  #   pid = keep_killing(blue_moon)
+  #   Reset.reset_logs([:debug]) # optional
+  #   pid = keep_killing(blue_moon, +388)
   #   true = Process.exit(pid, :kill) # and then check the logs
   #   :ok = Engine.tally(blue_moon, :player1) |> Tally.summary(:player1)
 
@@ -202,15 +203,16 @@ defmodule Islands.Engine.IE do
   @spec blue_moon :: Game.name()
   def blue_moon, do: "blue-moon"
 
-  @spec keep_killing(atom | binary) :: pid
-  def keep_killing(name) when is_atom(name) or is_binary(name) do
+  @spec keep_killing(atom | binary, integer) :: pid
+  def keep_killing(name, more_ms \\ 0)
+      when (is_atom(name) or is_binary(name)) and is_integer(more_ms) do
     spawn(fn ->
       for _ <- Stream.cycle([:ok]) do
         pid(name)
         |> IO.inspect(label: "Killing #{inspect(name)}")
         |> Process.exit(:kill)
 
-        pause(name)
+        pause(name, more_ms)
         |> IO.inspect(label: "Between kills (ms)")
         |> Process.sleep()
       end
@@ -227,11 +229,11 @@ defmodule Islands.Engine.IE do
     end)
   end
 
-  @spec position_island(atom | binary, Coord.row(), Coord.col()) :: :ok
-  def position_island(target, row, col)
+  @spec position_island(atom | binary, Coord.row(), Coord.col(), integer) :: :ok
+  def position_island(target, row, col, more_ms \\ 0)
       when (is_atom(target) or is_binary(target)) and row in 1..10 and
-             col in 1..10 do
-    keep_killing(target) |> do_position_island(row, col)
+             col in 1..10 and is_integer(more_ms) do
+    keep_killing(target, more_ms) |> do_position_island(row, col)
   end
 
   ## Private functions
@@ -279,14 +281,17 @@ defmodule Islands.Engine.IE do
     end
   end
 
-  @spec pause(atom | binary) :: pos_integer
-  defp pause(Islands.Engine.DynGameSup),
-    do: get_env(:between_dyn_sup_kills)
+  @spec pause(atom | binary, integer) :: pos_integer
+  defp pause(sup_or_server, adjustment)
 
-  defp pause(Islands.Engine.GameSup),
-    do: get_env(:between_sup_kills)
+  defp pause(Islands.Engine.DynGameSup, adjustment),
+    do: get_env(:between_dyn_sup_kills) + adjustment
 
-  defp pause(_), do: get_env(:between_server_kills)
+  defp pause(Islands.Engine.GameSup, adjustment),
+    do: get_env(:between_sup_kills) + adjustment
+
+  defp pause(_server, adjustment),
+    do: get_env(:between_server_kills) + adjustment
 
   @spec snooze :: pos_integer
   defp snooze, do: get_env(:between_registration_checks)
