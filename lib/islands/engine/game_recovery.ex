@@ -4,6 +4,7 @@ defmodule Islands.Engine.GameRecovery do
 
   alias __MODULE__
   alias Islands.Engine.{DynGameSup, GameServer}
+  alias Islands.Game
 
   @ets get_env(:ets_name)
 
@@ -31,4 +32,15 @@ defmodule Islands.Engine.GameRecovery do
 
   @spec init(term) :: {:ok, term}
   def init(:ok), do: {:ok, restart_servers()}
+
+  @spec handle_call(term, GenServer.from(), term) ::
+          {:reply, [Game.overview()], term}
+  def handle_call(:games_overview, _from, :ok) do
+    games_overview =
+      @ets
+      |> :ets.match_object({{GameServer, :_}, :_})
+      |> Enum.map(fn {{GameServer, _game_name}, game} -> Game.overview(game) end)
+
+    {:reply, games_overview, :ok}
+  end
 end
