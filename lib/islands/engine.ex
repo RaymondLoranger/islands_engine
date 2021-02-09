@@ -12,7 +12,7 @@ defmodule Islands.Engine do
 
   import Islands.Engine.Guards
 
-  alias Islands.Engine.{DynGameSup, GameServer}
+  alias Islands.Engine.{DynGameSup, GameRecovery, GameServer}
   alias Islands.{Coord, Game, Island, Player, PlayerID, Tally}
 
   @doc """
