@@ -96,11 +96,11 @@ defmodule Islands.Engine do
     do: call({:tally, player_id}, game_name)
 
   @doc """
-  Returns an overview of all the games being played.
+  Returns all the game overviews.
   """
-  @spec games_overview :: [Game.overview()]
-  def games_overview do
-    GenServer.call(GameRecovery, :games_overview)
+  @spec game_overviews :: [Game.overview()]
+  def game_overviews do
+    GenServer.call(GameRecovery, :game_overviews)
   end
 
   @doc """

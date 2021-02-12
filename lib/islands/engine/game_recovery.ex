@@ -35,12 +35,13 @@ defmodule Islands.Engine.GameRecovery do
 
   @spec handle_call(term, GenServer.from(), term) ::
           {:reply, [Game.overview()], term}
-  def handle_call(:games_overview, _from, :ok) do
-    games_overview =
+  def handle_call(:game_overviews, _from, :ok) do
+    game_overviews =
       @ets
       |> :ets.match_object({{GameServer, :_}, :_})
       |> Enum.map(fn {{GameServer, _game_name}, game} -> Game.overview(game) end)
+      |> Enum.sort()
 
-    {:reply, games_overview, :ok}
+    {:reply, game_overviews, :ok}
   end
 end
