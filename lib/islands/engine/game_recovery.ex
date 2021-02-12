@@ -39,7 +39,9 @@ defmodule Islands.Engine.GameRecovery do
     game_overviews =
       @ets
       |> :ets.match_object({{GameServer, :_}, :_})
-      |> Enum.map(fn {{GameServer, _game_name}, game} -> Game.overview(game) end)
+      |> Enum.map(fn {{GameServer, _game_name}, game} ->
+        Game.overview(game)
+      end)
       |> Enum.sort()
 
     {:reply, game_overviews, :ok}
