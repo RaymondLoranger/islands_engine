@@ -1,7 +1,6 @@
 defmodule Islands.Engine.GameServer.PositionIsland do
   alias Islands.Engine.GameServer.ReplyTuple
   alias Islands.Engine.GameServer
-  alias Islands.Board.Cache
   alias Islands.{Board, Coord, Game, Island, Request, State}
 
   @spec handle_call(Request.t(), GenServer.from(), Game.t()) :: ReplyTuple.t()
@@ -15,14 +14,7 @@ defmodule Islands.Engine.GameServer.PositionIsland do
          {:ok, island} <- Island.new(island_type, origin),
          %Board{} = board <- Game.player_board(game, player_id),
          %Board{} = board <- Board.position_island(board, island) do
-      response =
-        {:ok,
-         if Board.all_islands_positioned?(board) do
-           Cache.persist_board(board)
-           :all_islands_positioned
-         else
-           :island_positioned
-         end}
+      response = {:ok, Board.all_islands_positioned?(board) |> response()}
 
       game
       |> Game.update_board(player_id, board)
@@ -39,4 +31,9 @@ defmodule Islands.Engine.GameServer.PositionIsland do
         ReplyTuple.new(reason, game, request, player_id)
     end
   end
+
+  ## Private functions
+
+  defp response(_all_islands_positioned = true), do: :all_islands_positioned
+  defp response(_not_all_islands_positioned), do: :island_positioned
 end
