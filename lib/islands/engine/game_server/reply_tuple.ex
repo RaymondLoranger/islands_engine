@@ -1,14 +1,12 @@
 defmodule Islands.Engine.GameServer.ReplyTuple do
-  use PersistConfig
-
   alias Islands.Engine.GameServer
   alias Islands.{Game, PlayerID, Request, Tally}
 
   @player_turns [:player1_turn, :player2_turn]
   @position_actions [:position_island, :position_all_islands]
-  @timeout get_env(:timeout)
+  @timeout :timer.minutes(30)
 
-  @typedoc "Action like `:add_player` or reason like `:duplicate_player_name`"
+  @typedoc "Action like :add_player or reason like :duplicate_player_name"
   @type action_or_reason :: atom
   @type t :: {:reply, Tally.t(), Game.t(), timeout}
 

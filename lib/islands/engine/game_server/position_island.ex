@@ -34,6 +34,7 @@ defmodule Islands.Engine.GameServer.PositionIsland do
 
   ## Private functions
 
-  defp response(_all_islands_positioned = true), do: :all_islands_positioned
-  defp response(_not_all_islands_positioned), do: :island_positioned
+  @spec response(boolean) :: atom
+  defp response(_all_islands_positioned? = true), do: :all_islands_positioned
+  defp response(_all_islands_positioned?), do: :island_positioned
 end

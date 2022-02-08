@@ -1,23 +1,5 @@
 import Config
 
-# case config_env() do
-#   :dev ->
-#     config :file_only_logger, log?: true
-#     config :log_reset, levels: :all
-
-#   :prod ->
-#     config :file_only_logger, log?: true
-#     config :log_reset, levels: :all
-
-#   :test ->
-#     config :file_only_logger, log?: true
-#     config :log_reset, levels: :none
-
-#   _ ->
-#     config :file_only_logger, log?: true
-#     config :log_reset, levels: :all
-# end
-
 # Supervisor option defaults for :max_restarts and :max_seconds...
 {max_restarts, max_seconds} = {3, 5}
 # 1.666 sec...

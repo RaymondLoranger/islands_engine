@@ -41,16 +41,15 @@ defmodule Islands.Engine.IE do
   #   pid = self()
   #   {:ok, red_sun_pid} = Engine.new_game("red-sun", "Ed", :m, pid)
   #   {:error, error} = Engine.new_game("red-sun", "Al", :m, pid)
-  #   error = {:already_started, red_sun_pid}
+  #   error == {:already_started, red_sun_pid}
   #   {:ok, icy_moon_pid} = Engine.new_game("icy-moon", "Eve", :f, pid)
-  #   red_sun_pid = Engine.game_pid("red-sun")
-  #   icy_moon_pid = Engine.game_pid("icy-moon")
-  #   ["icy-moon", "red-sun"] = Engine.game_names
+  #   red_sun_pid == Engine.game_pid("red-sun")
+  #   icy_moon_pid == Engine.game_pid("icy-moon")
+  #   ["icy-moon", "red-sun"] == Engine.game_names
   #   game_names = :ets.match(Ets, {{GameServer, :"$1"}, :_})
-  #   [["icy-moon"], ["red-sun"]] = game_names
+  #   [["icy-moon"], ["red-sun"]] == game_names
   #   %Tally{} = Engine.add_player("red-sun", "Liz", :f, pid)
   #   :ok = position_all_islands("red-sun", :player1) |> Tally.summary(:player1)
-  #   etc.
 
   use PersistConfig
 
@@ -119,17 +118,13 @@ defmodule Islands.Engine.IE do
   #   :observer.start # optional
   #   pid = self()
   #   new_games(2) # starts 2 new games with last called "blue-moon"
-  #   Reset.reset_logs([:debug]) # optional
   #   :ets.match(Ets, {{GameServer, :"$1"}, :_})
   #   Engine.game_names
   #   %Tally{} = Engine.add_player(blue_moon, "Liz", :f, pid)
   #   :ok = position_all_islands(blue_moon, :player1) |> Tally.summary(:player1)
-  #   :ok = position_island(blue_moon, <row>, <col>, -60) # and check the logs
+  #   Reset.reset_logs([:debug]) # optional
+  #   :ok = position_island(blue_moon, 3, 2, +500) # and check the logs
   #   :ok = Engine.tally(blue_moon, :player1) |> Tally.summary(:player1)
-
-  ## Example of an IEx session...
-  #
-  #   iex -S mix (Xterm colors)
 
   ## Example of an IEx session...
   #
@@ -140,12 +135,12 @@ defmodule Islands.Engine.IE do
   #   :observer.start # optional
   #   pid = self()
   #   new_games(166) # starts 166 new games with last called "blue-moon"
-  #   Reset.reset_logs([:debug]) # optional
   #   :ets.match(Ets, {{GameServer, :"$1"}, :_})
   #   Engine.game_names
   #   %Tally{} = Engine.add_player(blue_moon, "Liz", :f, pid)
   #   :ok = position_all_islands(blue_moon, :player1) |> Tally.summary(:player1)
-  #   :ok = position_island(DynGameSup, <row>, <col>, -222) # and check the logs
+  #   Reset.reset_logs([:debug]) # optional
+  #   :ok = position_island(DynGameSup, 3, 2, +333) # and check the logs
   #   :ok = Engine.tally(blue_moon, :player1) |> Tally.summary(:player1)
 
   ## Example of an IEx session...
@@ -157,7 +152,6 @@ defmodule Islands.Engine.IE do
   #   :observer.start # optional
   #   pid = self()
   #   new_games(2) # starts 2 games with last called "blue-moon"
-  #   Reset.reset_logs([:debug]) # optional
   #   %Tally{} = Engine.add_player(blue_moon, "Liz", :f, pid)
   #   :ok = position_all_islands(blue_moon, :player1) |> Tally.summary(:player1)
   #   Reset.reset_logs([:debug]) # optional

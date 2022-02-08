@@ -24,8 +24,7 @@ The highlighted processes below (supervisor and servers) are fault-tolerant:
 if any crashes (or is killed), it is immediately restarted and the system
 remains undisturbed.
 
-The processes identified by their PIDs are Game Servers: each holds the state of
-a _Game of Islands_. Multiple games can be played simultaneously.
+The processes identified by their PIDs are game servers: each holds a game struct as its state. Multiple games can be played simultaneously.
 
 ## ![engine_app](images/islands_engine_app.png)
 

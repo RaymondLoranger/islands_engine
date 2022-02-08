@@ -31,14 +31,14 @@ defmodule Islands.Engine do
   """
   @spec end_game(Game.name()) :: :ok | {:error, term}
   def end_game(game_name) when is_binary(game_name),
-    do: stop(:shutdown, game_name)
+    do: stop(game_name, :shutdown)
 
   @doc """
   Stops a game at a player's request.
   """
   @spec stop_game(Game.name(), PlayerID.t()) :: Tally.t() | {:error, term}
   def stop_game(game_name, player_id) when valid?(game_name, player_id),
-    do: call({:stop, player_id}, game_name)
+    do: call(game_name, {:stop, player_id})
 
   @doc """
   Adds the second player of a game.
@@ -47,7 +47,7 @@ defmodule Islands.Engine do
           Tally.t() | {:error, term}
   def add_player(game_name, player2_name, gender, pid)
       when valid?(game_name, player2_name, gender, pid),
-      do: call({:add_player, player2_name, gender, pid}, game_name)
+      do: call(game_name, {:add_player, player2_name, gender, pid})
 
   @doc """
   Positions an island on the specified player's board.
@@ -61,7 +61,7 @@ defmodule Islands.Engine do
         ) :: Tally.t() | {:error, term}
   def position_island(game_name, player_id, island_type, row, col)
       when valid?(game_name, player_id, island_type, row, col),
-      do: call({:position_island, player_id, island_type, row, col}, game_name)
+      do: call(game_name, {:position_island, player_id, island_type, row, col})
 
   @doc """
   Positions all islands on the specified player's board.
@@ -70,30 +70,30 @@ defmodule Islands.Engine do
           Tally.t() | {:error, term}
   def position_all_islands(game_name, player_id)
       when valid?(game_name, player_id),
-      do: call({:position_all_islands, player_id}, game_name)
+      do: call(game_name, {:position_all_islands, player_id})
 
   @doc """
   Declares all islands set for the specified player.
   """
   @spec set_islands(Game.name(), PlayerID.t()) :: Tally.t() | {:error, term}
   def set_islands(game_name, player_id) when valid?(game_name, player_id),
-    do: call({:set_islands, player_id}, game_name)
+    do: call(game_name, {:set_islands, player_id})
 
   @doc """
-  Lets the specified player guess square (`row`, `col`).
+  Lets the specified player guess a square on the opponent's board.
   """
   @spec guess_coord(Game.name(), PlayerID.t(), Coord.row(), Coord.col()) ::
           Tally.t() | {:error, term}
   def guess_coord(game_name, player_id, row, col)
       when valid_args?(game_name, player_id, row, col),
-      do: call({:guess_coord, player_id, row, col}, game_name)
+      do: call(game_name, {:guess_coord, player_id, row, col})
 
   @doc """
   Returns the tally of a game for the specified player.
   """
   @spec tally(Game.name(), PlayerID.t()) :: Tally.t() | {:error, term}
   def tally(game_name, player_id) when valid?(game_name, player_id),
-    do: call({:tally, player_id}, game_name)
+    do: call(game_name, {:tally, player_id})
 
   @doc """
   Returns all the game overviews.
