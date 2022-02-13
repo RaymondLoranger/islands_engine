@@ -143,22 +143,6 @@ defmodule Islands.Engine.IE do
   #   :ok = position_island(DynGameSup, 3, 2, +333) # and check the logs
   #   :ok = Engine.tally(blue_moon, :player1) |> Tally.summary(:player1)
 
-  ## Example of an IEx session...
-  #
-  #   iex -S mix (Xterm colors)
-  #
-  #   use Islands.Engine.IE
-  #   import Engine, only: [position_all_islands: 2]
-  #   :observer.start # optional
-  #   pid = self()
-  #   new_games(2) # starts 2 games with last called "blue-moon"
-  #   %Tally{} = Engine.add_player(blue_moon, "Liz", :f, pid)
-  #   :ok = position_all_islands(blue_moon, :player1) |> Tally.summary(:player1)
-  #   Reset.reset_logs([:debug]) # optional
-  #   pid = keep_killing(blue_moon, +388)
-  #   true = Process.exit(pid, :kill) # and then check the logs
-  #   :ok = Engine.tally(blue_moon, :player1) |> Tally.summary(:player1)
-
   @spec print_tiles :: :ok
   def print_tiles do
     IO.puts(":atoll       => #{Tile.new(:atoll)}")
