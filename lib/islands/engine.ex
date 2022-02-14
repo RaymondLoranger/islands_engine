@@ -115,7 +115,7 @@ defmodule Islands.Engine do
   end
 
   @doc """
-  Returns the `pid` of the game server process registered via the
+  Returns the pid of the game server process registered via the
   given `game_name`, or `nil` if no such process is registered.
   """
   @spec game_pid(Game.name()) :: pid | nil
