@@ -4,7 +4,7 @@ defmodule Islands.Engine.Mixfile do
   def project do
     [
       app: :islands_engine,
-      version: "0.2.55",
+      version: "0.2.56",
       elixir: "~> 1.11",
       start_permanent: Mix.env() == :prod,
       name: "Islands Engine",
