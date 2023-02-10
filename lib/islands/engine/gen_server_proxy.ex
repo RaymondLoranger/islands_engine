@@ -15,7 +15,7 @@ defmodule Islands.Engine.GenServerProxy do
     ANSI.puts([
       :fuchsia_background,
       :light_white,
-      "Game ",
+      "Islands Game ",
       :italic,
       "#{game_name}",
       :not_italic,

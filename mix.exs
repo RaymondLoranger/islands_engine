@@ -4,7 +4,7 @@ defmodule Islands.Engine.Mixfile do
   def project do
     [
       app: :islands_engine,
-      version: "0.2.59",
+      version: "0.2.60",
       elixir: "~> 1.11",
       start_permanent: Mix.env() == :prod,
       name: "Islands Engine",
@@ -48,7 +48,7 @@ defmodule Islands.Engine.Mixfile do
       {:dialyxir, "~> 1.0", only: :dev, runtime: false},
       {:dynamic_supervisor_proxy, "~> 0.1"},
       {:ex_doc, "~> 0.22", only: :dev, runtime: false},
-      {:file_only_logger, "~> 0.1"},
+      {:file_only_logger, "~> 0.2"},
       {:gen_server_proxy, "~> 0.1"},
       {:io_ansi_plus, "~> 0.1"},
       {:islands_board, "~> 0.1"},
