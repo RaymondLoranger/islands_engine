@@ -11,7 +11,7 @@ defmodule Islands.Engine.Log do
     • 'handle_call' request: #{inspect(game.request) |> maybe_break(25)}
     • 'terminate' reason: #{inspect(reason) |> maybe_break(22)}
     • Game being terminated: #{inspect(game) |> maybe_break(25)}
-    #{from(env, __MODULE__)}
+    #{from(env, __MODULE__)}\
     """
   end
 
@@ -23,7 +23,7 @@ defmodule Islands.Engine.Log do
     • 'handle_call' request: #{inspect(game.request) |> maybe_break(25)}
     • 'terminate' reason: #{inspect(reason) |> maybe_break(22)}
     • Game being terminated: #{inspect(game) |> maybe_break(25)}
-    #{from(env, __MODULE__)}
+    #{from(env, __MODULE__)}\
     """
   end
 
@@ -34,7 +34,7 @@ defmodule Islands.Engine.Log do
     • Server PID: #{self() |> inspect()}
     • 'handle_call' request: #{inspect(game.request) |> maybe_break(25)}
     • Game being saved: #{inspect(game) |> maybe_break(20)}
-    #{from(env, __MODULE__)}
+    #{from(env, __MODULE__)}\
     """
   end
 
@@ -44,7 +44,7 @@ defmodule Islands.Engine.Log do
     • Game name: #{game_name}
     • Player 1 name: #{player1_name}
     • Server PID: #{self() |> inspect()}
-    #{from(env, __MODULE__)}
+    #{from(env, __MODULE__)}\
     """
   end
 
@@ -54,7 +54,7 @@ defmodule Islands.Engine.Log do
     • Game name: #{game_name}
     • Player 1 name: #{player1_name}
     • Server PID: #{self() |> inspect()}
-    #{from(env, __MODULE__)}
+    #{from(env, __MODULE__)}\
     """
   end
 
@@ -64,7 +64,7 @@ defmodule Islands.Engine.Log do
     • Game name: #{game.name}
     • Timeout: #{round(timeout / 1000 / 60)} min
     • Server PID: #{self() |> inspect()}
-    #{from(env, __MODULE__)}
+    #{from(env, __MODULE__)}\
     """
   end
 end
