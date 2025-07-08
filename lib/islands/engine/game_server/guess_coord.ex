@@ -5,7 +5,7 @@ defmodule Islands.Engine.GameServer.GuessCoord do
 
   @spec handle_call(Request.t(), GenServer.from(), Game.t()) :: ReplyTuple.t()
   def handle_call(
-        {:guess_coord = action, player_id, row, col} = request,
+        {action = :guess_coord, player_id, row, col} = request,
         _from,
         game
       ) do

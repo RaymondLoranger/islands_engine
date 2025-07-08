@@ -4,7 +4,7 @@ defmodule Islands.Engine.GameServer.SetIslands do
   alias Islands.{Board, Game, Request, State}
 
   @spec handle_call(Request.t(), GenServer.from(), Game.t()) :: ReplyTuple.t()
-  def handle_call({:set_islands = action, player_id} = request, _from, game) do
+  def handle_call({action = :set_islands, player_id} = request, _from, game) do
     with {:ok, state} <- State.check(game.state, {action, player_id}),
          %Board{} = board <- Game.player_board(game, player_id),
          true <- Board.all_islands_positioned?(board) do

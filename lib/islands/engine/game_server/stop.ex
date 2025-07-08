@@ -4,7 +4,7 @@ defmodule Islands.Engine.GameServer.Stop do
   alias Islands.{Game, Request, State}
 
   @spec handle_call(Request.t(), GenServer.from(), Game.t()) :: ReplyTuple.t()
-  def handle_call({:stop = action, player_id} = request, _from, game) do
+  def handle_call({action = :stop, player_id} = request, _from, game) do
     with {:ok, state} <- State.check(game.state, {action, player_id}) do
       opponent_id = Game.opponent_id(player_id)
 

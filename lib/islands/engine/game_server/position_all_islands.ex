@@ -6,7 +6,7 @@ defmodule Islands.Engine.GameServer.PositionAllIslands do
 
   @spec handle_call(Request.t(), GenServer.from(), Game.t()) :: ReplyTuple.t()
   def handle_call(
-        {:position_all_islands = action, player_id} = request,
+        {action = :position_all_islands, player_id} = request,
         _from,
         game
       ) do
@@ -20,11 +20,7 @@ defmodule Islands.Engine.GameServer.PositionAllIslands do
       |> GameServer.save()
       |> ReplyTuple.new(player_id)
     else
-      :error ->
-        ReplyTuple.new(action, game, request, player_id)
-
-      {:error, reason} when is_atom(reason) ->
-        ReplyTuple.new(reason, game, request, player_id)
+      :error -> ReplyTuple.new(action, game, request, player_id)
     end
   end
 end

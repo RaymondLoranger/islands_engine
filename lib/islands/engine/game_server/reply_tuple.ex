@@ -15,7 +15,7 @@ defmodule Islands.Engine.GameServer.ReplyTuple do
     do: {:reply, Tally.new(game, player_id), game, @timeout}
 
   @spec new(action_or_reason, Game.t(), Request.t(), PlayerID.t()) :: t
-  def new(:add_player = _action, game, request, player_id) do
+  def new(_action = :add_player, game, request, player_id) do
     reason =
       case game.state.game_state do
         :initialized -> :unexpected
@@ -39,7 +39,7 @@ defmodule Islands.Engine.GameServer.ReplyTuple do
     new(reason, game, request, player_id)
   end
 
-  def new(:set_islands = _action, game, request, player_id) do
+  def new(_action = :set_islands, game, request, player_id) do
     reason =
       case game.state.game_state do
         :initialized -> :player2_not_added
@@ -51,7 +51,7 @@ defmodule Islands.Engine.GameServer.ReplyTuple do
     new(reason, game, request, player_id)
   end
 
-  def new(:guess_coord = _action, game, request, player_id) do
+  def new(_action = :guess_coord, game, request, player_id) do
     reason =
       case game.state.game_state do
         :initialized -> :player2_not_added
@@ -63,7 +63,7 @@ defmodule Islands.Engine.GameServer.ReplyTuple do
     new(reason, game, request, player_id)
   end
 
-  def new(:stop = _action, game, request, player_id) do
+  def new(_action = :stop, game, request, player_id) do
     reason =
       case game.state.game_state do
         :initialized -> :player2_not_added

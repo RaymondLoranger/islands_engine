@@ -5,7 +5,7 @@ defmodule Islands.Engine.GameServer.AddPlayer do
 
   @spec handle_call(Request.t(), GenServer.from(), Game.t()) :: ReplyTuple.t()
   def handle_call(
-        {:add_player = action, name, gender, pid} = request,
+        {action = :add_player, name, gender, pid} = request,
         _from,
         game
       ) do

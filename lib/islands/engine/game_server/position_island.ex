@@ -5,7 +5,7 @@ defmodule Islands.Engine.GameServer.PositionIsland do
 
   @spec handle_call(Request.t(), GenServer.from(), Game.t()) :: ReplyTuple.t()
   def handle_call(
-        {:position_island = action, player_id, island_type, row, col} = request,
+        {action = :position_island, player_id, island_type, row, col} = request,
         _from,
         game
       ) do
